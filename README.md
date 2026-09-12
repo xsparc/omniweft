@@ -4,7 +4,7 @@
 
 Omniweft treats a virtual world as structured data that people, game systems, and AI agents can inspect and change through the same interfaces. AI can compose a scene, sculpt terrain, modify geometry, paint textures, apply physical actions, and inspect the result. The engine validates and schedules those changes while simulation and rendering continue.
 
-**Status: design and planning foundation. There is no engine executable yet.** This repository contains the architecture, implementation backlog, example acceptance specifications, and contribution infrastructure. All engine features and performance figures below are proposed targets, not measured capabilities.
+**Status: headless native bootstrap in review (PR-001).** The bootstrap branch adds a C++20 start/step/stop example and Windows/Linux CPU checks. World mutation, rendering, physics, SDK and performance targets below remain planned. See [the bootstrap example](examples/platform-bootstrap.md) and [current execution evidence](docs/execution/PR-001-HANDOFF.md) for what has actually run.
 
 ## Start here
 
@@ -41,11 +41,13 @@ Pixel control means defined image coordinates and programmable bulk operations. 
 
 A local sandbox on Windows 11 x64 and Ubuntu 24.04 x64: a minimal editor, rigid bodies, basic physically based materials, editable static voxel terrain, mesh deformation, texture painting, a Python agent interface, and save/replay. All core examples work offline with a scripted AI provider. Cloud providers and downloadable models are optional.
 
-Proposed stack: **C++20, CMake, SDL3, Vulkan 1.3, Jolt Physics and an out-of-process Python SDK**. Exact dependency and compiler versions will be pinned and exercised in PR-001. See the [stack decision](docs/adr/0001-runtime-stack.md).
+Proposed stack: **C++20, CMake, SDL3, Vulkan 1.3, Jolt Physics and an out-of-process Python SDK**. PR-001 pins the toolchain and actual dependencies of the headless bootstrap. SDL3, Vulkan and Jolt source revisions and licenses will be pinned and verified when their integration slices introduce them. See the [stack decision](docs/adr/0001-runtime-stack.md).
 
-## Validate the planning repository
+## Build and validate
 
-Requires Python 3.11 or newer and no third-party Python packages:
+Build the native shell using the platform-specific instructions in [platform.bootstrap](examples/platform-bootstrap.md). It requires the pinned tools in `toolchains/bootstrap.json`; the executable itself needs no GPU, Python interpreter, provider key or network.
+
+Planning validation separately requires Python 3.11 or newer and no third-party Python packages:
 
 ```sh
 python tools/validate_plan.py

@@ -2,7 +2,7 @@
 
 ## Current repository checks
 
-The documentation bootstrap supplies `python tools/validate_plan.py`, running on Windows and Linux in GitHub Actions. It checks required project files, local Markdown paths/anchors, roadmap IDs, acyclic dependencies, proposed statuses, and feature-to-example coverage. This is planning validation only. No C++ compiler, renderer, physics system or runnable engine example is present yet.
+The documentation bootstrap supplies `python tools/validate_plan.py`, running on Windows and Linux in GitHub Actions. It checks required project files, local Markdown paths/anchors, roadmap IDs, acyclic dependencies, authorized execution states, and feature-to-example coverage. This is planning validation only. PR-001 adds a separate CMake/CTest headless native lane; see [its example](../examples/platform-bootstrap.md) and [actual execution evidence](execution/PR-001-HANDOFF.md). No renderer or physics behavior is verified by the bootstrap.
 
 ## Implementation lanes
 
@@ -16,7 +16,7 @@ The documentation bootstrap supplies `python tools/validate_plan.py`, running on
 
 Hosted CI operating-system images are not a Windows 11 desktop or a physical Vulkan GPU certification. Add clean-machine Windows 11 validation and Linux desktop X11/Wayland coverage before claiming supported desktop releases. A software Vulkan implementation may catch API errors but cannot establish real-driver behavior or performance.
 
-Core tests and provider-adapter contract tests require no API keys, network calls, proprietary assets or model downloads. The `optional-provider` lane is not required to merge an otherwise verified offline adapter or release the offline engine.
+Core tests and provider-adapter contract tests require no API keys, network calls, proprietary assets or model downloads. Initial provisioning of the pinned build tools can require network access; subsequent headless configure/build/test does not fetch engine dependencies. The `optional-provider` lane is not required to merge an otherwise verified offline adapter or release the offline engine.
 
 ## Evidence contract
 

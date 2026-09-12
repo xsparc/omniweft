@@ -1,15 +1,15 @@
 # Example verification catalog
 
-**These are Markdown specifications, not runnable examples yet.** Each implementation PR must supply its matching executable/SDK fixture and keep its specification current. A specification alone never establishes feature completion.
+**PR-001 supplies the first headless runner and platform.bootstrap fixture. Other entries remain planned specifications.** Each implementation PR must supply its matching executable/SDK fixture and keep its specification current. Consult each example and its evidence for implementation state; a specification alone never establishes feature completion.
 
-The proposed common interface is:
+The common interface for later examples remains proposed:
 
 ```sh
 omniweft_examples --example objects.atomic --headless --seed 7 --verify --output artifacts/objects.atomic
 omniweft_examples --example showcase.world_workshop --interactive --seed 7
 ```
 
-PR-001 implements the runner shell; each later PR adds its named example. GUI-only behavior uses `--interactive` and a manual scenario alongside automated structural checks. GPU verification uses `--gpu --verify` on a supported real device; `--headless` does not mean GPU coverage. Each runtime result includes explicit `passed`, `failed`, or `not_run` for each lane, plus its environment and exact commit.
+PR-001 implements the runner shell; each later PR adds its named example. GUI-only behavior uses `--interactive` and a manual scenario alongside automated structural checks. GPU verification uses `--gpu --verify` on a supported real device; `--headless` does not mean GPU coverage. Each verification evidence manifest includes explicit lane outcomes (`passed`, `failed`, `not_run`, or `not_applicable`), its environment and exact commit. The bootstrap's `result.json` is the deterministic fixture artifact retained with that manifest.
 
 | Feature PR | Example specification | Verification lanes |
 | --- | --- | --- |

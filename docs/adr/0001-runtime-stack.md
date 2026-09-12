@@ -4,7 +4,7 @@ Status: accepted design baseline; implementation verification pending. Date: 202
 
 ## Context and decision
 
-The engine needs Windows/Linux graphics, compute, rigid bodies, editable representations, headless tests and provider independence. Choose C++20/CMake, SDL3, Vulkan 1.3, a Jolt adapter and a separate Python SDK. Pin actual compiler/library revisions in PR-001 and verify them in platform examples before promising support.
+The engine needs Windows/Linux graphics, compute, rigid bodies, editable representations, headless tests and provider independence. Choose C++20/CMake, SDL3, Vulkan 1.3, a Jolt adapter and a separate Python SDK. PR-001 pins the headless shell's actual compiler/toolchain and dependency inventory. Pin SDL/Vulkan/Jolt library revisions and verify their platform examples when their integration slices introduce them, before promising support.
 
 ## Alternatives
 

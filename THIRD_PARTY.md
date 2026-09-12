@@ -1,6 +1,6 @@
 # Third-party inventory and provenance
 
-The bootstrap vendors no engine libraries, models, datasets or art. The Apache license text is included verbatim in [LICENSE](LICENSE). Candidate implementation dependencies are not yet pinned, downloaded or audited for shipping.
+The native headless bootstrap vendors no engine libraries, models, datasets or art. It uses only the platform C++ standard library/runtime. The exact build-tool inventory is `toolchains/bootstrap.json`; `toolchains/build-tools.txt` pins provisioned Python wheels by version and SHA-256. No SDL, Vulkan or Jolt library is downloaded or linked by this slice. The Apache license text is included verbatim in [LICENSE](LICENSE). Candidate implementation dependencies are not yet pinned, downloaded or audited for shipping.
 
 | Candidate | Intended role | Upstream |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ The bootstrap vendors no engine libraries, models, datasets or art. The Apache l
 | Dear ImGui | Initial editor UI, subject to spike | [Dear ImGui](https://github.com/ocornut/imgui) |
 | ONNX Runtime, optional later | Model inference adapter | [ONNX Runtime](https://github.com/microsoft/onnxruntime) |
 
-PR-001 creates an actual pinned inventory for dependencies it introduces. Each entry must include name, version/commit, source URL, content hash, SPDX license expression, notice paths, modifications, transitive components and whether shipped in source or binaries. Generate an SBOM from actual build inputs before packaging; this candidate table is not an SBOM.
+PR-001 supplies an actual pinned inventory for tools it introduces; candidate engine dependencies above remain deferred. Each entry must include name, version/commit, source URL, content hash, SPDX license expression, notice paths, modifications, transitive components and whether shipped in source or binaries. Generate an SBOM from actual build inputs before packaging; this candidate table is not an SBOM.
 
 The planning CI invokes official `actions/checkout` and `actions/setup-python` at immutable source commits named in its workflow. Dependabot proposes updates; review changed code and licenses before merging. These services/actions are build tooling, not vendored engine dependencies.
 
