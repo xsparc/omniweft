@@ -1,0 +1,12 @@
+{
+  "description": "Literal empty-state bytes from the version-1 layout in PR-003-PLAN; no native encoder used.",
+  "snapshot": {
+    "format_version": 1,
+    "world_id": "workshop",
+    "seed": 7,
+    "max_slots": 4,
+    "world_revision": 0,
+    "slots": []
+  },
+  "hex": "4f574f424a30303108000000776f726b73686f700700000004000000000000000000000000000000"
+}
