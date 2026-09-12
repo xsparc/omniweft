@@ -10,6 +10,7 @@ from pathlib import Path
 import platform
 import re
 import subprocess
+import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -71,6 +72,8 @@ class Evidence:
         self.directory = directory.resolve() if directory else None
         self.manifest = {"schema_version": 1, "work_item": "PR-001", "example": "platform.bootstrap",
                          "seed": 7, "lane": "cpu", "started_at": timestamp(),
+                         "timestamp_utc": timestamp(), "command": [sys.executable, *sys.argv],
+                         "lanes": {"cpu": "not_run", "gpu": "not_applicable"},
                          "assertions": ASSERTIONS, "commands": COMMANDS, "artifacts": {},
                          "limitations": ["Headless lifecycle fixture only; no graphics, physics, or world engine validation."]}
 
@@ -119,14 +122,20 @@ class Evidence:
 
     def finish(self, error):
         if self.directory:
-            self.manifest.update(finished_at=timestamp(), status="failed" if error else "passed")
+            outcome = "failed" if error else "passed"
+            self.manifest.update(finished_at=timestamp(), status=outcome, exit_code=1 if error else 0)
+            self.manifest["lanes"]["cpu"] = outcome
             if error:
                 self.manifest["error"] = str(error)
             (self.directory / "manifest.json").write_text(json.dumps(self.manifest, indent=2, default=str) + "\n", encoding="utf-8")
 
     def __exit__(self, kind, error, traceback):
         if error is None and self.directory:
-            require("result" in self.manifest["artifacts"], "successful evidence must retain the checked native result")
+            try:
+                require("result" in self.manifest["artifacts"], "successful evidence must retain the checked native result")
+            except Exception as validation_error:
+                self.finish(validation_error)
+                raise
         self.finish(error)
 
 

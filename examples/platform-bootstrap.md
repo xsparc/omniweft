@@ -12,13 +12,13 @@ Use a tiny deterministic fixture with seed 7, generated locally or covered by an
 
 ## Build and run
 
-Use Python **3.12.14**, CMake **3.31.6** and Ninja **1.13.2**. Install the exact hash-locked build tools with:
+Use Python **3.12.10** (the CI baseline; **3.12.14** is an explicitly pinned local alternate), CMake **3.31.6** and Ninja **1.13.2**. Install the exact hash-locked build tools with:
 
 ```sh
 python -m pip install --require-hashes --only-binary=:all: --no-deps -r toolchains/build-tools.txt
 ```
 
-On Windows, use an x64 Visual Studio developer shell selecting MSVC toolset **14.44.35207**. On Ubuntu 24.04, install/select `clang++-18` (**18.1.3**). `toolchains/bootstrap.json` specifies the exact accepted compiler versions. Drift is an actionable failure, not silently accepted. Provisioning tools can use the network; configuring, building, running and testing the headless shell requires no engine downloads, model or GPU.
+On Windows, use an x64 Visual Studio developer shell selecting MSVC toolset **14.44.35207** (CI compiler **19.44.35228**, local alternate **19.44.35227**). On Ubuntu 24.04, install/select `clang++-18` (**18.1.3**). `toolchains/bootstrap.json` specifies the exact accepted compiler versions. Drift is an actionable failure, not silently accepted. Provisioning tools can use the network; configuring, building, running and testing the headless shell requires no engine downloads, model or GPU.
 
 From the repository root:
 
@@ -41,7 +41,9 @@ On Windows substitute `windows-headless`. The executable is `build/windows-headl
 omniweft_examples --example platform.bootstrap --headless --seed 7 --verify --output artifacts/platform.bootstrap
 ```
 
-Use a fresh output directory for every invocation. Existing result files are preserved and cause a clear refusal; choose a new directory to retry. No delete or overwrite step is needed.
+Use a fresh output directory for every invocation. The runner claims that directory exclusively; any existing directory is preserved and causes a clear refusal, even if empty. Choose a new directory to retry. No delete or overwrite step is needed.
+
+For retained evidence after a build, run `python tests/bootstrap_oracle.py --executable build/linux-headless/omniweft_examples --evidence-dir artifacts/bootstrap-evidence` (substitute the Windows executable path as appropriate). The evidence directory must also be new.
 
 The seed-7 fixture reports lifecycle `created`, `running`, `stopped`, exactly one executed step and checksum `1282168116`. The independent Python subprocess oracle checks literal expected values, exit status and output artifacts. A successful `--verify` is a lifecycle assertion for this fixture, not world-engine or graphics certification.
 

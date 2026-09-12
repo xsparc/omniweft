@@ -6,7 +6,7 @@
     {
       "id": "PR-001",
       "title": "Buildable Windows/Linux project shell",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [],
       "example": "platform.bootstrap",
@@ -26,7 +26,13 @@
         "claimed_at": "2026-09-13",
         "plan": "docs/execution/PR-001-PLAN.md",
         "handoff": "docs/execution/PR-001-HANDOFF.md",
-        "evidence": []
+        "evidence": [
+          "https://github.com/xsparc/omniweft/actions/runs/34708376706",
+          "https://github.com/xsparc/omniweft/actions/runs/34708376739",
+          "docs/execution/PR-001-HANDOFF.md"
+        ],
+        "pr_url": "https://github.com/xsparc/omniweft/pull/4",
+        "review": "Independent native and workflow/evidence reviews found no blocking defects; details in handoff."
       }
     },
     {
