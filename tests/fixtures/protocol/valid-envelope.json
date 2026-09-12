@@ -1,0 +1,15 @@
+{
+  "protocol_version": "0.1",
+  "world_id": "workshop",
+  "transaction_id": "018f7242-4387-7c98-a114-67787915a369",
+  "idempotency": {"epoch": "server-issued-session-epoch", "sequence": 8},
+  "expected_world_revision": 42,
+  "apply_at": {"mode": "next_tick", "expires_after_ticks": 120},
+  "budget": {"max_operations": 2, "max_blob_bytes": 0},
+  "operations": [
+    {"type": "entity.create", "temporary_id": "block", "prefab": "builtin.unit_cube"},
+    {"type": "transform.set", "target": {"temporary_id": "block"},
+     "position_m": [0.0, 2.0, 0.0], "rotation_xyzw": [0.0, 0.0, 0.0, 1.0],
+     "scale": [1.0, 1.0, 1.0]}
+  ]
+}
