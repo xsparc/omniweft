@@ -209,6 +209,9 @@ ParseResult parse(std::string_view bytes) {
     BoundedSax sax;
     if (!Json::sax_parse(bytes.begin(), bytes.end(), &sax))
       return {std::nullopt, {sax.error.value_or(ValidationError{"INVALID_SCHEMA", "", "Input must be one strict JSON value."})}};
+    // Upstream treats raw NUL as end-of-input; strict wire JSON must consume every byte.
+    if (bytes.find('\0') != std::string_view::npos)
+      return {std::nullopt, {{"INVALID_SCHEMA", "", "Raw NUL bytes are not valid JSON."}}};
     return {convert(Json::parse(bytes.begin(), bytes.end())), {}};
   } catch (const ValidationError& error) {
     return {std::nullopt, {error}};
