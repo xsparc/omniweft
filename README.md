@@ -4,7 +4,7 @@
 
 Omniweft treats a virtual world as structured data that people, game systems, and AI agents can inspect and change through the same interfaces. AI can compose a scene, sculpt terrain, modify geometry, paint textures, apply physical actions, and inspect the result. The engine validates and schedules those changes while simulation and rendering continue.
 
-**Status: native headless bootstrap merged (PR-001); command-schema implementation is next.** The bootstrap branch adds a C++20 start/step/stop example and Windows/Linux CPU checks. World mutation, rendering, physics, SDK and performance targets below remain planned. See [the bootstrap example](examples/platform-bootstrap.md) and [current execution evidence](docs/execution/PR-001-HANDOFF.md) for what has actually run.
+**Status: native headless bootstrap merged (PR-001); command schema in progress (PR-002).** The native runner provides a C++20 start/step/stop example and Windows/Linux CPU checks. PR-002 adds structural command validation and round-trip serialization; its verification and integration state are tracked in [the command schema handoff](docs/execution/PR-002-HANDOFF.md). World mutation, rendering, physics, SDK and performance targets below remain planned. See [the bootstrap example](examples/platform-bootstrap.md) and [current execution evidence](docs/execution/PR-001-HANDOFF.md) for what has actually run.
 
 ## Start here
 

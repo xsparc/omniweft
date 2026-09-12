@@ -46,7 +46,7 @@
       "hashes": "build-tools.txt",
       "modifications": "none",
       "transitive_components": "Upstream CMake binary distribution; component notices retained in the installed wheel.",
-      "shipping": "build tooling only; no tools or third-party native libraries vendored into this repository",
+      "shipping": "build tooling only; CMake itself is not vendored into this repository",
       "license_scope": "Top-level CMake and Python distribution licenses; bundled transitive component terms are retained separately under cmake/data/doc/cmake."
     },
     {
@@ -75,5 +75,6 @@
       "transitive_components": "Installer/runtime component notices remain with the selected Python distribution.",
       "shipping": "test tooling only; setup-python selects exact version, runtime not vendored"
     }
-  ]
+  ],
+  "source_dependency_inventory": "../third_party/dependencies.json"
 }

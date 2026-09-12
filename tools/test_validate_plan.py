@@ -53,7 +53,7 @@ class PlanningGateTests(unittest.TestCase):
 
     def test_false_completion_is_rejected(self):
         self.alter_backlog(lambda data: data.update(phase="design"))
-        self.alter_backlog(lambda data: data["items"][0].update(status="done"))
+        self.alter_backlog(lambda data: data["items"][0].update(status="done", execution={}))
         errors = validate(self.root)
         self.assertTrue(any("design phase cannot claim" in e for e in errors))
         self.assertTrue(any("done needs PR URL" in e for e in errors))

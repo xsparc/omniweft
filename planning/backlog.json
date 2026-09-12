@@ -42,7 +42,7 @@
     {
       "id": "PR-002",
       "title": "Versioned command schema",
-      "status": "ready",
+      "status": "in_progress",
       "milestone": "M1",
       "depends_on": [
         "PR-001"
@@ -64,7 +64,13 @@
         "plan": "docs/execution/PR-002-PLAN.md",
         "handoff": "docs/execution/PR-002-HANDOFF.md",
         "claimed_at": "2026-09-13",
-        "evidence": []
+        "evidence": [],
+        "pr_url": "https://github.com/xsparc/omniweft/pull/5",
+        "independent_contract_review": {
+          "reviewer": "bootstrap_architecture",
+          "commit": "4a90580e384291b1097006607277abd1763b4f75",
+          "result": "no actionable findings"
+        }
       }
     },
     {
