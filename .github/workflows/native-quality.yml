@@ -61,6 +61,21 @@ jobs:
         shell: bash
         run: |
           python tests/protocol_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_examples.exe' || 'linux-headless/omniweft_examples' }}" --evidence-dir artifacts/protocol
+      - name: Summarize retained evidence
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ("bootstrap", "protocol", "protocol-mutation"):
+              manifest = json.loads((Path("artifacts") / name / "manifest.json").read_text(encoding="utf-8"))
+              summary = {key: manifest[key] for key in ("work_item", "example", "candidate_sha", "candidate_worktree_dirty", "status", "environment")}
+              summary["assertion_count"] = len(manifest["assertions"])
+              summary["command_count"] = len(manifest["commands"])
+              summary["result"] = manifest["artifacts"]["result"]
+              summary["executable"] = manifest["artifacts"]["executable"]
+              print(json.dumps({"evidence": name, **summary}, sort_keys=True))
+          PY
       - name: Retain bootstrap and protocol evidence with CTest log
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4; official upstream pin

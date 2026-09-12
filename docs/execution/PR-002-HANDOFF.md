@@ -15,9 +15,11 @@
 
 The contract-only draft at `4a90580e384291b1097006607277abd1763b4f75` passed existing bootstrap native checks in [run 34723748677](https://github.com/xsparc/omniweft/actions/runs/34723748677). This does not establish protocol functionality.
 
-[Planning run 34723748693](https://github.com/xsparc/omniweft/actions/runs/34723748693) passed document/ledger validation on both platforms but failed one of 13 regression tests: its false-completion fixture inherited PR-001's newly legitimate merge evidence. The fixture now explicitly removes that evidence from its temporary test copy. Both original rejection assertions and the production validator remain intact; independent review accepted this correction. Rerun results remain pending.
+[Planning run 34723748693](https://github.com/xsparc/omniweft/actions/runs/34723748693) passed document/ledger validation on both platforms but failed one of 13 regression tests: its false-completion fixture inherited PR-001's newly legitimate merge evidence. The fixture now explicitly removes that evidence from its temporary test copy. Both original rejection assertions and the production validator remain intact; independent review accepted this correction. The corrected planning suite passed on both platforms in [run 34724140524](https://github.com/xsparc/omniweft/actions/runs/34724140524) at `d35f256bc2a53e3d493b2767adfa57c9c648f489`.
 
-Protocol build, independent oracle, typed serialization, mutation proof and full implementation review are pending. Hosted artifacts will record the exact tested candidate, executable/source hashes, commands, assertions and lane limitations.
+At `d35f256bc2a53e3d493b2767adfa57c9c648f489`, [native run 34724140473](https://github.com/xsparc/omniweft/actions/runs/34724140473) compiled and passed all four CTest suites on Windows and Linux. Its deliberate-mutant oracle correctly failed, but the proof harness expected a status diagnostic after an earlier field-shape assertion. Independent test follow-up `5ceb16c99e655bc56ab53b3fa8d83e79187c6c03` checks rejection status first without dropping assertions, and adds default-command/output-collision/missing-input coverage. Full current-candidate CI remains pending.
+
+Independent native source review accepted helper commit `a4cfb4b5a451f9937d5ef4cf791adc650e682ec9` after the raw-NUL fix. Root independently reviewed oracle fixtures, mutation mechanics and workflow; final evidence review remains pending. Hosted artifacts will record the exact tested candidate, executable/source hashes, commands, assertions and lane limitations.
 
 ## Resume
 

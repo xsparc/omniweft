@@ -244,8 +244,8 @@ def inspect_report(payload, cases):
                           name + ": unsigned sequence remains integer")
             serializations.append((name, result["serialized"], expected))
         else:
-            audit.equal(name + ": rejected fields", sorted(result), ["errors", "index", "status"])
             audit.equal(name + ": rejected", result["status"], "schema_invalid")
+            audit.equal(name + ": rejected fields", sorted(result), ["errors", "index", "status"])
             audit.equal(name + ": exactly one error", len(result["errors"]), 1)
             error = result["errors"][0]
             audit.require(set(error) in ({"code", "message", "path"}, {"code", "message", "path", "operation_index"}),
@@ -290,6 +290,40 @@ def run_cases(executable, directory, cases, evidence, group):
     return inspect_report(payload, cases)
 
 
+
+def check_public_example(executable, directory, expected, evidence):
+    base = [str(executable), "--example", "protocol.reject_invalid",
+            "--headless", "--seed", "7", "--verify"]
+    output = directory / "public-example"
+    command = [*base, "--output", str(output)]
+    process = audit.execute(command)
+    audit.equal("public example without --input exits zero", process.returncode, 0)
+    result_path = output / "result.json"
+    payload = result_path.read_bytes()
+    evidence.retain(result_path, "builtin-result.json")
+    cases = [
+        ("builtin-valid-first", b"", expected, None, None),
+        ("builtin-invalid-version", b"", None, "UNSUPPORTED_VERSION", "/protocol_version"),
+        ("builtin-valid-after-rejection", b"", expected, None, None),
+    ]
+    values = inspect_report(payload, cases)
+    audit.equal("public example recovers with identical serialization", values[0][1], values[1][1])
+    collision = audit.execute(command)
+    audit.require(collision.returncode != 0, "protocol output collision must fail")
+    audit.require("fresh --output directory" in collision.stderr,
+                  "protocol output collision gives fresh-directory guidance")
+    audit.require(result_path.read_bytes() == payload, "protocol output collision preserves prior result bytes")
+    audit.equal("protocol output collision leaves only original result",
+                sorted(path.name for path in output.iterdir()), ["result.json"])
+
+    missing_output = directory / "missing-input-output"
+    missing_input = directory / "absent-input.json"
+    missing = audit.execute([*base, "--output", str(missing_output), "--input", str(missing_input)])
+    audit.require(missing.returncode != 0, "missing protocol input must fail")
+    audit.require("input_error:" in missing.stderr and "readable JSON fixture" in missing.stderr,
+                  "missing protocol input gives readable-fixture guidance")
+    audit.require(not missing_output.exists(), "missing protocol input must not publish output")
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--executable", required=True, type=Path)
@@ -320,6 +354,7 @@ def main():
         for (name, first, _), (_, subsequent, _) in zip(serializations, second):
             audit.equal(name + ": parse serialize parse is byte stable", subsequent, first)
         if args.case_set == "all":
+            check_public_example(executable, directory, expected, evidence)
             input_path = directory / "cases-0-inputs" / "000-valid-first.json"
             output_path = directory / "cli-too-many-inputs"
             command = [str(executable), "--example", "protocol.reject_invalid", "--headless",
@@ -332,7 +367,8 @@ def main():
         # The first three cases are valid/invalid/valid, in one native process.
         audit.equal("recovery preserves accepted serialization", serializations[0][1], serializations[1][1])
         print(json.dumps({"status": "passed", "case_count": len(cases),
-                          "roundtrip_count": len(second), "assertion_count": len(audit.ASSERTIONS)}))
+                          "roundtrip_count": len(second), "builtin_case_count": 3 if args.case_set == "all" else 0,
+                          "assertion_count": len(audit.ASSERTIONS)}))
     return 0
 
 
