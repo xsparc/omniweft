@@ -32,7 +32,8 @@ jobs:
         with:
           python-version: '3.12.10'
       - name: Install hashed build tools
-        run: python -m pip install --require-hashes --only-binary=:all: --no-deps -r toolchains/build-tools.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r toolchains/build-tools.txt
       - name: Configure, build and verify on Linux
         if: runner.os == 'Linux'
         run: python tools/bootstrap.py
