@@ -1,6 +1,6 @@
 # Contributing to Omniweft
 
-Omniweft currently contains design documents, example specifications and planning validation. Help by reviewing contracts, refining bounded work items or, once execution scope is adopted, implementing one roadmap feature with its example.
+Omniweft is implementing its first native headless bootstrap, with the remaining engine features specified in the roadmap. The existing backlog is [adopted for incremental execution](docs/execution/AUTHORIZATION.md). Contribute one dependency-ready behavior with its example, actual checks and independent review.
 
 1. Read the [project brief](docs/PROJECT_BRIEF.md), relevant [architecture decisions](docs/adr/README.md), [Code of Conduct](CODE_OF_CONDUCT.md) and [agent instructions](AGENTS.md).
 2. Choose an eligible [work item](docs/ROADMAP.md), or propose a change in an issue with a concrete problem and acceptance criteria. Coordinate ownership before overlapping changes.

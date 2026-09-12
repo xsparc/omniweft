@@ -31,7 +31,7 @@ AI reasoning runs outside the simulation thread. The editor and gateway submit c
 | Area | Choice | Rationale and qualification |
 | --- | --- | --- |
 | Runtime | C++20 | Direct access to native graphics/physics tooling; central ownership and sanitizers mitigate memory risks |
-| Build | CMake + Ninja; checked-in presets | Common Windows/Linux workflow; exact versions and dependency lock established by PR-001 |
+| Build | CMake + Ninja; checked-in presets | Common Windows/Linux workflow; exact bootstrap tool versions established by PR-001; library pins added with integration |
 | Platform | SDL3 | Window, events, input and platform integration; supported-platform evidence in [SDL documentation](https://wiki.libsdl.org/SDL3/README-platforms) |
 | GPU | Vulkan 1.3 baseline + bounded compute | One renderer across target systems; startup probes required features/limits before device creation |
 | Physics | Jolt behind `ow_physics` | Reuse mature rigid-body solver while retaining engine IDs and mutation rules; [upstream architecture](https://jrouwe.github.io/JoltPhysics/) |
@@ -41,7 +41,7 @@ AI reasoning runs outside the simulation thread. The editor and gateway submit c
 | Model runtime | Optional ONNX Runtime CPU adapter later | Isolated dependency; accelerator/provider compatibility requires separate testing |
 | Tests | CTest + a standard-library Python subprocess oracle for PR-001 | Headless examples and regression artifacts; select a pinned C++ test library when a later slice needs it |
 
-Dependency versions are not selected by floating branch at configure time. PR-001 records exact source revisions, licenses, checksums, build options and supported compilers. The design chooses libraries, not an untested lockfile.
+Dependency versions are not selected by floating branch at configure time. PR-001 records the actual headless toolchain and dependency inventory. Each integration slice records exact source revisions, licenses, checksums, build options and supported compilers for libraries it introduces. The design chooses libraries, not an untested lockfile.
 
 ## Dependency boundaries
 

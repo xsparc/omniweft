@@ -1,6 +1,6 @@
 # platform.bootstrap
 
-Status: **planned specification; not implemented**. Work item: **PR-001 — Buildable Windows/Linux project shell**.
+Status: **implementation under review; see the [execution handoff](../docs/execution/PR-001-HANDOFF.md) for actual checks and merge state**. Work item: **PR-001 — Buildable Windows/Linux project shell**.
 
 Dependencies: documentation bootstrap. Validation lanes: cpu.
 
@@ -10,13 +10,40 @@ Implement only the named behavior, its public contract, corresponding runnable e
 
 Use a tiny deterministic fixture with seed 7, generated locally or covered by an explicit asset license manifest. Exercise the public command/query interfaces once available, avoiding privileged test-only mutation paths.
 
-## Proposed run command
+## Build and run
 
-This command becomes available only when this work item is implemented:
+Use Python **3.12.14**, CMake **3.31.6** and Ninja **1.13.2**. Install the exact hash-locked build tools with:
+
+```sh
+python -m pip install --require-hashes --only-binary=:all: --no-deps -r toolchains/build-tools.txt
+```
+
+On Windows, use an x64 Visual Studio developer shell selecting MSVC toolset **14.44.35207**. On Ubuntu 24.04, install/select `clang++-18` (**18.1.3**). `toolchains/bootstrap.json` specifies the exact accepted compiler versions. Drift is an actionable failure, not silently accepted. Provisioning tools can use the network; configuring, building, running and testing the headless shell requires no engine downloads, model or GPU.
+
+From the repository root:
+
+```sh
+python tools/bootstrap.py --check
+python tools/bootstrap.py
+```
+
+The second command configures, builds and runs CTest. The corresponding explicit presets are `windows-headless` and `linux-headless`:
+
+```sh
+cmake --preset linux-headless
+cmake --build --preset linux-headless
+ctest --preset linux-headless
+```
+
+On Windows substitute `windows-headless`. The executable is `build/windows-headless/omniweft_examples.exe` or `build/linux-headless/omniweft_examples`. Run it by its full path, or add that directory to PATH:
 
 ```sh
 omniweft_examples --example platform.bootstrap --headless --seed 7 --verify --output artifacts/platform.bootstrap
 ```
+
+Use a fresh output directory for every invocation. Existing result files are preserved and cause a clear refusal; choose a new directory to retry. No delete or overwrite step is needed.
+
+The seed-7 fixture reports lifecycle `created`, `running`, `stopped`, exactly one executed step and checksum `1282168116`. The independent Python subprocess oracle checks literal expected values, exit status and output artifacts. A successful `--verify` is a lifecycle assertion for this fixture, not world-engine or graphics certification.
 
 ## Pass criteria
 
@@ -34,4 +61,4 @@ Record exact candidate SHA, commands, environment, seed, assertions, results, ar
 
 Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.
 
-Update this document with actual build/run instructions and observed evidence when the implementation merges. The [roadmap](../docs/ROADMAP.md) and [backlog](../planning/backlog.json) retain the same work-item and example IDs.
+Actual build/run instructions are above; [the handoff](../docs/execution/PR-001-HANDOFF.md) records current validation and integration status. The [roadmap](../docs/ROADMAP.md) and [backlog](../planning/backlog.json) retain the same work-item and example IDs.

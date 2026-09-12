@@ -24,10 +24,10 @@ This file describes the target; [bootstrap verification](BOOTSTRAP_VERIFICATION.
 
 ## Implementation setup still required
 
-- PR-001 pins and verifies native build dependencies, compiler versions and CMake presets on Windows/Linux.
+- PR-001 introduces native toolchain pins, CMake presets and Windows/Linux CPU checks; [its handoff](execution/PR-001-HANDOFF.md) records observed results and remaining integration gates.
 - GPU validation needs isolated real-device runners; no personal machine is enrolled by this bootstrap.
-- Mandatory examples need their runtime implementations; current example files are specifications.
+- Only the PR-001 headless lifecycle example is being implemented. The remaining example files are specifications.
 - Appoint additional reviewers and designate a confidential project conduct contact as capacity permits.
-- Release signing, package publication, telemetry, paid inference and background autonomous execution are not configured.
+- Release signing, package publication, telemetry and paid inference are not configured. An hourly local Codex continuation is active as recorded in [the implementation authorization](execution/AUTHORIZATION.md); no GitHub-hosted autonomous bot is installed.
 
-The project is ready for a scoped implementation kickoff; it is not a released engine. Use the [roadmap](ROADMAP.md) and [autonomous workflow](AUTONOMOUS_DEVELOPMENT.md) to start the first adopted slice.
+The project has begun its adopted implementation scope; it is not a released engine. Use the [roadmap](ROADMAP.md) and [autonomous workflow](AUTONOMOUS_DEVELOPMENT.md) to start the first adopted slice.

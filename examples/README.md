@@ -1,8 +1,8 @@
 # Example verification catalog
 
-**These are Markdown specifications, not runnable examples yet.** Each implementation PR must supply its matching executable/SDK fixture and keep its specification current. A specification alone never establishes feature completion.
+**PR-001 supplies the first headless runner and platform.bootstrap fixture. Other entries remain planned specifications.** Each implementation PR must supply its matching executable/SDK fixture and keep its specification current. Consult each example and its evidence for implementation state; a specification alone never establishes feature completion.
 
-The proposed common interface is:
+The common interface for later examples remains proposed:
 
 ```sh
 omniweft_examples --example objects.atomic --headless --seed 7 --verify --output artifacts/objects.atomic
