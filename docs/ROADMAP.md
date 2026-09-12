@@ -1,6 +1,6 @@
 # Incremental implementation roadmap
 
-All 38 items are **proposed**, not authorized engine implementation in this documentation task. PR IDs are stable work-item IDs; they are not GitHub pull-request numbers. The dependency graph permits parallel independent work; number order is a reading aid. The initial documentation bootstrap precedes PR-001.
+Implementation of these 38 items is now [adopted](execution/AUTHORIZATION.md). The backlog records current states; only dependency-ready work may be claimed. PR IDs are stable work-item IDs; they are not GitHub pull-request numbers. The dependency graph permits parallel independent work; number order is a reading aid. The initial documentation bootstrap precedes PR-001.
 
 ## M1: Offline AI-addressable scene
 

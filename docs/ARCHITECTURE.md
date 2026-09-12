@@ -39,7 +39,7 @@ AI reasoning runs outside the simulation thread. The editor and gateway submit c
 | Imports | glTF 2.0/GLB first | Standard mesh/material interchange; native world semantics use a separate format |
 | Editor | Dear ImGui adapter, subject to build spike | Fast developer inspector and timeline; accessibility gaps tracked explicitly |
 | Model runtime | Optional ONNX Runtime CPU adapter later | Isolated dependency; accelerator/provider compatibility requires separate testing |
-| Tests | CTest + a pinned C++ test library selected in PR-001 | Headless test executables, example harness, regression artifacts |
+| Tests | CTest + a standard-library Python subprocess oracle for PR-001 | Headless examples and regression artifacts; select a pinned C++ test library when a later slice needs it |
 
 Dependency versions are not selected by floating branch at configure time. PR-001 records exact source revisions, licenses, checksums, build options and supported compilers. The design chooses libraries, not an untested lockfile.
 

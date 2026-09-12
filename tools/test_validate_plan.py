@@ -14,7 +14,7 @@ class PlanningGateTests(unittest.TestCase):
         self.scratch = tempfile.TemporaryDirectory(prefix="omniweft-plan-test-")
         self.root = Path(self.scratch.name) / "repo"
         shutil.copytree(ROOT, self.root, ignore=shutil.ignore_patterns(
-            ".git", "__pycache__", "artifacts", "build", "out"))
+            ".git", "__pycache__", "artifacts", "build", "out", ".cache", ".venv"))
 
     def tearDown(self):
         self.scratch.cleanup()
@@ -52,10 +52,33 @@ class PlanningGateTests(unittest.TestCase):
         self.assertTrue(any("missing or unsafe example" in e for e in validate(self.root)))
 
     def test_false_completion_is_rejected(self):
+        self.alter_backlog(lambda data: data.update(phase="design"))
         self.alter_backlog(lambda data: data["items"][0].update(status="done"))
         errors = validate(self.root)
         self.assertTrue(any("design phase cannot claim" in e for e in errors))
         self.assertTrue(any("done needs PR URL" in e for e in errors))
+
+    def test_execution_without_authorization_is_rejected(self):
+        self.alter_backlog(lambda data: data.update(phase="implementation"))
+        self.alter_backlog(lambda data: data["items"][0].update(
+            status="in_progress", execution={}))
+        self.assertTrue(any("execution state needs adopted authorization" in e
+                            for e in validate(self.root)))
+
+    def test_execution_before_dependency_merge_is_rejected(self):
+        self.alter_backlog(lambda data: data.update(phase="implementation"))
+        self.alter_backlog(lambda data: data["items"][0].update(status="in_review"))
+        self.alter_backlog(lambda data: data["items"][1].update(
+            status="ready", execution={"authorization": "fixture approval"}))
+        self.assertTrue(any("PR-002: dependency PR-001 is not done" in e
+                            for e in validate(self.root)))
+
+    def test_implementation_completion_without_merge_evidence_is_rejected(self):
+        self.alter_backlog(lambda data: data.update(phase="implementation"))
+        self.alter_backlog(lambda data: data["items"][0].update(
+            status="done", execution={"authorization": "fixture approval"}))
+        self.assertTrue(any("done needs PR URL, merge SHA and evidence" in e
+                            for e in validate(self.root)))
 
     def test_dependency_and_lane_document_drift_is_rejected(self):
         path = self.root / "examples/render-world_cube.md"

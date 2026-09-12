@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "project": "Omniweft",
-  "phase": "design",
+  "phase": "implementation",
   "items": [
     {
       "id": "PR-001",
       "title": "Buildable Windows/Linux project shell",
-      "status": "proposed",
+      "status": "in_progress",
       "milestone": "M1",
       "depends_on": [],
       "example": "platform.bootstrap",
@@ -18,7 +18,16 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator, task 01a09699-3e74-7103-80e4-63d80a8e978e",
+        "branch": "codex/pr-001-platform-bootstrap",
+        "claimed_at": "2026-09-13",
+        "plan": "docs/execution/PR-001-PLAN.md",
+        "handoff": "docs/execution/PR-001-HANDOFF.md",
+        "evidence": []
+      }
     },
     {
       "id": "PR-002",
