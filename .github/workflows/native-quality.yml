@@ -52,4 +52,14 @@ jobs:
         shell: bash
         run: |
           git rev-parse HEAD
-          python tests/bootstrap_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_examples.exe' || 'linux-headless/omniweft_examples' }}"
+          python tests/bootstrap_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_examples.exe' || 'linux-headless/omniweft_examples' }}" --evidence-dir artifacts/bootstrap
+      - name: Retain bootstrap evidence and CTest log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4; official upstream pin
+        with:
+          name: bootstrap-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            artifacts/bootstrap/
+            build/*/Testing/Temporary/LastTest.log
+          if-no-files-found: error
+          retention-days: 7
