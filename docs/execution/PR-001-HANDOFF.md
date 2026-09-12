@@ -1,6 +1,6 @@
 # PR-001 execution handoff
 
-- Work item / state: **PR-001, in review**. Implementation and technical review are complete; the PR is not merged and the item is not done.
+- Work item / state: **PR-001, done**. The maintainer squash-merged [GitHub PR #4](https://github.com/xsparc/omniweft/pull/4) as `7283b8ad02b96195bb9e828b9945dc4c6c975c9a` at 2026-09-12T22:32:23Z; the user confirmed this and GitHub independently verified it. All four final-candidate checks and independent review passed.
 - Adopted scope: [2026-09-13 autonomous implementation instruction](AUTHORIZATION.md).
 - Branch / base: `codex/pr-001-platform-bootstrap`, from protected `main` at `58ca8f6`. Coordinator worktree: `D:\Projects\Local\agent_works\omniweft-pr-001`. The original checkout is preserved on `main`. Helper commits `fd9989169d4270e5f0b8bbee61a7cefb23a164e9` and `24a01a1576ecde7435508a79081597d3372d3cd5` are integrated; no helper work remains to merge.
 - PR: [GitHub PR #4](https://github.com/xsparc/omniweft/pull/4). Verified hosted snapshot PR head: `dc999fb1badaeabfcf206000856f30b6dfca469e`; GitHub tested its merge candidate `a395c3347995441b5fa3a2711f77b522ffb63130`. This closeout adds evidence metadata and documentation; consult the PR's current checks/artifact manifest for the final tip, not an older green run.
@@ -26,9 +26,8 @@ GPU/manual/physics/provider validation is **not applicable** to this headless sl
 
 ## Resumption and integration
 
-- Ownership/uncommitted work: coordinator alone owns the backlog and closeout. These changes are committed together; inspect live `git status`, branch HEAD, the PR and current checks on resumption and preserve any later user changes.
-- Next action: satisfy the existing maintainer merge-authority and contribution-certification gates, then integrate through the protected PR path only when all current planning/native checks and independent review remain satisfied.
-- Blocker: [routine merge authority](../AUTONOMOUS_DEVELOPMENT.md#merge-authority) and [an authorized contribution certification path](../../CONTRIBUTING.md#contribution-rights-and-ai-assistance) have not been adopted. No DCO sign-off or human approval was invented. These are the repository's explicit gates.
-- After an actual merge: record its real merge SHA and `done` state through a serialized ledger closeout, reconcile `main`, then claim PR-002. PR-002 is not eligible while PR-001 is unmerged.
-- Recurrence: hourly Codex heartbeat `develop-omniweft-incrementally` is active. It resumes this PR first and stays quiet when a blocker is unchanged.
-- Merge SHA: **none**. Follow-up: PR-002, versioned command schema, after recorded PR-001 completion.
+- Actual merge SHA: `7283b8ad02b96195bb9e828b9945dc4c6c975c9a`; merged by `xsparc` at 2026-09-12T22:32:23Z.
+- Final PR head `3076ba62a19bcb8ed7295ae0768db9d010fead9d` passed both native and planning lanes. Native [run 34708668541](https://github.com/xsparc/omniweft/actions/runs/34708668541) tested merge candidate `181a3973da918508be5d86aa09c0ad630a9d2194`; planning [run 34708668553](https://github.com/xsparc/omniweft/actions/runs/34708668553) passed both OSes. Downloaded manifests are also preserved in the prior coordinator's `artifacts/ci-3076ba6`.
+- The squash commit records AI coauthorship. No DCO sign-off is claimed or fabricated here; the maintainer's actual merge is recorded, and future contribution/merge policies remain in effect.
+- Next item: [PR-002](PR-002-PLAN.md), now eligible. Coordinator records this completion and PR-002's claim together on the new branch; no runtime source is changed by this bookkeeping.
+- Local worktrees are preserved. New local commands were not returning at the next kickoff, so remote branches and GitHub-hosted checks are used until command execution is available.
