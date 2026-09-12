@@ -207,8 +207,13 @@ def scenarios(max_slots=4):
 
 def check_state(name, actual, expected, actual_hex):
     assert_json(name, actual, expected)
+    for field in ("format_version", "seed", "max_slots", "world_revision"):
+        audit.require(type(actual[field]) is int, name+": integer "+field+" token")
     for item in actual["slots"]:
+        audit.require(type(item["generation"]) is int, name+": integer generation token")
         if item["entity"] is not None:
+            audit.require(type(item["entity"]["authoring_revision"]) is int,
+                          name+": integer entity authoring_revision token")
             value = item["entity"]["transform"]
             for number in [*value["position_m"], *value["rotation_xyzw"], *value["scale"]]:
                 audit.require(math.isfinite(number), name+": finite stored component")
@@ -224,6 +229,8 @@ def inspect_report(payload, cases, max_slots):
     audit.equal("objects report fields", sorted(report), ["example","results","schema_version","seed","verified"])
     for key,value in {"schema_version":1,"example":"objects.atomic","seed":7,"verified":True}.items():
         assert_json("objects report "+key,report[key],value)
+        if key in ("schema_version", "seed"):
+            audit.require(type(report[key]) is int, "objects report integer "+key+" token")
     audit.equal("objects one result per transaction",len(report["results"]),len(cases))
     before = empty(max_slots)
     for index,(case,result) in enumerate(zip(cases,report["results"])):
@@ -231,6 +238,7 @@ def inspect_report(payload, cases, max_slots):
         audit.equal(name+": result fields",sorted(result),
                     ["after","after_canonical_hex","before","before_canonical_hex","index","receipt"])
         audit.equal(name+": index",result["index"],index)
+        audit.require(type(result["index"]) is int, name+": integer result index token")
         check_state(name+": full-state before",result["before"],before,result["before_canonical_hex"])
         # State is asserted before receipt metadata so mutation failures name the actual rollback defect.
         check_state(name+": full-state after",result["after"],case["after"],result["after_canonical_hex"])
@@ -241,7 +249,10 @@ def inspect_report(payload, cases, max_slots):
         audit.equal(name+": volatility",receipt["durability"],"volatile")
         audit.equal(name+": transaction identity",receipt["transaction_id"],case["request"]["transaction_id"])
         audit.equal(name+": receipt revision",receipt["world_revision"],case["after"]["world_revision"])
+        audit.require(type(receipt["world_revision"]) is int, name+": integer receipt revision token")
         assert_json(name+": creation history",receipt["created"],case["created"])
+        for resolved in receipt["created"]:
+            audit.require(type(resolved["generation"]) is int, name+": integer resolved generation token")
         if case["code"] is None:
             audit.equal(name+": no errors",receipt["errors"],[])
         else:
@@ -256,6 +267,7 @@ def inspect_report(payload, cases, max_slots):
                 audit.equal(name+": error path",error["path"],case["path"])
             if case["operation_index"] is not None:
                 audit.equal(name+": operation index",error["operation_index"],case["operation_index"])
+                audit.require(type(error["operation_index"]) is int, name+": integer operation index token")
             audit.require(isinstance(error["message"],str) and bool(error["message"].strip()),name+": error explains rejection")
             assert_json(name+": rejected full state unchanged",result["after"],result["before"])
             audit.equal(name+": rejected bytes unchanged",result["after_canonical_hex"],result["before_canonical_hex"])
