@@ -99,6 +99,9 @@
           },
           {
             "$ref": "#/$defs/transform"
+          },
+          {
+            "$ref": "#/$defs/delete"
           }
         ]
       }
@@ -228,6 +231,33 @@
         },
         "scale": {
           "$ref": "#/$defs/vector3"
+        }
+      }
+    },
+    "delete": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "target",
+        "child_policy"
+      ],
+      "properties": {
+        "type": {
+          "const": "entity.delete"
+        },
+        "target": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/temporaryTarget"
+            },
+            {
+              "$ref": "#/$defs/durableTarget"
+            }
+          ]
+        },
+        "child_policy": {
+          "const": "reject_if_children"
         }
       }
     }

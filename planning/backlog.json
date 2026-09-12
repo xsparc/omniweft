@@ -42,7 +42,7 @@
     {
       "id": "PR-002",
       "title": "Versioned command schema",
-      "status": "in_review",
+      "status": "done",
       "milestone": "M1",
       "depends_on": [
         "PR-001"
@@ -65,8 +65,8 @@
         "handoff": "docs/execution/PR-002-HANDOFF.md",
         "claimed_at": "2026-09-13",
         "evidence": [
-          "https://github.com/xsparc/omniweft/actions/runs/34724298685",
-          "https://github.com/xsparc/omniweft/actions/runs/34724298524",
+          "https://github.com/xsparc/omniweft/actions/runs/34724489627",
+          "https://github.com/xsparc/omniweft/actions/runs/34724489605",
           "docs/execution/PR-002-HANDOFF.md"
         ],
         "pr_url": "https://github.com/xsparc/omniweft/pull/5",
@@ -77,13 +77,17 @@
         },
         "review": "Independent native source review accepted a4cfb4b after raw-NUL fix; integrated tests/workflow and hosted evidence reviewed before PR readiness. See handoff and current PR.",
         "functional_head": "873cfaff0243acb9409a5eda7c16d05ea58b1a46",
-        "tested_merge_candidate": "6aa5137e1d229a2c87f03e4305d57ee1d8eb79b8"
+        "tested_merge_candidate": "6aa5137e1d229a2c87f03e4305d57ee1d8eb79b8",
+        "merge_sha": "32e32ae19b5138231159fe961246dbcf5c8a88c2",
+        "merged_at": "2026-09-12T23:11:17Z",
+        "merged_by": "xsparc",
+        "completion_reference": "Heartbeat independently verified PR #5 merged through GitHub."
       }
     },
     {
       "id": "PR-003",
       "title": "Atomic object lifecycle and transforms",
-      "status": "proposed",
+      "status": "in_progress",
       "milestone": "M1",
       "depends_on": [
         "PR-002"
@@ -97,7 +101,16 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator, task 01a09699-3e74-7103-80e4-63d80a8e978e",
+        "branch": "codex/pr-003-atomic-objects",
+        "claimed_at": "2026-09-13",
+        "plan": "docs/execution/PR-003-PLAN.md",
+        "handoff": "docs/execution/PR-003-HANDOFF.md",
+        "evidence": []
+      }
     },
     {
       "id": "PR-004",
