@@ -2,6 +2,7 @@
 #if !defined(_M_X64) && !defined(__x86_64__)
 #error "Omniweft bootstrap requires an x86_64 compiler target; select x64 build tools."
 #endif
+#include "protocol_example.hpp"
 #include <charconv>
 #include <cstdint>
 #include <filesystem>
@@ -150,8 +151,13 @@ void save_result(const Options& options, const BootstrapSession& session) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
+  for (int index = 1; index + 1 < argc; ++index) {
+    if (std::string_view(argv[index]) == "--example" &&
+        std::string_view(argv[index + 1]) == "protocol.reject_invalid")
+      return run_protocol_example(argc, argv);
+  }
   if (argc == 2 && std::string_view(argv[1]) == "--help") {
-    std::cout << usage;
+    std::cout << usage << "Also available: --example protocol.reject_invalid with repeatable --input <json-file>.\n";
     return 0;
   }
   Options options;
