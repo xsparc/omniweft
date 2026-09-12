@@ -52,8 +52,9 @@ def preflight():
         observed[name] = {"path": path, "version": version}
         # cl /Bv returns 2 without a source file, but still identifies the compiler.
         allowed_codes = (0, 2) if name == "compiler" and target == "windows" else (0,)
-        if result.returncode not in allowed_codes or version != expected:
-            errors.append(f"{executable} pin mismatch: require {expected}, found {version} (exit {result.returncode}). Select the pinned tool or obtain review for a servicing-pin update.")
+        versions = [expected, *compiler.get("local_alternates", [])] if name == "compiler" else [expected]
+        if result.returncode not in allowed_codes or version not in versions:
+            errors.append(f"{executable} pin mismatch: require {versions}, found {version} (exit {result.returncode}). Select the pinned tool or obtain review for a servicing-pin update.")
     return errors, observed
 
 
