@@ -77,11 +77,13 @@
         },
         "review": "Independent native source review accepted a4cfb4b after raw-NUL fix; integrated tests/workflow and hosted evidence reviewed before PR readiness. See handoff and current PR.",
         "functional_head": "873cfaff0243acb9409a5eda7c16d05ea58b1a46",
-        "tested_merge_candidate": "6aa5137e1d229a2c87f03e4305d57ee1d8eb79b8",
+        "tested_merge_candidate": "a72b49d7ba03133c7cbb96a05d0aa92066f33040",
         "merge_sha": "32e32ae19b5138231159fe961246dbcf5c8a88c2",
         "merged_at": "2026-09-12T23:11:17Z",
         "merged_by": "xsparc",
-        "completion_reference": "Heartbeat independently verified PR #5 merged through GitHub."
+        "completion_reference": "Heartbeat independently verified PR #5 merged through GitHub.",
+        "functional_tested_merge_candidate": "6aa5137e1d229a2c87f03e4305d57ee1d8eb79b8",
+        "final_head": "38affa15cbe12f770b15f50badeb7a6ac1a8ae69"
       }
     },
     {
@@ -109,7 +111,8 @@
         "claimed_at": "2026-09-13",
         "plan": "docs/execution/PR-003-PLAN.md",
         "handoff": "docs/execution/PR-003-HANDOFF.md",
-        "evidence": []
+        "evidence": [],
+        "pr_url": "https://github.com/xsparc/omniweft/pull/6"
       }
     },
     {

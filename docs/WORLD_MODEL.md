@@ -1,6 +1,6 @@
 # World model and representation contracts
 
-Status: proposed schema design. The initial schema version is `0.1`; serialization is not implemented.
+Status: design baseline with PR-003's bounded root-object implementation. The command schema is `0.1`; [the PR-003 contract](execution/PR-003-PLAN.md) defines actual slot/generation, transform and diagnostic canonical-state behavior. World save packages, journals, hierarchy, geometry and physics remain proposed. See [current verification](execution/PR-003-HANDOFF.md).
 
 ## Authority and identity
 

@@ -1,6 +1,6 @@
 # Architecture
 
-Status: proposed. Nothing in this document implies implemented capabilities.
+Status: design baseline, incrementally implemented. PR-001 supplies the native shell; PR-002 supplies structural command parsing; PR-003 adds bounded atomic object execution. Consult [the current handoff](execution/PR-003-HANDOFF.md) for measured implementation state. Remaining runtime modules and product capabilities below are proposed.
 
 ## Runtime shape
 
@@ -49,9 +49,10 @@ Dependency versions are not selected by floating branch at configure time. PR-00
 | --- | --- | --- |
 | `ow_foundation` | IDs, math conventions, errors, clocks, jobs, bounded allocators | C++ standard library and audited tiny utilities |
 | `ow_world` | Entity/component storage, revisions, sparse volumes, image and mesh metadata | foundation |
-| `ow_commands` | Versioned schemas, authorization, transactions, receipts | world, foundation |
+| `ow_commands` | Versioned typed command schemas and structural validation | foundation |
+| `ow_transactions` | Atomic authoring coordinator and volatile receipts; later admission/policy integration | commands, world, foundation |
 | `ow_assets` | Hash-addressed blobs, import validation, provenance, cooking | foundation, world schema |
-| `ow_simulation` | Tick ordering, state transitions, controller fallback | commands, world |
+| `ow_simulation` | Tick ordering, state transitions, controller fallback | transactions, commands, world |
 | `ow_physics` | Solver handles, body/constraint caches, collision cooking | simulation contracts, Jolt |
 | `ow_geometry` | Mesh/voxel operations, extraction, derived geometry | world, assets, jobs |
 | `ow_render` | Render graph, GPU resources, material compilation, readback | presentation schema, assets, SDL/Vulkan adapters |

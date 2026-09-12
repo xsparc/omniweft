@@ -32,8 +32,17 @@ target_include_directories(ow_commands PUBLIC include)
 target_include_directories(ow_commands SYSTEM PRIVATE third_party)
 ow_native_policy(ow_commands)
 
-add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp)
-target_link_libraries(omniweft_examples PRIVATE ow_commands)
+add_library(ow_world STATIC src/world.cpp)
+target_include_directories(ow_world PUBLIC include)
+ow_native_policy(ow_world)
+
+add_library(ow_transactions STATIC src/transactions.cpp)
+target_link_libraries(ow_transactions PUBLIC ow_world ow_commands)
+target_include_directories(ow_transactions PUBLIC include)
+ow_native_policy(ow_transactions)
+
+add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp)
+target_link_libraries(omniweft_examples PRIVATE ow_transactions)
 target_include_directories(omniweft_examples SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_examples)
 
@@ -58,4 +67,13 @@ if(BUILD_TESTING)
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/protocol_oracle.py"
       --executable "$<TARGET_FILE:omniweft_examples>")
   set_tests_properties(protocol.native protocol.reject_invalid PROPERTIES TIMEOUT 60)
+
+  add_executable(objects_native_test tests/objects_native_test.cpp)
+  target_link_libraries(objects_native_test PRIVATE ow_transactions)
+  ow_native_policy(objects_native_test)
+  add_test(NAME objects.native COMMAND objects_native_test)
+  add_test(NAME objects.atomic
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/objects_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_examples>")
+  set_tests_properties(objects.native objects.atomic PROPERTIES TIMEOUT 120)
 endif()

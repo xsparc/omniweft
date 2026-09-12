@@ -58,7 +58,12 @@ struct TransformSet {
   std::array<double, 3> scale{1.0, 1.0, 1.0};
   bool operator==(const TransformSet&) const = default;
 };
-using Operation = std::variant<EntityCreate, TransformSet>;
+struct EntityDelete {
+  Target target;
+  std::string child_policy = "reject_if_children";
+  bool operator==(const EntityDelete&) const = default;
+};
+using Operation = std::variant<EntityCreate, TransformSet, EntityDelete>;
 struct Envelope {
   std::string protocol_version = "0.1";
   std::string world_id;

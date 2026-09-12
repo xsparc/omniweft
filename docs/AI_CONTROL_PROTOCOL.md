@@ -1,6 +1,8 @@
 # AI control protocol
 
-Status: PR-002 defines the [authoritative schema 0.1 envelope](../schemas/protocol-0.1.schema.json) and native structural parse/serialize API; see [its handoff](execution/PR-002-HANDOFF.md) for current verification and integration state. Server endpoints, authentication, transaction admission and SDK remain proposed. A `schema_valid` result does not authorize or apply a transaction.
+Status: PR-002 defines the [authoritative schema 0.1 envelope](../schemas/protocol-0.1.schema.json) and native structural parse/serialize API; see [its handoff](execution/PR-002-HANDOFF.md) for current verification and integration state. PR-003 adds `entity.delete` with required `child_policy: "reject_if_children"` and a synchronous trusted-host atomic execution boundary. PR-002-era readers reject that additive operation as `UNSUPPORTED_OPERATION`; all earlier envelope meanings remain unchanged. Server endpoints, authentication, transaction admission and SDK remain proposed. A `schema_valid` result alone does not authorize or apply a transaction.
+
+The [PR-003 execution contract](execution/PR-003-PLAN.md) is limited to immediate single-owner-thread root-object transactions and volatile receipts. Envelope idempotency/scheduling metadata does not establish epoch admission, deduplication or queued deadline behavior at this internal boundary. Future gateway admission must enforce those contracts before invoking the executor.
 
 ## Control loop
 

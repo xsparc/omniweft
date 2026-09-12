@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- PR-003: bounded atomic root-object creation, transforms and deletion; complete-state rollback and generation reuse evidence (see execution handoff for checks and merge state).
+
 - Adopted recurring incremental implementation with isolated PR ownership and durable handoffs.
 - PR-001: merged native headless lifecycle fixture, pinned build tools and independent CPU verification.
 - PR-002: typed schema 0.1 envelopes, structural validation, stable round-trip serialization, bounded hostile-input and recovery fixtures (see execution handoff for checks and merge state).
