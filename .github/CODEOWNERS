@@ -1,0 +1,7 @@
+# Real initial owner; additional subsystem owners require accepted appointment.
+* @xsparc
+/.github/ @xsparc
+/AGENTS.md @xsparc
+/LICENSE @xsparc
+/GOVERNANCE.md @xsparc
+/docs/adr/ @xsparc

@@ -1,0 +1,800 @@
+{
+  "schema_version": 1,
+  "project": "Omniweft",
+  "phase": "design",
+  "items": [
+    {
+      "id": "PR-001",
+      "title": "Buildable Windows/Linux project shell",
+      "status": "proposed",
+      "milestone": "M1",
+      "depends_on": [],
+      "example": "platform.bootstrap",
+      "example_spec": "examples/platform-bootstrap.md",
+      "acceptance": "Configure, build and run a headless start/exit example on both target OSes; pin compiler/dependency versions and licenses.",
+      "negative_case": "Missing tools and unsupported graphics capabilities produce actionable diagnostics; headless build needs no GPU.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-002",
+      "title": "Versioned command schema",
+      "status": "proposed",
+      "milestone": "M1",
+      "depends_on": [
+        "PR-001"
+      ],
+      "example": "protocol.reject_invalid",
+      "example_spec": "examples/protocol-reject_invalid.md",
+      "acceptance": "Round-trip a known valid envelope and return structured validation results for schema 0.1.",
+      "negative_case": "Malformed, unknown-version, oversized, deeply nested and non-finite input is rejected without world mutation.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-003",
+      "title": "Atomic object lifecycle and transforms",
+      "status": "proposed",
+      "milestone": "M1",
+      "depends_on": [
+        "PR-002"
+      ],
+      "example": "objects.atomic",
+      "example_spec": "examples/objects-atomic.md",
+      "acceptance": "Create two entities and apply transforms in one transaction. Then modify a pre-existing object's transform before an invalid final operation and assert that the entire canonical authoring state, entity identities/count and revision match the pretransaction snapshot.",
+      "negative_case": "Deleted generations and invalid temporary references fail without partial creation.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-004",
+      "title": "Vulkan presentation of world objects",
+      "status": "proposed",
+      "milestone": "M1",
+      "depends_on": [
+        "PR-003"
+      ],
+      "example": "render.world_cube",
+      "example_spec": "examples/render-world_cube.md",
+      "acceptance": "Present a cube from a committed snapshot and show a transformed subsequent revision; record actual device and validation output.",
+      "negative_case": "Resize/minimize and unsupported device startup remain controlled; no use-after-free on resource retirement.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-005",
+      "title": "Authenticated local Python SDK",
+      "status": "proposed",
+      "milestone": "M1",
+      "depends_on": [
+        "PR-003"
+      ],
+      "example": "sdk.move_cube",
+      "example_spec": "examples/sdk-move_cube.md",
+      "acceptance": "Negotiate protocol, create/move/query an object through a separate Python process, and receive typed receipts.",
+      "negative_case": "Missing/wrong token, forbidden Origin, incompatible version and an expired session cannot mutate the world.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-006",
+      "title": "Fixed-step loop and scripted provider",
+      "status": "proposed",
+      "milestone": "M1",
+      "depends_on": [
+        "PR-004",
+        "PR-005"
+      ],
+      "example": "agents.mock_builder",
+      "example_spec": "examples/agents-mock_builder.md",
+      "acceptance": "A fixed seed builds the same known object arrangement and canonical authoring hashes through the public SDK.",
+      "negative_case": "Provider delay does not stop fixed-step progress; capped catch-up reports overload.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-007",
+      "title": "Capabilities and resource budgets",
+      "status": "proposed",
+      "milestone": "M1",
+      "depends_on": [
+        "PR-005",
+        "PR-006"
+      ],
+      "example": "policy.denied_edits",
+      "example_spec": "examples/policy-denied_edits.md",
+      "acceptance": "Permit a scoped edit while enforcing per-principal operations, memory, observation and queue limits.",
+      "negative_case": "Foreign-region edits, allocation amplification and repeated rejected batches neither mutate nor leak quota.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-008",
+      "title": "Offline AI blocks showcase",
+      "status": "proposed",
+      "milestone": "M1",
+      "depends_on": [
+        "PR-004",
+        "PR-006",
+        "PR-007"
+      ],
+      "example": "showcase.ai_blocks",
+      "example_spec": "examples/showcase-ai_blocks.md",
+      "acceptance": "A scripted agent builds and rearranges a visible room through the public SDK; exact object assertions and GPU evidence agree.",
+      "negative_case": "Reject one intentional invalid plan and continue the scene with the previous state intact.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-009",
+      "title": "Hierarchy and reparenting",
+      "status": "proposed",
+      "milestone": "M2",
+      "depends_on": [
+        "PR-003"
+      ],
+      "example": "objects.hierarchy",
+      "example_spec": "examples/objects-hierarchy.md",
+      "acceptance": "Preserve-world and preserve-local reparent operations give independently calculated transforms.",
+      "negative_case": "Reject cycles and ambiguous parent deletion; stale child handles do not target reused storage. Once physical bodies exist, reject dynamic-body parenting and inherited collider scaling.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-010",
+      "title": "Bounded semantic and spatial queries",
+      "status": "proposed",
+      "milestone": "M2",
+      "depends_on": [
+        "PR-007",
+        "PR-009"
+      ],
+      "example": "observe.semantic_query",
+      "example_spec": "examples/observe-semantic_query.md",
+      "acceptance": "Return the exact fixture set for tag/AABB filters with stable pagination and permission filtering.",
+      "negative_case": "Response-size limits and inaccessible objects do not leak data; expired snapshot cursor requires resync.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-011",
+      "title": "Concurrency and idempotent retries",
+      "status": "proposed",
+      "milestone": "M2",
+      "depends_on": [
+        "PR-007",
+        "PR-010"
+      ],
+      "example": "agents.contention",
+      "example_spec": "examples/agents-contention.md",
+      "acceptance": "Two proposals from the same revision yield one commit and one explicit conflict; duplicate identical keys reuse the receipt.",
+      "negative_case": "A changed payload under the same key is rejected; expired keys force resync instead of guessing. After receipt compaction or epoch rotation, retry an old sequence and prove it requires resync instead of applying again.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-012",
+      "title": "Authoring undo and redo",
+      "status": "proposed",
+      "milestone": "M2",
+      "depends_on": [
+        "PR-009",
+        "PR-011"
+      ],
+      "example": "world.undo_chain",
+      "example_spec": "examples/world-undo_chain.md",
+      "acceptance": "Undo/redo a supported edit chain to exact canonical authoring states using inverse transactions.",
+      "negative_case": "A stale inverse and a request to undo elapsed physical time fail explicitly.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-013",
+      "title": "Recorded command replay",
+      "status": "proposed",
+      "milestone": "M2",
+      "depends_on": [
+        "PR-006",
+        "PR-011",
+        "PR-012"
+      ],
+      "example": "world.replay",
+      "example_spec": "examples/world-replay.md",
+      "acceptance": "Replay accepted command order from recorded assets/seeds and match exact nonphysics checkpoints.",
+      "negative_case": "Corrupt log, unknown required schema and missing asset fail before unsafe application. Assert identical resolved entity UUID/generation mappings, not only equivalent transforms.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-014",
+      "title": "Crash-safe persistence and recovery",
+      "status": "proposed",
+      "milestone": "M2",
+      "depends_on": [
+        "PR-013"
+      ],
+      "example": "world.crash_recovery",
+      "example_spec": "examples/world-crash_recovery.md",
+      "acceptance": "Inject termination at journal/snapshot boundaries; recover the last durable commit exactly once with stable entity IDs.",
+      "negative_case": "Truncated package, exhausted disk quota and hash mismatch preserve the last-known-good world. Crash immediately before/after durable acknowledgement and during compaction; restore durable epoch/watermarks and discover unacknowledged durable edits.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-015",
+      "title": "Agent lifecycle and cancellation",
+      "status": "proposed",
+      "milestone": "M2",
+      "depends_on": [
+        "PR-007",
+        "PR-011",
+        "PR-014"
+      ],
+      "example": "agents.worker_failure",
+      "example_spec": "examples/agents-worker_failure.md",
+      "acceptance": "Timeout, cancel, crash and restart a worker while simulation remains responsive and statuses remain queryable.",
+      "negative_case": "Late results from a superseded request never commit; retry after uncertain disconnect does not duplicate work.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-016",
+      "title": "Content-addressed assets and provenance",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-003",
+        "PR-014"
+      ],
+      "example": "assets.roundtrip",
+      "example_spec": "examples/assets-roundtrip.md",
+      "acceptance": "Round-trip a generated fixture with content hash, source/license manifest and deduplication.",
+      "negative_case": "Reject missing blobs, traversal paths, decompression limits and wrong hashes; history roots prevent premature collection.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-017",
+      "title": "Bounded glTF mesh import",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-016"
+      ],
+      "example": "meshes.import_gltf",
+      "example_spec": "examples/meshes-import_gltf.md",
+      "acceptance": "Import a tiny generated GLB and verify known vertices, indices, transforms, bounds and material references.",
+      "negative_case": "Invalid indices, non-finite attributes, unsupported required extensions and oversized resources fail cleanly.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-018",
+      "title": "Materials and texture rendering",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-004",
+        "PR-016",
+        "PR-017"
+      ],
+      "example": "render.materials",
+      "example_spec": "examples/render-materials.md",
+      "acceptance": "Display a known material/texture on the intended object; controlled GPU readback and tolerant reference match pass.",
+      "negative_case": "Missing texture has a visible diagnostic/fallback; color-space and descriptor-lifetime checks pass.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-019",
+      "title": "Versioned mesh vertex edits",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-017"
+      ],
+      "example": "meshes.deform",
+      "example_spec": "examples/meshes-deform.md",
+      "acceptance": "Edit a selected vertex set and verify exact intended positions, recomputed bounds and unchanged untargeted data.",
+      "negative_case": "Stale topology revision, NaN and out-of-range elements reject the whole edit.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-020",
+      "title": "Bounded mesh topology edits",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-012",
+        "PR-019"
+      ],
+      "example": "meshes.cut_and_restore",
+      "example_spec": "examples/meshes-cut_and_restore.md",
+      "acceptance": "Add/remove a bounded face selection with valid indices and an explicit element remap or invalidation; undo restores source data.",
+      "negative_case": "Invalid topology under the supported policy and stale element IDs cannot create corrupt assets.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-021",
+      "title": "Exact texture region edits",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-016",
+        "PR-018"
+      ],
+      "example": "pixels.paint_region",
+      "example_spec": "examples/pixels-paint_region.md",
+      "acceptance": "Write a known RGBA8 rectangle, verify exact bytes and untouched neighbors, then verify bounded GPU upload/readback.",
+      "negative_case": "Reject invalid format, row pitch, bounds, stale revision and oversize writes without partial texture changes.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-022",
+      "title": "Approved GPU image kernel",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-021"
+      ],
+      "example": "pixels.compute_filter",
+      "example_spec": "examples/pixels-compute_filter.md",
+      "acceptance": "Run one fixed integer-compatible filter with bounded dispatch and compare GPU output to an independent CPU reference.",
+      "negative_case": "Unsupported dimensions, out-of-bounds dispatch and missing synchronization are caught; generated shader code is not accepted.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-023",
+      "title": "Sparse voxel storage and edits",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-003",
+        "PR-016"
+      ],
+      "example": "voxels.edit_boundary",
+      "example_spec": "examples/voxels-edit_boundary.md",
+      "acceptance": "Fill/carve/paint across positive and negative chunk boundaries; verify exact cells, revisions and persistence.",
+      "negative_case": "Bounds/allocation overflow and conflicting chunk revisions reject the batch without allocating unbounded chunks.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-024",
+      "title": "Voxel surface extraction",
+      "status": "proposed",
+      "milestone": "M3",
+      "depends_on": [
+        "PR-004",
+        "PR-023"
+      ],
+      "example": "voxels.surface_update",
+      "example_spec": "examples/voxels-surface_update.md",
+      "acceptance": "Update affected chunk/neighbor surfaces and display them; fixture faces and seams match known occupancy.",
+      "negative_case": "Boundary edit cannot leave stale neighbor faces; cancellation drops obsolete meshing output.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-025",
+      "title": "Rigid-body solver adapter",
+      "status": "proposed",
+      "milestone": "M4",
+      "depends_on": [
+        "PR-003",
+        "PR-013"
+      ],
+      "example": "physics.drop_stack",
+      "example_spec": "examples/physics-drop_stack.md",
+      "acceptance": "Run primitive bodies on static ground at a fixed step; verify contact/support and declared penetration tolerance.",
+      "negative_case": "Invalid mass/shape, NaN and stale solver mappings fail; lifecycle restore has no orphan bodies.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-026",
+      "title": "Forces, impulses and body state",
+      "status": "proposed",
+      "milestone": "M4",
+      "depends_on": [
+        "PR-007",
+        "PR-025"
+      ],
+      "example": "physics.agent_push",
+      "example_spec": "examples/physics-agent_push.md",
+      "acceptance": "Apply an isolated impulse with known mass and expected velocity within tolerance, plus a sustained-force fixture.",
+      "negative_case": "Unauthorized physical actions, invalid vectors and expired tick windows fail; sleeping bodies wake as specified.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-027",
+      "title": "Versioned asynchronous collider cooking",
+      "status": "proposed",
+      "milestone": "M4",
+      "depends_on": [
+        "PR-017",
+        "PR-020",
+        "PR-024",
+        "PR-025"
+      ],
+      "example": "physics.cook_versions",
+      "example_spec": "examples/physics-cook_versions.md",
+      "acceptance": "Cook supported static/convex geometry off-thread and stage the matching revision for publication.",
+      "negative_case": "A superseded or failed cook never replaces the current collider; staged allocations are reclaimed.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-028",
+      "title": "Atomic publication of physical edits",
+      "status": "proposed",
+      "milestone": "M4",
+      "depends_on": [
+        "PR-012",
+        "PR-026",
+        "PR-027"
+      ],
+      "example": "physics.edit_active_body",
+      "example_spec": "examples/physics-edit_active_body.md",
+      "acceptance": "Publish static terrain or supported convex replacement and collider together; verify raycasts, wake and mass/velocity policy.",
+      "negative_case": "Reject unsupported dynamic concave edits and invalid overlap; no visual/collision revision mismatch.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-029",
+      "title": "Camera, depth and object observations",
+      "status": "proposed",
+      "milestone": "M4",
+      "depends_on": [
+        "PR-010",
+        "PR-018",
+        "PR-024"
+      ],
+      "example": "observe.camera_frame",
+      "example_spec": "examples/observe-camera_frame.md",
+      "acceptance": "Read a bounded color/depth/object-ID region with view, frame, camera, tick and revision metadata; known picking hits match world IDs.",
+      "negative_case": "Stale-frame selections and denied/oversized observations fail without blocking rendering.",
+      "lanes": [
+        "cpu",
+        "gpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-030",
+      "title": "Optional model-provider adapter",
+      "status": "proposed",
+      "milestone": "M4",
+      "depends_on": [
+        "PR-005",
+        "PR-007",
+        "PR-015",
+        "PR-029"
+      ],
+      "example": "agents.provider_bridge",
+      "example_spec": "examples/agents-provider_bridge.md",
+      "acceptance": "Replay recorded provider proposals offline through the same validation API; identify adapter/model and redact diagnostics.",
+      "negative_case": "Malformed output, prompt-injected labels, timeout and cost ceiling cannot bypass capabilities or freeze simulation.",
+      "lanes": [
+        "cpu",
+        "optional-provider"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-031",
+      "title": "Isolated speculative world branches",
+      "status": "proposed",
+      "milestone": "M5",
+      "depends_on": [
+        "PR-014",
+        "PR-016",
+        "PR-028"
+      ],
+      "example": "world.speculate",
+      "example_spec": "examples/world-speculate.md",
+      "acceptance": "Edit and save a copy-on-write branch with its own world identity while the live world remains unchanged.",
+      "negative_case": "Branch quota/cancel failures reclaim resources without collecting assets retained by live state or history.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-032",
+      "title": "Explicit branch diff and merge",
+      "status": "proposed",
+      "milestone": "M5",
+      "depends_on": [
+        "PR-011",
+        "PR-031"
+      ],
+      "example": "world.merge_conflict",
+      "example_spec": "examples/world-merge_conflict.md",
+      "acceptance": "Merge disjoint supported edits using explicit base/live/branch revisions and preserve untouched live data.",
+      "negative_case": "Conflicting edit/delete cases return a diff; failed merge changes nothing and never uses silent last-writer-wins.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-033",
+      "title": "Minimal inspector and plan preview",
+      "status": "proposed",
+      "milestone": "M5",
+      "depends_on": [
+        "PR-008",
+        "PR-010",
+        "PR-032"
+      ],
+      "example": "editor.inspect_transaction",
+      "example_spec": "examples/editor-inspect_transaction.md",
+      "acceptance": "Select an entity, inspect revisions/permissions, preview a plan, commit/deny it and follow its actual receipt.",
+      "negative_case": "UI does not report success for generated text or queued work; stale preview requires refresh.",
+      "lanes": [
+        "cpu",
+        "gpu",
+        "manual"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-034",
+      "title": "Human interaction through command API",
+      "status": "proposed",
+      "milestone": "M5",
+      "depends_on": [
+        "PR-004",
+        "PR-009",
+        "PR-025",
+        "PR-029"
+      ],
+      "example": "interaction.pick_and_move",
+      "example_spec": "examples/interaction-pick_and_move.md",
+      "acceptance": "Pick/focus/move an object with documented input controls; user and AI actions use the same revision and authority rules.",
+      "negative_case": "Competing edits conflict clearly; input focus and remapping prevent accidental world actions while typing.",
+      "lanes": [
+        "cpu",
+        "gpu",
+        "manual"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-035",
+      "title": "Reproducible performance harness",
+      "status": "proposed",
+      "milestone": "M5",
+      "depends_on": [
+        "PR-022",
+        "PR-024",
+        "PR-028",
+        "PR-029"
+      ],
+      "example": "bench.core_workloads",
+      "example_spec": "examples/bench-core_workloads.md",
+      "acceptance": "Run the fixed workload with warm-up and repeated samples; emit p50/p95/p99, memory and hardware/driver manifest.",
+      "negative_case": "Missing measurements or changed workloads invalidate comparisons; failures cannot silently rewrite baselines.",
+      "lanes": [
+        "cpu",
+        "gpu",
+        "benchmark"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-036",
+      "title": "Adversarial operation and recovery harness",
+      "status": "proposed",
+      "milestone": "M5",
+      "depends_on": [
+        "PR-014",
+        "PR-015",
+        "PR-020",
+        "PR-021",
+        "PR-023",
+        "PR-028",
+        "PR-032"
+      ],
+      "example": "quality.hostile_session",
+      "example_spec": "examples/quality-hostile_session.md",
+      "acceptance": "Seeded malformed sessions, allocation failures and restart injection preserve state, quotas and authority invariants under supported sanitizers.",
+      "negative_case": "Retain minimized failing seeds and detect deliberate regression mutations in validators and commit paths.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-037",
+      "title": "Living Workshop integration",
+      "status": "proposed",
+      "milestone": "M5",
+      "depends_on": [
+        "PR-028",
+        "PR-030",
+        "PR-032",
+        "PR-033",
+        "PR-034",
+        "PR-036"
+      ],
+      "example": "showcase.world_workshop",
+      "example_spec": "examples/showcase-world_workshop.md",
+      "acceptance": "Complete the courtyard/ramp/blocks/sign/mesh scenario offline through public APIs, then save/replay and recover worker failure.",
+      "negative_case": "An over-budget plan and stale geometry edit leave the workshop consistent and usable.",
+      "lanes": [
+        "cpu",
+        "gpu",
+        "manual"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "PR-038",
+      "title": "Developer-preview packaging",
+      "status": "proposed",
+      "milestone": "M5",
+      "depends_on": [
+        "PR-035",
+        "PR-037"
+      ],
+      "example": "release.clean_machine",
+      "example_spec": "examples/release-clean_machine.md",
+      "acceptance": "Package and launch headless/editor/SDK/examples on clean Windows/Linux machines; verify checksums, licenses/SBOM and documented install.",
+      "negative_case": "Missing mandatory runtime files or notices block packaging; no secrets, proprietary fixtures or unverified release claims.",
+      "lanes": [
+        "cpu",
+        "gpu",
+        "manual"
+      ],
+      "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
+      "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    }
+  ]
+}

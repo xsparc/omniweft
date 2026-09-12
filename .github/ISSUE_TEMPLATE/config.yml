@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and design discussion
+    url: https://github.com/xsparc/omniweft/discussions
+    about: Discuss architecture, usage and contributor coordination.
+  - name: Private vulnerability report
+    url: https://github.com/xsparc/omniweft/security/advisories/new
+    about: Report suspected vulnerabilities privately.
