@@ -42,7 +42,7 @@
     {
       "id": "PR-002",
       "title": "Versioned command schema",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [
         "PR-001"
@@ -64,13 +64,20 @@
         "plan": "docs/execution/PR-002-PLAN.md",
         "handoff": "docs/execution/PR-002-HANDOFF.md",
         "claimed_at": "2026-09-13",
-        "evidence": [],
+        "evidence": [
+          "https://github.com/xsparc/omniweft/actions/runs/34724298685",
+          "https://github.com/xsparc/omniweft/actions/runs/34724298524",
+          "docs/execution/PR-002-HANDOFF.md"
+        ],
         "pr_url": "https://github.com/xsparc/omniweft/pull/5",
         "independent_contract_review": {
           "reviewer": "bootstrap_architecture",
           "commit": "4a90580e384291b1097006607277abd1763b4f75",
           "result": "no actionable findings"
-        }
+        },
+        "review": "Independent native source review accepted a4cfb4b after raw-NUL fix; integrated tests/workflow and hosted evidence reviewed before PR readiness. See handoff and current PR.",
+        "functional_head": "873cfaff0243acb9409a5eda7c16d05ea58b1a46",
+        "tested_merge_candidate": "6aa5137e1d229a2c87f03e4305d57ee1d8eb79b8"
       }
     },
     {

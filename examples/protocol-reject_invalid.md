@@ -1,6 +1,6 @@
 # protocol.reject_invalid
 
-Status: **implementation in progress; verification and merge pending**. Work item: **PR-002 — Versioned command schema**.
+Status: **implemented and verified in PR-002; merge pending**. Work item: **PR-002 — Versioned command schema**.
 
 Dependencies: PR-001. Validation lanes: cpu.
 
@@ -44,4 +44,4 @@ Record exact candidate SHA, commands, environment, seed, assertions, results, ar
 
 Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.
 
-The independent Python oracle checks field values and rejection outcomes using its own fixtures; the native fixture directly checks typed non-finite serialization. Hosted Windows/Linux jobs retain candidate, command, assertion and artifact evidence. [The handoff](../docs/execution/PR-002-HANDOFF.md) distinguishes observed results from pending checks; local execution is currently unavailable. The [roadmap](../docs/ROADMAP.md) and [backlog](../planning/backlog.json) retain the same work-item and example IDs.
+Observed functional checks at `873cfaff0243acb9409a5eda7c16d05ea58b1a46`: Windows/Linux CTest 4/4, 150 byte cases, 17 stable round-trips, three built-in outcomes and a successful deliberate-validator mutation proof. The independent Python oracle checks field values and rejection outcomes using its own fixtures; the native fixture directly checks typed non-finite serialization. Hosted Windows/Linux jobs retain candidate, command, assertion and artifact evidence. [The handoff](../docs/execution/PR-002-HANDOFF.md) distinguishes observed results from pending checks; local execution is currently unavailable. The [roadmap](../docs/ROADMAP.md) and [backlog](../planning/backlog.json) retain the same work-item and example IDs.
