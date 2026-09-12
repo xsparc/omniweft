@@ -73,6 +73,10 @@ def make_cases(valid, expected):
     accepted("valid-first", raw=valid)
     changed("unknown-version", ("protocol_version",), "0.2", "UNSUPPORTED_VERSION")
     accepted("valid-after-rejection", raw=valid)
+    rejected("raw-nul-after-valid", valid+b"\x00", "INVALID_SCHEMA")
+    accepted("valid-after-raw-nul", raw=valid)
+    rejected("raw-nul-before-garbage", valid+b"\x00unparsed-garbage", "INVALID_SCHEMA")
+    accepted("valid-after-nul-garbage", raw=valid)
     for name, raw in [("empty", b""), ("truncated", compact[:-1]), ("trailing-data", compact+b" false"),
                       ("comment", b"//comment\n"+compact),
                       ("trailing-comma", compact[:-1]+b",}"),
@@ -202,6 +206,17 @@ def make_cases(valid, expected):
     finite_edges["operations"][1]["rotation_xyzw"] = [0.0, 0.0, 0.0, 0.0]
     finite_edges["operations"][1]["scale"] = [-1.0, 0.0, 1.0]
     accepted("finite-limits-execution-invariants-deferred", finite_edges)
+    durable = copy.deepcopy(expected)
+    durable["operations"][1]["target"] = {
+        "world_id": "workshop", "entity_uuid": "ffffffff-ffff-ffff-ffff-ffffffffffff", "generation": 0}
+    for label, value in [("boolean", True), ("null", None), ("string", "1"),
+                         ("negative", -1), ("fraction", 1.5), ("overflow", UINT64_MAX+1)]:
+        item = copy.deepcopy(durable)
+        item["operations"][1]["target"]["generation"] = value
+        rejected("generation-"+label, encoded(item), "INVALID_SCHEMA", "/operations/1/target/generation")
+    for label, token in [("decimal", b"1.0"), ("exponent", b"1e0")]:
+        rejected("generation-"+label, encoded(durable).replace(b'"generation":0', b'"generation":'+token),
+                 "INVALID_SCHEMA", "/operations/1/target/generation")
     return cases
 
 def inspect_report(payload, cases):
