@@ -36,6 +36,6 @@ struct Receipt {
 // Trusted host boundary only: no authentication, scheduling or exactly-once admission.
 class Coordinator {
  public:
-  static Receipt apply_at_boundary(world::World& world, const commands::Envelope& envelope);
+  static Receipt apply_at_boundary(world::World& target_world, const commands::Envelope& envelope);
 };
 }  // namespace ow::transactions

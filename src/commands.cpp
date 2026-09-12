@@ -131,6 +131,26 @@ std::string uuid(const Json& value, const std::string& path) {
   }
   return text;
 }
+Target target_value(const Json& target, const std::string& path) {
+  if (target.is_object() && target.contains("temporary_id")) {
+    fields(target, path, {"temporary_id"});
+    return TemporaryTarget{identifier(target["temporary_id"], child(path, "temporary_id"), 64)};
+  }
+  fields(target, path, {"world_id", "entity_uuid", "generation"});
+  return EntityTarget{
+    identifier(target["world_id"], child(path, "world_id")),
+    uuid(target["entity_uuid"], child(path, "entity_uuid")),
+    unsigned_integer(target["generation"], child(path, "generation"))};
+}
+Json target_json(const Target& target) {
+  return std::visit([](const auto& reference) -> Json {
+    using Reference = std::decay_t<decltype(reference)>;
+    if constexpr (std::is_same_v<Reference, TemporaryTarget>)
+      return {{"temporary_id", reference.temporary_id}};
+    else
+      return {{"world_id", reference.world_id}, {"entity_uuid", reference.entity_uuid}, {"generation", reference.generation}};
+  }, target);
+}
 Envelope convert(const Json& value) {
   fields(value, "", {"protocol_version", "world_id", "transaction_id", "idempotency",
                      "expected_world_revision", "apply_at", "budget", "operations"});
@@ -177,22 +197,17 @@ Envelope convert(const Json& value) {
     } else if (type == "transform.set") {
       fields(operation, path, {"type", "target", "position_m", "rotation_xyzw", "scale"});
       TransformSet transform;
-      const auto& target = operation["target"];
-      const auto target_path = child(path, "target");
-      if (target.is_object() && target.contains("temporary_id")) {
-        fields(target, target_path, {"temporary_id"});
-        transform.target = TemporaryTarget{identifier(target["temporary_id"], child(target_path, "temporary_id"), 64)};
-      } else {
-        fields(target, target_path, {"world_id", "entity_uuid", "generation"});
-        transform.target = EntityTarget{
-          identifier(target["world_id"], child(target_path, "world_id")),
-          uuid(target["entity_uuid"], child(target_path, "entity_uuid")),
-          unsigned_integer(target["generation"], child(target_path, "generation"))};
-      }
+      transform.target = target_value(operation["target"], child(path, "target"));
       transform.position_m = vector_value<3>(operation["position_m"], child(path, "position_m"));
       transform.rotation_xyzw = vector_value<4>(operation["rotation_xyzw"], child(path, "rotation_xyzw"));
       transform.scale = vector_value<3>(operation["scale"], child(path, "scale"));
       envelope.operations.emplace_back(std::move(transform));
+    } else if (type == "entity.delete") {
+      fields(operation, path, {"type", "target", "child_policy"});
+      if (!operation["child_policy"].is_string() || operation["child_policy"] != "reject_if_children")
+        reject("INVALID_SCHEMA", child(path, "child_policy"), "Only reject_if_children deletion is supported.");
+      envelope.operations.emplace_back(EntityDelete{
+        target_value(operation["target"], child(path, "target")), "reject_if_children"});
     } else {
       reject("UNSUPPORTED_OPERATION", child(path, "type"), "Operation type is not supported by schema 0.1.");
     }
@@ -239,20 +254,16 @@ SerializeResult serialize(const Envelope& envelope) {
         using Type = std::decay_t<decltype(operation)>;
         if constexpr (std::is_same_v<Type, EntityCreate>) {
           value["operations"].push_back({{"type", "entity.create"}, {"temporary_id", operation.temporary_id}, {"prefab", operation.prefab}});
-        } else {
+        } else if constexpr (std::is_same_v<Type, TransformSet>) {
           finite_vector(operation.position_m, child(path, "position_m"));
           finite_vector(operation.rotation_xyzw, child(path, "rotation_xyzw"));
           finite_vector(operation.scale, child(path, "scale"));
-          Json target;
-          std::visit([&](const auto& reference) {
-            using Reference = std::decay_t<decltype(reference)>;
-            if constexpr (std::is_same_v<Reference, TemporaryTarget>)
-              target = {{"temporary_id", reference.temporary_id}};
-            else
-              target = {{"world_id", reference.world_id}, {"entity_uuid", reference.entity_uuid}, {"generation", reference.generation}};
-          }, operation.target);
+          const auto target = target_json(operation.target);
           value["operations"].push_back({{"type", "transform.set"}, {"target", target},
             {"position_m", operation.position_m}, {"rotation_xyzw", operation.rotation_xyzw}, {"scale", operation.scale}});
+        } else {
+          value["operations"].push_back({{"type", "entity.delete"}, {"target", target_json(operation.target)},
+            {"child_policy", operation.child_policy}});
         }
       }, envelope.operations[index]);
     }
