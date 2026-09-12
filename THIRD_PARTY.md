@@ -1,6 +1,12 @@
 # Third-party inventory and provenance
 
-The native headless bootstrap vendors no engine libraries, models, datasets or art. It uses only the platform C++ standard library/runtime. The exact build-tool inventory is `toolchains/bootstrap.json`; `toolchains/build-tools.txt` pins provisioned Python wheels by version and SHA-256. No SDL, Vulkan or Jolt library is downloaded or linked by this slice. The Apache license text is included verbatim in [LICENSE](LICENSE). Candidate implementation dependencies are not yet pinned, downloaded or audited for shipping.
+The native headless bootstrap uses the platform C++ standard library/runtime. PR-002 vendors nlohmann/json for structural envelope parsing and serialization; no models, datasets or art are included. The exact build-tool inventory is `toolchains/bootstrap.json`; `toolchains/build-tools.txt` pins provisioned Python wheels by version and SHA-256. No SDL, Vulkan or Jolt library is downloaded or linked by this slice. The Apache license text is included verbatim in [LICENSE](LICENSE). The following actual source dependency is pinned independently of future engine integrations.
+
+| Actual dependency | Pin and role | License and provenance |
+| --- | --- | --- |
+| nlohmann/json 3.12.0 | `55f93686c01528224f448c19128836e7df245f72`; native JSON parse/serialize | [MIT notice](third_party/nlohmann/LICENSE.MIT), embedded notices retained in the unmodified header; [byte hashes and source inventory](third_party/dependencies.json) |
+
+CMake checks the vendored header and license SHA-256 values before compilation. Git attributes preserve their upstream bytes on both Windows and Linux. The header is a source dependency compiled into native consumers; it introduces no network service or configure-time download. The build is offline after pinned tool provisioning. The remaining candidate dependencies below are not yet pinned, downloaded or audited for shipping.
 
 | Candidate | Intended role | Upstream |
 | --- | --- | --- |

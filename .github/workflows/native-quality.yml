@@ -36,7 +36,9 @@ jobs:
           python -m pip install --require-hashes --only-binary=:all: --no-deps -r toolchains/build-tools.txt
       - name: Configure, build and verify on Linux
         if: runner.os == 'Linux'
-        run: python tools/bootstrap.py
+        run: |
+          python tools/bootstrap.py
+          python tests/protocol_mutation.py --build-dir build/linux-headless --evidence-dir artifacts/protocol-mutation
       - name: Configure, build and verify on Windows
         if: runner.os == 'Windows'
         shell: pwsh
@@ -48,18 +50,41 @@ jobs:
           Enter-VsDevShell -VsInstallPath $installation -SkipAutomaticLocation -DevCmdArguments '-arch=x64 -host_arch=x64 -vcvars_ver=14.44'
           python tools/bootstrap.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tests/protocol_mutation.py --build-dir build/windows-headless --evidence-dir artifacts/protocol-mutation
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Record candidate and fixture evidence
         shell: bash
         run: |
           git rev-parse HEAD
           python tests/bootstrap_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_examples.exe' || 'linux-headless/omniweft_examples' }}" --evidence-dir artifacts/bootstrap
-      - name: Retain bootstrap evidence and CTest log
+      - name: Record protocol validation evidence
+        shell: bash
+        run: |
+          python tests/protocol_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_examples.exe' || 'linux-headless/omniweft_examples' }}" --evidence-dir artifacts/protocol
+      - name: Summarize retained evidence
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ("bootstrap", "protocol", "protocol-mutation"):
+              manifest = json.loads((Path("artifacts") / name / "manifest.json").read_text(encoding="utf-8"))
+              summary = {key: manifest[key] for key in ("work_item", "example", "candidate_sha", "candidate_worktree_dirty", "status", "environment")}
+              summary["assertion_count"] = len(manifest["assertions"])
+              summary["command_count"] = len(manifest["commands"])
+              summary["result"] = manifest["artifacts"]["result"]
+              summary["executable"] = manifest["artifacts"]["executable"]
+              print(json.dumps({"evidence": name, **summary}, sort_keys=True))
+          PY
+      - name: Retain bootstrap and protocol evidence with CTest log
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4; official upstream pin
         with:
           name: bootstrap-${{ matrix.os }}-${{ github.sha }}
           path: |
             artifacts/bootstrap/
+            artifacts/protocol/
+            artifacts/protocol-mutation/
             build/*/Testing/Temporary/LastTest.log
           if-no-files-found: error
           retention-days: 7

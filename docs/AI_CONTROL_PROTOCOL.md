@@ -1,6 +1,6 @@
 # AI control protocol
 
-Status: proposed v0.1 contract. JSON examples describe the intended API; no server or SDK exists yet.
+Status: PR-002 defines the [authoritative schema 0.1 envelope](../schemas/protocol-0.1.schema.json) and native structural parse/serialize API; see [its handoff](execution/PR-002-HANDOFF.md) for current verification and integration state. Server endpoints, authentication, transaction admission and SDK remain proposed. A `schema_valid` result does not authorize or apply a transaction.
 
 ## Control loop
 
@@ -106,7 +106,7 @@ Quotas cover resulting allocation, decompressed size, derived jobs, GPU dispatch
 
 ## Provider and SDK behavior
 
-The Python SDK exposes typed queries, transaction building, status polling, bounded retries and event resync. It negotiates protocol version and surfaces structured errors. Generated SDK models should come from the authoritative command schema once PR-002 creates it.
+The Python SDK exposes typed queries, transaction building, status polling, bounded retries and event resync. It negotiates protocol version and surfaces structured errors. Generated SDK models should come from the authoritative command schema, including its documented lexical and resource limits.
 
 A provider adapter returns a proposal plus optional explanation. It cannot commit by bypassing the gateway. The mandatory provider is deterministic scripted logic using local procedural fixtures. Optional live-model adapters add provider/model identification, timeouts, cost ceilings, redacted telemetry and schema validation. Record accepted actions for replay; do not rerun a language model and claim the new output is a reproduction.
 

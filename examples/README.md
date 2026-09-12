@@ -1,6 +1,6 @@
 # Example verification catalog
 
-**PR-001 supplies the first headless runner and platform.bootstrap fixture. Other entries remain planned specifications.** Each implementation PR must supply its matching executable/SDK fixture and keep its specification current. Consult each example and its evidence for implementation state; a specification alone never establishes feature completion.
+**PR-001 supplies the headless runner and platform.bootstrap fixture. PR-002 adds protocol.reject_invalid; consult its handoff for current verification and integration state. Later entries remain planned specifications.** Each implementation PR must supply its matching executable/SDK fixture and keep its specification current. Consult each example and its evidence for implementation state; a specification alone never establishes feature completion.
 
 The common interface for later examples remains proposed:
 

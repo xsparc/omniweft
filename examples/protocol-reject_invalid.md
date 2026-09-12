@@ -1,6 +1,6 @@
 # protocol.reject_invalid
 
-Status: **planned specification; not implemented**. Work item: **PR-002 — Versioned command schema**.
+Status: **implemented and verified in PR-002; merge pending**. Work item: **PR-002 — Versioned command schema**.
 
 Dependencies: PR-001. Validation lanes: cpu.
 
@@ -10,13 +10,23 @@ Implement only the named behavior, its public contract, corresponding runnable e
 
 Use a tiny deterministic fixture with seed 7, generated locally or covered by an explicit asset license manifest. Exercise the public command/query interfaces once available, avoiding privileged test-only mutation paths.
 
-## Proposed run command
+## Build and run
 
-This command becomes available only when this work item is implemented:
+Build with the pinned CMake/toolchain instructions in [platform.bootstrap](platform-bootstrap.md). The same headless executable exposes:
 
 ```sh
 omniweft_examples --example protocol.reject_invalid --headless --seed 7 --verify --output artifacts/protocol.reject_invalid
 ```
+
+The built-in fixture submits schema-valid and invalid envelopes without creating a world. Supply raw JSON byte fixtures using repeatable `--input <file>` arguments (at most 64) to exercise several independent envelopes in one process. The output directory must be new; existing output is preserved.
+
+`result.json` records `schema_valid` or `schema_invalid` for each input, structured error code/path and valid typed round-trip data with stable serialized bytes. A completed validation run exits zero even when an envelope is rejected; CLI, I/O or self-check failures remain nonzero. `--verify` checks fixture/report consistency, not authorization or world state.
+
+## Contract boundaries
+
+The [schema](../schemas/protocol-0.1.schema.json) and [slice plan](../docs/execution/PR-002-PLAN.md) define the envelope and `entity.create` / `transform.set` variants. The native API checks at most 1 MiB of bytes and 32 containers before constructing a DOM, rejects decoded duplicate keys and unknown fields, and preserves unsigned 64-bit identities, generations, revisions and sequence values exactly. Integer fields reject fractional/exponent syntax. Numeric vectors must be finite binary64 values.
+
+The validator has no world, executor, authentication or capability parameter. Schema success does not establish entity existence, access, epoch admission, temporary-reference resolution or transaction atomicity. PR-003 will apply the retained negative/recovery fixtures to actual world mutation.
 
 ## Pass criteria
 
@@ -34,4 +44,4 @@ Record exact candidate SHA, commands, environment, seed, assertions, results, ar
 
 Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.
 
-Update this document with actual build/run instructions and observed evidence when the implementation merges. The [roadmap](../docs/ROADMAP.md) and [backlog](../planning/backlog.json) retain the same work-item and example IDs.
+Observed functional checks at `873cfaff0243acb9409a5eda7c16d05ea58b1a46`: Windows/Linux CTest 4/4, 150 byte cases, 17 stable round-trips, three built-in outcomes and a successful deliberate-validator mutation proof. The independent Python oracle checks field values and rejection outcomes using its own fixtures; the native fixture directly checks typed non-finite serialization. Hosted Windows/Linux jobs retain candidate, command, assertion and artifact evidence. [The handoff](../docs/execution/PR-002-HANDOFF.md) distinguishes observed results from pending checks; local execution is currently unavailable. The [roadmap](../docs/ROADMAP.md) and [backlog](../planning/backlog.json) retain the same work-item and example IDs.

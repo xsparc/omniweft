@@ -3,3 +3,7 @@
 *.jpg binary
 *.glb binary
 *.zip binary
+
+# Preserve reviewed upstream bytes for configure-time provenance checks.
+/third_party/nlohmann/json.hpp -text
+/third_party/nlohmann/LICENSE.MIT -text

@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/xsparc/omniweft/blob/main/schemas/protocol-0.1.schema.json",
+  "title": "Omniweft schema 0.1 authoring envelope",
+  "description": "Structural validation only. A schema_valid envelope is not authorized, admitted, scheduled or committed.",
+  "$comment": "Native validation additionally rejects duplicate decoded keys, non-finite numeric conversions, non-integer lexical tokens for integer fields, input exceeding 1048576 bytes, and nesting beyond 32 containers (root counts as one). Operation count must not exceed budget.max_operations. Entity existence, target world access, temporary reference resolution and transform execution invariants are deferred.",
+  "x-omniweft-limits": {
+    "max_input_bytes": 1048576,
+    "max_container_depth": 32,
+    "root_container_depth": 1,
+    "max_operations": 256,
+    "max_cli_inputs": 64
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "world_id",
+    "transaction_id",
+    "idempotency",
+    "expected_world_revision",
+    "apply_at",
+    "budget",
+    "operations"
+  ],
+  "properties": {
+    "protocol_version": {
+      "const": "0.1"
+    },
+    "world_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "transaction_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "idempotency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "epoch",
+        "sequence"
+      ],
+      "properties": {
+        "epoch": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sequence": {
+          "$ref": "#/$defs/uint64"
+        }
+      }
+    },
+    "expected_world_revision": {
+      "$ref": "#/$defs/uint64"
+    },
+    "apply_at": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "expires_after_ticks"
+      ],
+      "properties": {
+        "mode": {
+          "const": "next_tick"
+        },
+        "expires_after_ticks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_operations",
+        "max_blob_bytes"
+      ],
+      "properties": {
+        "max_operations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "max_blob_bytes": {
+          "$ref": "#/$defs/uint64"
+        }
+      }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/create"
+          },
+          {
+            "$ref": "#/$defs/transform"
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "temporaryId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "uint64": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 18446744073709551615,
+      "description": "Wire token must use integer syntax, not decimal/exponent syntax; no rounding or coercion."
+    },
+    "finiteNumber": {
+      "type": "number",
+      "minimum": -1.7976931348623157e+308,
+      "maximum": 1.7976931348623157e+308
+    },
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/finiteNumber"
+      }
+    },
+    "quaternion": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/$defs/finiteNumber"
+      }
+    },
+    "temporaryTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "temporary_id"
+      ],
+      "properties": {
+        "temporary_id": {
+          "$ref": "#/$defs/temporaryId"
+        }
+      }
+    },
+    "durableTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "world_id",
+        "entity_uuid",
+        "generation"
+      ],
+      "properties": {
+        "world_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "entity_uuid": {
+          "$ref": "#/$defs/uuid"
+        },
+        "generation": {
+          "$ref": "#/$defs/uint64"
+        }
+      }
+    },
+    "create": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "temporary_id",
+        "prefab"
+      ],
+      "properties": {
+        "type": {
+          "const": "entity.create"
+        },
+        "temporary_id": {
+          "$ref": "#/$defs/temporaryId"
+        },
+        "prefab": {
+          "$ref": "#/$defs/identifier"
+        }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "target",
+        "position_m",
+        "rotation_xyzw",
+        "scale"
+      ],
+      "properties": {
+        "type": {
+          "const": "transform.set"
+        },
+        "target": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/temporaryTarget"
+            },
+            {
+              "$ref": "#/$defs/durableTarget"
+            }
+          ]
+        },
+        "position_m": {
+          "$ref": "#/$defs/vector3"
+        },
+        "rotation_xyzw": {
+          "$ref": "#/$defs/quaternion"
+        },
+        "scale": {
+          "$ref": "#/$defs/vector3"
+        }
+      }
+    }
+  }
+}
