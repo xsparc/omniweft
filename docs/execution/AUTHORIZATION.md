@@ -1,6 +1,6 @@
 # Adopted autonomous implementation scope
 
-Date: 2026-09-13. Source: the maintainer's Codex task, **Bootstrap autonomous PR workflow** (`01a09699-3e74-7103-80e4-63d80a8e978e`).
+Date: 2026-09-13. Source: the maintainer's Codex task, **Bootstrap autonomous PR workflow**.
 
 > Documents are already in place I want you to bootstrap and perpetually develop using a multi PR autonomous incremental workflow.
 
@@ -18,6 +18,12 @@ Before unattended integration can begin, the maintainer must explicitly adopt ro
 
 The Codex app automation **Develop Omniweft incrementally** (`develop-omniweft-incrementally`) was created active on 2026-09-13 with an hourly cadence, attached to the existing task. It resumes active PRs before claiming new work, persists a handoff, and reports meaningful completions, new failures or required maintainer action. Unchanged blocked state stays quiet. This is a local Codex scheduler, not a GitHub-hosted bot or a promise of uninterrupted execution while the host is unavailable.
 
-Initial coordinator worktree: `D:\Projects\Local\agent_works\omniweft-pr-001`, branch `codex/pr-001-platform-bootstrap`. The implementation helper uses its own worktree and branch; the coordinator integrates reviewed changes and is the only writer of the shared backlog. Resume from the active backlog item's handoff (initially [PR-001](PR-001-HANDOFF.md)), inspect live git/PR state, and reconcile actual merges before starting dependent work.
+Initial coordinator branch `codex/pr-001-platform-bootstrap`. Machine-local worktree locations remain in the private task. The implementation helper uses its own worktree and branch; the coordinator integrates reviewed changes and is the only writer of the shared backlog. Resume from the active backlog item's handoff (initially [PR-001](PR-001-HANDOFF.md)), inspect live git/PR state, and reconcile actual merges before starting dependent work.
 
 At roadmap completion, report the measured outcome and keep additional ideas proposed until scope is adopted. The user may pause or change the automation at any time.
+
+## Rendering verification and privacy clarification
+
+For PR-004, the maintainer designated the current Windows GPU machine, requested conservative Linux Docker use, and said to prioritize Windows verification if necessary. Windows physical-GPU evidence is the immediate required target; attempt bounded Linux container checks and report whether they use hardware or software, with any unavailable Linux GPU lane explicitly `not_run`. Do not claim Linux desktop support from a container or silently replace a hardware test with software rendering. This changes verification priority, not authority to spend, modify trust or publish releases.
+
+The maintainer also explicitly required protection of personal details on the Windows machine. Public commits, PRs, logs and artifacts must omit local account names, home/worktree paths, hostnames, device UUID/LUID/serials, environment dumps and unrelated local software/processes. Retain necessary generic GPU model, driver/API/tool versions, source hashes, relative artifact paths and independently verified results. Redact before publishing; keep machine-specific orchestration details only in the private task.

@@ -2,7 +2,7 @@
 
 - State: **done**. [GitHub PR #5](https://github.com/xsparc/omniweft/pull/5) was squash-merged by @xsparc at 2026-09-12T23:11:17Z as `32e32ae19b5138231159fe961246dbcf5c8a88c2`, independently verified through GitHub.
 - Work item: PR-002 — Versioned command schema; example `protocol.reject_invalid`.
-- Task: `01a09699-3e74-7103-80e4-63d80a8e978e`; coordinator branch `codex/pr-002-command-schema`.
+- Coordinator branch `codex/pr-002-command-schema`.
 - Base: PR-001 squash merge `7283b8ad02b96195bb9e828b9945dc4c6c975c9a`, verified through GitHub after the user's merge confirmation. PR-001 is done in the shared ledger.
 - Authority: [adopted implementation scope](AUTHORIZATION.md). Future merge and contribution-certification policy is unchanged.
 - Contract: [slice plan](PR-002-PLAN.md), [schema 0.1](../../schemas/protocol-0.1.schema.json) and [public example](../../examples/protocol-reject_invalid.md).
