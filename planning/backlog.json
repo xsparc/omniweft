@@ -181,7 +181,7 @@
     {
       "id": "PR-005",
       "title": "Authenticated local Python SDK",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [
         "PR-003"
@@ -204,7 +204,16 @@
         "eligibility": "Existing roadmap adopted; dependency PR-003 merged; promoted ready then claimed.",
         "base_sha": "ba80bb8392206a32810c8de989245e80cdfe055d",
         "plan": "docs/execution/PR-005-PLAN.md",
-        "handoff": "docs/execution/PR-005-HANDOFF.md"
+        "handoff": "docs/execution/PR-005-HANDOFF.md",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/9",
+        "runtime_candidate_sha": "3d23b2dfb089ecefbb69196fe5c779bdabb68dfa",
+        "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization",
+        "evidence": [
+          "docs/evidence/PR-005/README.md",
+          "https://github.com/xsparc/omniweft/actions/runs/34753912412",
+          "https://github.com/xsparc/omniweft/actions/runs/34753912427",
+          "https://github.com/xsparc/omniweft/actions/runs/34753912390"
+        ]
       }
     },
     {
