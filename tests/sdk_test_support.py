@@ -93,7 +93,7 @@ class Evidence(BaseEvidence):
 
 class Host:
     """A real native subprocess, controlled exclusively through its production pipes."""
-    def __init__(self, executable, evidence, *, ttl=30000, max_requests=1024):
+    def __init__(self, executable, evidence, *, ttl=30000, max_requests=1024, runtime=60000):
         self.evidence = evidence
         self.ttl = ttl
         self.lines = queue.Queue(maxsize=66)
@@ -102,7 +102,7 @@ class Host:
         self.process = None
         self.descriptor = None
         self.args = [str(executable), "--world", "workshop", "--seed", "7", "--max-slots", "8",
-                     "--session-ttl-ms", str(ttl), "--max-runtime-ms", "60000", "--max-requests", str(max_requests)]
+                     "--session-ttl-ms", str(ttl), "--max-runtime-ms", str(runtime), "--max-requests", str(max_requests)]
         self.record = {"command": ["<executable>", *self.args[1:]], "exit_code": None, "started_at": timestamp()}
         evidence.manifest["commands"].append(self.record)
 

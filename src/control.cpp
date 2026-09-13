@@ -52,6 +52,9 @@ constexpr std::size_t max_body_bytes = 1048576;
 constexpr std::size_t max_response_bytes = 4194304;
 constexpr std::size_t max_request_line_bytes = 1024;
 constexpr auto request_timeout = Milliseconds(1000);
+// Normal completion owns the configured deadline; only emergency termination
+// gets this fixed cleanup allowance. It never extends request/admission time.
+constexpr auto shutdown_grace = Milliseconds(1000);
 struct Failure {};
 struct Closed {};
 struct Rejection {
@@ -529,8 +532,10 @@ class Host {
  public:
   Host(const Config& config, const Callbacks& callbacks, PrivatePipes& pipes, std::uint16_t port)
       : config_(config), callbacks_(callbacks), pipes_(pipes), port_(port) {}
-  void renew() {
+  bool renew(Time deadline) {
+    if (Clock::now() >= deadline) return false;
     auto token = random_secret(), epoch = random_secret();
+    if (Clock::now() >= deadline) return false;
     token_ = std::move(token);
     epoch_ = std::move(epoch);
     next_sequence_ = 1;
@@ -538,20 +543,24 @@ class Host {
     expires_ = Clock::now() + Milliseconds(config_.session_ttl_ms);
     pipes_.descriptor({{"schema_version", 1}, {"protocol_version", "0.1"}, {"host", "127.0.0.1"},
       {"port", port_}, {"token", token_}, {"epoch", epoch_}, {"session_ttl_ms", config_.session_ttl_ms}});
+    return true;
   }
-  bool host_commands() {
-    while (const auto chunk = pipes_.read()) {
+  bool host_commands(Time deadline) {
+    while (Clock::now() < deadline) {
+      const auto chunk = pipes_.read();
+      if (!chunk) return true;
       if (chunk->empty()) {
         if (!pending_command_.empty()) throw Failure{};
         return false;
       }
       for (const char character : *chunk) {
+        if (Clock::now() >= deadline) return false;
         if (character == '\n') {
           if (pending_command_ == "stop") return false;
           if (pending_command_ != "renew" || renewals_ >= 64) throw Failure{};
           ++renewals_;
           pending_command_.clear();
-          renew();
+          if (!renew(deadline)) return false;
         } else {
           if (pending_command_.size() >= 5 || character < 'a' || character > 'z') throw Failure{};
           pending_command_ += character;
@@ -560,7 +569,7 @@ class Host {
         }
       }
     }
-    return true;
+    return false;
   }
   void connection(NativeSocket socket, Time deadline) {
     try {
@@ -678,15 +687,15 @@ int run(const Config& config, const Callbacks& callbacks) noexcept {
     if (!callbacks.snapshot || !callbacks.apply) throw Failure{};
     PrivatePipes pipes;
     const auto deadline = Clock::now() + Milliseconds(config.max_runtime_ms);
-    Watchdog watchdog(deadline);
+    Watchdog watchdog(deadline + shutdown_grace);
     SocketRuntime runtime;
     std::uint16_t port = 0;
     Socket listener(create_listener(port));
     Host host(config, callbacks, pipes, port);
-    host.renew();
+    if (!host.renew(deadline)) return 0;
     std::uint32_t count = 0;
     while (Clock::now() < deadline && count < config.max_requests) {
-      if (!host.host_commands()) return 0;
+      if (!host.host_commands(deadline)) return 0;
       if (!ready(listener.get(), false, std::min(deadline, Clock::now() + Milliseconds(20)))) continue;
       sockaddr_in peer{};
 #ifdef _WIN32

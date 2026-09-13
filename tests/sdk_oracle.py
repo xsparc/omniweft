@@ -346,6 +346,24 @@ def pipeline(executable, evidence):
         s.submit(envelope(host.descriptor["epoch"], 2, 1, [move()], 1), receipt(2, 1), snapshot(2), "recovery")
 
 
+def runtime_incomplete(executable, evidence):
+    started = time.monotonic()
+    with Host(executable, evidence, runtime=1000) as host:
+        # Leave a real authenticated HTTP body unfinished across the normal
+        # host deadline. The connection's own deadline would otherwise be later.
+        time.sleep(0.55)
+        incomplete = request_bytes(host.descriptor, "POST", "/v0/transactions", b"{}")[:-1]
+        response = exchange(host.descriptor, incomplete)
+        require(response is None or response[0] == 400,
+                "incomplete connection closes or rejects without an admitted receipt")
+        code = host.process.wait(timeout=4)
+        exact(code, 0, "incomplete connection at normal runtime expiry returns zero")
+        require(time.monotonic() - started < 5.0,
+                "incomplete connection runtime cleanup has a finite failure bound")
+        evidence.retain_json("runtime-lifecycle.json", {"schema_version": 1,
+                             "incomplete_connection_closed": True, "native_exit_code": code})
+
+
 def sdk_example(executable, evidence):
     with tempfile.TemporaryDirectory(prefix="ow-sdk-example-") as temporary:
         output = Path(temporary) / "result"
@@ -402,6 +420,7 @@ def main():
         if args.case_set == "all":
             expiry(executable, evidence)
             pipeline(executable, evidence)
+            runtime_incomplete(executable, evidence)
             sdk_example(executable, evidence)
         evidence.finish("passed")
         print(json.dumps({"status": "passed", "example": "sdk.move_cube", "assertions": len(evidence.manifest["assertions"])}))

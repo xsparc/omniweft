@@ -360,21 +360,86 @@ def actual_client(sdk, executable):
         exact(fresh.observe().to_dict(), snapshot(3), "SDK real native recovery state")
 
 
+def natural_runtime(sdk, executable):
+    for unused in range(3):
+        started = time.monotonic()
+        try:
+            with sdk.NativeSession(executable, max_runtime_ms=1000) as session:
+                # Public client access checks actual child liveness. Wait for
+                # natural completion before close can send a stop command.
+                ended = False
+                deadline = time.monotonic() + 4.0
+                while time.monotonic() < deadline:
+                    try:
+                        session.client()
+                    except sdk.ProtocolError:
+                        ended = True
+                        break
+                    time.sleep(0.01)
+                require(ended, "native normal lifetime ends before SDK close")
+        except sdk.ProtocolError:
+            raise Failure("natural native runtime expiry must close successfully") from None
+        exact(session.returncode, 0, "ordinary native runtime expiry returns zero")
+        require(time.monotonic() - started < 5.0, "ordinary native runtime cleanup has a finite failure bound")
+
+
+def close_exit_race(sdk, executable):
+    # Delay after a REAL poll observes a REAL child alive; no fake process/exit result.
+    session = sdk.NativeSession(executable, max_runtime_ms=1000)
+    session.start()
+    original_poll = __import__("subprocess").Popen.poll
+    observed_alive = []
+    observed_exit = []
+    def delayed_poll(process):
+        result = original_poll(process)
+        if result is None and not observed_alive:
+            observed_alive.append(True)
+            deadline = time.monotonic() + 4.0
+            while original_poll(process) is None:
+                if time.monotonic() >= deadline:
+                    raise Failure("close race child reaches a bounded natural exit")
+                time.sleep(0.01)
+            observed_exit.append(process.returncode)
+        return result
+    started = time.monotonic()
+    try:
+        with mock.patch("subprocess.Popen.poll", delayed_poll):
+            try:
+                session.close()
+            except sdk.ProtocolError:
+                raise Failure("SDK close reconciles natural exit between poll and stop write") from None
+        require(bool(observed_alive), "close race observes the actual child alive first")
+        exact(observed_exit, [0], "close race child really exits before the stop write")
+        exact(session.returncode, 0, "SDK close race preserves actual successful child exit")
+        require(time.monotonic() - started < 5.0, "SDK close race has a finite cleanup bound")
+    finally:
+        try:
+            session.close()
+        except sdk.ProtocolError:
+            pass
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--executable", type=Path, required=True)
     parser.add_argument("--sdk-root", type=Path, default=ROOT / "sdk/python")
     parser.add_argument("--client-only", action="store_true")
+    parser.add_argument("--lifecycle-case", choices=("idle", "close-race"))
     args = parser.parse_args()
     sys.path.insert(0, str(args.sdk_root.resolve(strict=True)))
     import omniweft_sdk as sdk
     require(Path(sdk.__file__).resolve().is_relative_to(args.sdk_root.resolve()), "tested SDK imports from the declared source")
-    malformed_replies(sdk)
-    uncertain_reply(sdk)
-    hostile_typed_values(sdk)
-    overall_deadlines(sdk)
-    if not args.client_only:
-        actual_client(sdk, args.executable.resolve(strict=True))
+    if args.lifecycle_case:
+        (natural_runtime if args.lifecycle_case == "idle" else close_exit_race)(sdk, args.executable.resolve(strict=True))
+    else:
+        malformed_replies(sdk)
+        uncertain_reply(sdk)
+        hostile_typed_values(sdk)
+        overall_deadlines(sdk)
+        if not args.client_only:
+            actual_client(sdk, args.executable.resolve(strict=True))
+            natural_runtime(sdk, args.executable.resolve(strict=True))
+            close_exit_race(sdk, args.executable.resolve(strict=True))
     print(json.dumps({"status": "passed", "assertions": CHECKS}))
     return 0
 

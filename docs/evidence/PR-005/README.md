@@ -1,6 +1,8 @@
 # PR-005 Windows SDK evidence
 
-This bundle verifies runtime commit `3d23b2dfb089ecefbb69196fe5c779bdabb68dfa` and tree `01b9fe13202d7c03f8759ec0d6b7f58ff638f4ef` from a clean checkout. Later delivery documentation and archive commits do not change the tested runtime, SDK or oracle sources.
+This is historical evidence from before the runtime-expiry review fix. It does not certify that later lifecycle correction; see [the current handoff](../../execution/PR-005-HANDOFF.md) for its verification state.
+
+This bundle verifies runtime commit `3d23b2dfb089ecefbb69196fe5c779bdabb68dfa` and tree `01b9fe13202d7c03f8759ec0d6b7f58ff638f4ef` from a clean checkout. The earlier delivery commit 4abb3f4483af22bd645cbddecee9ea8ccf6f837d changed only documentation and evidence. The subsequent lifecycle correction changes runtime, SDK and oracle sources and requires separate evidence.
 
 - [Compressed reports and canonical snapshots](windows-sdk-3d23b2d.zip): 77,151 bytes, 153 entries, 884,104 bytes uncompressed.
 - ZIP SHA-256: `93881b2f4253540ff2d99dcb05cf375441214a6510fde3bfa7ee6280b349bfcb`.

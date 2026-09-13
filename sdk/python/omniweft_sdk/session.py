@@ -133,8 +133,14 @@ class NativeSession:
                 return
             try:
                 if process.poll() is None:
-                    process.stdin.write(b"stop\n")
-                    process.stdin.flush()
+                    try:
+                        process.stdin.write(b"stop\n")
+                        process.stdin.flush()
+                    except OSError:
+                        # Natural completion can close the pipe after poll().
+                        # Only the bounded wait and verified exit below decide
+                        # whether this shutdown succeeded.
+                        pass
                 process.wait(timeout=3)
                 self.returncode = process.returncode
                 if process.returncode != 0:

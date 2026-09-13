@@ -2,6 +2,12 @@
 
 State: **in_review**, not merged. [PR #9](https://github.com/xsparc/omniweft/pull/9), branch `codex/pr-005-authenticated-sdk`, base `ba80bb8392206a32810c8de989245e80cdfe055d`. Runtime candidate `3d23b2dfb089ecefbb69196fe5c779bdabb68dfa`, tree `01b9fe13202d7c03f8759ec0d6b7f58ff638f4ef`. [Authorization](AUTHORIZATION.md) · [frozen slice plan](PR-005-PLAN.md) · [example](../../examples/sdk-move_cube.md).
 
+## Runtime-expiry review follow-up
+
+PR #9 was returned to draft after the additional automated review identified a normal-expiry/watchdog race on delivery head 4abb3f4483af22bd645cbddecee9ea8ccf6f837d. Independent review confirmed it, and the local original binary reproduced failure exit 4 in nine of ten otherwise idle 1000 ms lifetimes. The earlier passing evidence below remains historical and did not cover this lifecycle case.
+
+The bounded correction retains the configured normal deadline for I/O, admission and renewals, and gives the hard watchdog a fixed additional 1000 ms for cleanup. SDK shutdown also reconciles a failed stop write with bounded waiting and a verified real exit code. Pinned local Windows build and all 11 integrated CTest checks passed. The strengthened SDK test was rerun after requiring natural child completion before cleanup and passed; planning validation passed 38 items. Independent source and lifecycle-test review passed. The new tests reject the preserved original native binary and, separately, the prior SDK with the corrected native binary; the corrected combination passes. Fresh clean-candidate retained evidence, current-head CI and review-thread disposition remain pending before returning this PR to ready.
+
 ## Implemented behavior
 
 The native `omniweft_control` process owns one World and admits authenticated loopback requests through the existing typed command coordinator. The separate standard-library Python SDK negotiates capabilities, creates/moves/deletes typed objects, observes complete snapshots, renews private sessions and requires explicit resynchronization after uncertain mutation responses. Request framing, credentials, expiry, world identity, revisions and sequence admission are bounded and validated. See [the wire contract](../../schemas/control-0.1.schema.json) and [SDK usage](../../sdk/python/README.md).

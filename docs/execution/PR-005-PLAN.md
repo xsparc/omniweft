@@ -19,7 +19,7 @@ The descriptor is at most 512 UTF-8 bytes plus newline, exactly:
 
 The launcher exclusively owns the private pipe. Fixed `renew\n` rotates token and epoch, resets next_sequence to 1, and preserves the same World. Old credentials immediately cease to authorize. Fixed `stop\n` or EOF stops the host. Process host commands between bounded network requests; no public session-issuance endpoint or test-only world mutation. Invalid/oversized private commands fail closed. At most 64 renewals per process; hard runtime fallback prevents detached survivors.
 
-Host CLI accepts bounded nonsecret configuration: `--world workshop`, `--seed 7`, `--max-slots` (1..1024, default 1024), `--session-ttl-ms` (50..300000, default 30000), `--max-runtime-ms` (1000..600000, default 60000), `--max-requests` (1..4096, default 1024). Fixture uses eight slots. No host/address/token flags.
+Host CLI accepts bounded nonsecret configuration: `--world workshop`, `--seed 7`, `--max-slots` (1..1024, default 1024), `--session-ttl-ms` (50..300000, default 30000), `--max-runtime-ms` (1000..600000, default 60000), `--max-requests` (1..4096, default 1024). Fixture uses eight slots. No host/address/token flags. The configured max_runtime_ms is the normal admission, network-I/O and private-renewal cutoff; ordinary bounded completion returns exit 0. A separate hard watchdog stays armed through cleanup and exits 4 only if the process remains stalled for a fixed additional 1000 ms. This cleanup allowance grants no further request or renewal time. SDK shutdown performs a bounded wait and accepts a failed stop-pipe write only when the real child is subsequently verified to have exited 0.
 
 ## Frozen HTTP subset
 

@@ -25,6 +25,7 @@ struct Callbacks {
 // Invokes callbacks synchronously on this calling owner thread only.
 // Requires private stdin/stdout pipes; descriptors are the only stdout output.
 // Returns 0 for stop/EOF/bounded completion, 3 for unavailable private pipes,
-// or 4 for failure. The hard-runtime watchdog exits with 4 on a stalled host.
+// or 4 for failure. Normal I/O/admission stops at max_runtime_ms. The watchdog
+// exits with 4 on a stalled host after a fixed additional 1000ms cleanup grace.
 int run(const Config& config, const Callbacks& callbacks) noexcept;
 }  // namespace ow::control
