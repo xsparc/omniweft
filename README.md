@@ -4,7 +4,7 @@
 
 Omniweft treats a virtual world as structured data that people, game systems, and AI agents can inspect and change through the same interfaces. AI can compose a scene, sculpt terrain, modify geometry, paint textures, apply physical actions, and inspect the result. The engine validates and schedules those changes while simulation and rendering continue.
 
-**Status: headless bootstrap, command schema and atomic object execution merged (PR-001 through PR-003); Vulkan presentation in progress (PR-004).** The native runner provides a C++20 start/step/stop example and structural command validation with round-trip serialization. PR-003 adds bounded, synchronous create/transform/delete transactions, detached snapshots and complete rollback for in-memory root objects. Its Windows/Linux checks and actual merge are recorded in [the object execution handoff](docs/execution/PR-003-HANDOFF.md). The PR-004 candidate adds optional SDL3/Vulkan presentation with verified Windows hardware evidence and passing hosted Windows/Linux builds; maintainer merge remains pending. Physics, authenticated SDK, persistence and performance targets below remain planned. See the runnable [bootstrap](examples/platform-bootstrap.md), [protocol](examples/protocol-reject_invalid.md) and [atomic object](examples/objects-atomic.md) examples.
+**Status: headless bootstrap, typed objects and Vulkan presentation merged (PR-001 through PR-004); authenticated Python SDK in progress (PR-005).** The native runner provides a C++20 start/step/stop example and structural command validation with round-trip serialization. PR-003 adds bounded, synchronous create/transform/delete transactions, detached snapshots and complete rollback for in-memory root objects. Its Windows/Linux checks and actual merge are recorded in [the object execution handoff](docs/execution/PR-003-HANDOFF.md). PR-004 adds optional SDL3/Vulkan presentation with verified Windows hardware evidence and passing hosted Windows/Linux builds. The PR-005 candidate adds a native authenticated loopback host and separate typed Python SDK; its independent verification and merge remain pending. Physics, authenticated SDK, persistence and performance targets below remain planned. See the runnable [bootstrap](examples/platform-bootstrap.md), [protocol](examples/protocol-reject_invalid.md) and [atomic object](examples/objects-atomic.md) examples.
 
 ## Start here
 
@@ -56,6 +56,8 @@ python tools/validate_plan.py
 ```
 
 This checks local Markdown links, required repository files, the roadmap dependency graph, and example coverage. It does not build or validate an engine. Future build/run commands in the planning documents are explicitly marked as proposed.
+
+For the authenticated local SDK candidate, see [sdk.move_cube](examples/sdk-move_cube.md), [SDK usage](sdk/python/README.md) and [its execution handoff](docs/execution/PR-005-HANDOFF.md).
 
 ## Contribute
 

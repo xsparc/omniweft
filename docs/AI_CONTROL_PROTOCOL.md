@@ -1,8 +1,8 @@
 # AI control protocol
 
-Status: PR-002 defines the [authoritative schema 0.1 envelope](../schemas/protocol-0.1.schema.json) and native structural parse/serialize API; see [its handoff](execution/PR-002-HANDOFF.md) for current verification and integration state. PR-003 adds `entity.delete` with required `child_policy: "reject_if_children"` and a synchronous trusted-host atomic execution boundary. PR-002-era readers reject that additive operation as `UNSUPPORTED_OPERATION`; all earlier envelope meanings remain unchanged. Server endpoints, authentication, transaction admission and SDK remain proposed. A `schema_valid` result alone does not authorize or apply a transaction.
+Status: PR-002 defines the [authoritative schema 0.1 envelope](../schemas/protocol-0.1.schema.json) and native structural parse/serialize API; see [its handoff](execution/PR-002-HANDOFF.md) for current verification and integration state. PR-003 adds `entity.delete` with required `child_policy: "reject_if_children"` and a synchronous trusted-host atomic execution boundary. PR-002-era readers reject that additive operation as `UNSUPPORTED_OPERATION`; all earlier envelope meanings remain unchanged. PR-005 adds a candidate for three authenticated local endpoints and a separate typed Python SDK; its [frozen synchronous profile](execution/PR-005-PLAN.md), [wire schema](../schemas/control-0.1.schema.json) and [handoff](execution/PR-005-HANDOFF.md) distinguish implemented scope and pending verification. The fuller gateway, scheduling and retry behavior below remains planned. A `schema_valid` result alone does not authorize or apply a transaction.
 
-The [PR-003 execution contract](execution/PR-003-PLAN.md) is limited to immediate single-owner-thread root-object transactions and volatile receipts. Envelope idempotency/scheduling metadata does not establish epoch admission, deduplication or queued deadline behavior at this internal boundary. Future gateway admission must enforce those contracts before invoking the executor.
+The [PR-003 execution contract](execution/PR-003-PLAN.md) is limited to immediate single-owner-thread root-object transactions and volatile receipts. Envelope idempotency/scheduling metadata does not establish epoch admission, deduplication or queued deadline behavior at this internal boundary. The PR-005 gateway enforces active session/epoch and exact-next-sequence admission before invoking that executor. Its next_tick mode consumes the immediate synchronous host boundary; it does not claim queued deadlines or physics ticks.
 
 ## Control loop
 
@@ -70,6 +70,8 @@ Durability is a separate receipt field: `durability: volatile|durable`, with a d
 One initial batch succeeds completely or does nothing. Large world-building jobs are explicit multi-batch plans with checkpoints and progress. They are not advertised as atomic across all batches. Failed preparation frees staged resources after relevant worker/GPU fences; admission charges cannot leak after repeated failures.
 
 ## Ordering, retries and durability
+
+The retained duplicate-receipt and concurrent retry behavior in this section is the PR-011 target. PR-005 negotiates retry_mode=resync_only: repeats, gaps and retired epochs are rejected, no receipts are retained for replay, and an uncertain client must observe/resynchronize explicitly. Persistence and crash-safe receipt recovery remain later milestones.
 
 - The coordinator assigns an accepted sequence number and records the scheduled tick. Replay consumes this order, not nondeterministic client arrival timing.
 - The idempotency key is `(world, authenticated principal, server-issued epoch, client sequence)`. The UUID `transaction_id` is a correlation ID, not the deduplication mechanism. Sequence numbers are monotonically admitted per epoch; the SDK serializes admissions, retries uncertain admissions with the same sequence, and resyncs on a gap. Completion may remain asynchronous.

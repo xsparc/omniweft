@@ -1,0 +1,550 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/xsparc/omniweft/blob/main/schemas/control-0.1.schema.json",
+  "title": "Omniweft PR-005 synchronous local control profile",
+  "description": "HTTP/private-channel wire shapes only. Authentication, deadlines, strict framing and admission sequencing are enforced separately by the native host.",
+  "$comment": "Integers additionally require integer lexical tokens. Reject duplicate decoded keys, nonfinite conversions, invalid UTF-8, over-depth JSON and unknown fields. Request head includes request line and final CRLF. This strict Content-Length endpoint profile is not a general HTTP/1.1 server. See docs/execution/PR-005-PLAN.md.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/PrivateDescriptor"
+    },
+    {
+      "$ref": "#/$defs/Capabilities"
+    },
+    {
+      "$ref": "#/$defs/ObserveRequest"
+    },
+    {
+      "$ref": "#/$defs/ObserveResponse"
+    },
+    {
+      "$ref": "#/$defs/TransactionResponse"
+    },
+    {
+      "$ref": "#/$defs/AdmissionError"
+    },
+    {
+      "$ref": "protocol-0.1.schema.json"
+    }
+  ],
+  "$defs": {
+    "uint64": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 18446744073709551615
+    },
+    "positiveSequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 18446744073709551615
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "epoch": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "Transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "position_m",
+        "rotation_xyzw",
+        "scale"
+      ],
+      "properties": {
+        "position_m": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "rotation_xyzw": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number"
+          }
+        },
+        "scale": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "Entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prefab",
+        "authoring_revision",
+        "transform"
+      ],
+      "properties": {
+        "prefab": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9_.-]+$"
+        },
+        "authoring_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "transform": {
+          "$ref": "#/$defs/Transform"
+        }
+      }
+    },
+    "Slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entity_uuid",
+        "generation",
+        "retired",
+        "entity"
+      ],
+      "properties": {
+        "entity_uuid": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "retired": {
+          "type": "boolean"
+        },
+        "entity": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/Entity"
+            }
+          ]
+        }
+      }
+    },
+    "Snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format_version",
+        "world_id",
+        "seed",
+        "max_slots",
+        "world_revision",
+        "slots"
+      ],
+      "properties": {
+        "format_version": {
+          "const": 1
+        },
+        "world_id": {
+          "const": "workshop"
+        },
+        "seed": {
+          "const": 7
+        },
+        "max_slots": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        },
+        "world_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "slots": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 1024,
+          "items": {
+            "$ref": "#/$defs/Slot"
+          }
+        }
+      }
+    },
+    "CreatedBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "temporary_id",
+        "world_id",
+        "entity_uuid",
+        "generation"
+      ],
+      "properties": {
+        "temporary_id": {
+          "$ref": "#/$defs/temporaryId"
+        },
+        "world_id": {
+          "const": "workshop"
+        },
+        "entity_uuid": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        }
+      }
+    },
+    "ReceiptError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "path",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{0,63}$"
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "operation_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        }
+      }
+    },
+    "Receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durability",
+        "transaction_id",
+        "world_revision",
+        "created",
+        "errors"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "committed",
+            "rejected"
+          ]
+        },
+        "durability": {
+          "const": "volatile"
+        },
+        "transaction_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "world_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "created": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/CreatedBinding"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/ReceiptError"
+          }
+        }
+      }
+    },
+    "Limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_header_bytes",
+        "max_body_bytes",
+        "max_response_bytes",
+        "max_operations",
+        "max_slots",
+        "request_timeout_ms",
+        "session_ttl_ms"
+      ],
+      "properties": {
+        "max_header_bytes": {
+          "const": 16384
+        },
+        "max_body_bytes": {
+          "const": 1048576
+        },
+        "max_response_bytes": {
+          "const": 4194304
+        },
+        "max_operations": {
+          "const": 256
+        },
+        "max_slots": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        },
+        "request_timeout_ms": {
+          "const": 1000
+        },
+        "session_ttl_ms": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 300000
+        }
+      }
+    },
+    "PrivateDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "protocol_version",
+        "host",
+        "port",
+        "token",
+        "epoch",
+        "session_ttl_ms"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "protocol_version": {
+          "const": "0.1"
+        },
+        "host": {
+          "const": "127.0.0.1"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "token": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "epoch": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "session_ttl_ms": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 300000
+        }
+      },
+      "description": "Only the exclusively owned private pipe carries this credential descriptor; never retain or publish its token or epoch."
+    },
+    "Capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "epoch",
+        "next_sequence",
+        "world_id",
+        "world_revision",
+        "operations",
+        "limits",
+        "admission",
+        "durability",
+        "retry_mode"
+      ],
+      "properties": {
+        "protocol_version": {
+          "const": "0.1"
+        },
+        "epoch": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "next_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "world_id": {
+          "const": "workshop"
+        },
+        "world_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "operations": {
+          "const": [
+            "entity.create",
+            "transform.set",
+            "entity.delete"
+          ]
+        },
+        "limits": {
+          "$ref": "#/$defs/Limits"
+        },
+        "admission": {
+          "const": "synchronous"
+        },
+        "durability": {
+          "const": "volatile"
+        },
+        "retry_mode": {
+          "const": "resync_only"
+        }
+      }
+    },
+    "ObserveRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "world_id"
+      ],
+      "properties": {
+        "protocol_version": {
+          "const": "0.1"
+        },
+        "world_id": {
+          "const": "workshop"
+        }
+      }
+    },
+    "ObserveResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "epoch",
+        "next_sequence",
+        "snapshot"
+      ],
+      "properties": {
+        "protocol_version": {
+          "const": "0.1"
+        },
+        "epoch": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "next_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "snapshot": {
+          "$ref": "#/$defs/Snapshot"
+        }
+      }
+    },
+    "TransactionResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "epoch",
+        "next_sequence",
+        "receipt"
+      ],
+      "properties": {
+        "protocol_version": {
+          "const": "0.1"
+        },
+        "epoch": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "next_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "receipt": {
+          "$ref": "#/$defs/Receipt"
+        }
+      }
+    },
+    "AdmissionError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "status",
+        "error"
+      ],
+      "properties": {
+        "protocol_version": {
+          "const": "0.1"
+        },
+        "status": {
+          "const": "rejected"
+        },
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "path"
+          ],
+          "properties": {
+            "code": {
+              "enum": [
+                "NOT_AUTHORIZED",
+                "SESSION_EXPIRED",
+                "INVALID_SCHEMA",
+                "UNSUPPORTED_VERSION",
+                "BUDGET_EXCEEDED",
+                "REQUIRES_RESYNC",
+                "NOT_FOUND",
+                "UNSUPPORTED_OPERATION"
+              ]
+            },
+            "path": {
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        }
+      }
+    },
+    "temporaryId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+    }
+  }
+}

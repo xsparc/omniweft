@@ -1,6 +1,6 @@
 # render.world_cube
 
-Status: **implemented and verified in the PR-004 candidate; maintainer merge pending**. Work item: **PR-004 — Vulkan presentation of world objects**.
+Status: **implemented, verified and merged in PR-004**. Work item: **PR-004 — Vulkan presentation of world objects**.
 
 Dependencies: PR-003. Validation lanes: cpu, gpu.
 
