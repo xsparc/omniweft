@@ -7,3 +7,8 @@
 # Preserve reviewed upstream bytes for configure-time provenance checks.
 /third_party/nlohmann/json.hpp -text
 /third_party/nlohmann/LICENSE.MIT -text
+
+/third_party/render/SDL-LICENSE.txt -text
+/third_party/render/Vulkan-Headers-LICENSE.md -text
+/third_party/render/Vulkan-Headers-Apache-2.0.txt -text
+/third_party/render/Vulkan-Headers-MIT.txt -text

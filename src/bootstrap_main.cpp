@@ -4,6 +4,7 @@
 #endif
 #include "protocol_example.hpp"
 #include "objects_example.hpp"
+#include "render_example.hpp"
 #include <charconv>
 #include <cstdint>
 #include <filesystem>
@@ -159,9 +160,12 @@ int main(int argc, char* argv[]) {
     if (std::string_view(argv[index]) == "--example" &&
         std::string_view(argv[index + 1]) == "objects.atomic")
       return run_objects_example(argc, argv);
+    if (std::string_view(argv[index]) == "--example" &&
+        std::string_view(argv[index + 1]) == "render.world_cube")
+      return run_render_example(argc, argv);
   }
   if (argc == 2 && std::string_view(argv[1]) == "--help") {
-    std::cout << usage << "Also available: --example protocol.reject_invalid or objects.atomic with repeatable --input <json-file>.\n";
+    std::cout << usage << "Also available: --example protocol.reject_invalid or objects.atomic with repeatable --input <json-file>.\nRendering: --example render.world_cube --gpu (optional build) or --headless [--interactive].\n";
     return 0;
   }
   Options options;
@@ -173,7 +177,7 @@ int main(int argc, char* argv[]) {
   }
   if (!options.headless) {
     std::cerr << "graphics_unavailable: this build has no graphics backend; rerun with --headless. "
-                 "Rendering/device probing is deferred to PR-004.\n";
+                 "Use --example render.world_cube --gpu with the optional Vulkan build for presentation.\n";
     return 3;
   }
   try {

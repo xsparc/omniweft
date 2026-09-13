@@ -1,33 +1,120 @@
 {
   "version": 6,
-  "cmakeMinimumRequired": {"major": 3, "minor": 31, "patch": 6},
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 6
+  },
   "configurePresets": [
     {
       "name": "headless-base",
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
-      "cacheVariables": {"CMAKE_BUILD_TYPE": "Debug", "BUILD_TESTING": "ON"}
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_TESTING": "ON"
+      }
     },
     {
       "name": "windows-headless",
       "inherits": "headless-base",
-      "condition": {"type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows"},
-      "cacheVariables": {"CMAKE_CXX_COMPILER": "cl"}
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl"
+      }
     },
     {
       "name": "linux-headless",
       "inherits": "headless-base",
-      "condition": {"type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux"},
-      "cacheVariables": {"CMAKE_CXX_COMPILER": "clang++-18"}
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++-18"
+      }
+    },
+    {
+      "name": "windows-vulkan",
+      "inherits": "windows-headless",
+      "cacheVariables": {
+        "OW_ENABLE_VULKAN": "ON",
+        "CMAKE_C_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "linux-vulkan",
+      "inherits": "linux-headless",
+      "cacheVariables": {
+        "OW_ENABLE_VULKAN": "ON",
+        "CMAKE_C_COMPILER": "clang-18"
+      }
     }
   ],
   "buildPresets": [
-    {"name": "windows-headless", "configurePreset": "windows-headless"},
-    {"name": "linux-headless", "configurePreset": "linux-headless"}
+    {
+      "name": "windows-headless",
+      "configurePreset": "windows-headless"
+    },
+    {
+      "name": "linux-headless",
+      "configurePreset": "linux-headless"
+    },
+    {
+      "name": "windows-vulkan",
+      "configurePreset": "windows-vulkan"
+    },
+    {
+      "name": "linux-vulkan",
+      "configurePreset": "linux-vulkan"
+    }
   ],
   "testPresets": [
-    {"name": "windows-headless", "configurePreset": "windows-headless", "output": {"outputOnFailure": true}, "execution": {"noTestsAction": "error"}},
-    {"name": "linux-headless", "configurePreset": "linux-headless", "output": {"outputOnFailure": true}, "execution": {"noTestsAction": "error"}}
+    {
+      "name": "windows-headless",
+      "configurePreset": "windows-headless",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "linux-headless",
+      "configurePreset": "linux-headless",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "windows-vulkan",
+      "configurePreset": "windows-vulkan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "linux-vulkan",
+      "configurePreset": "linux-vulkan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    }
   ]
 }

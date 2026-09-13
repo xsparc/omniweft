@@ -76,7 +76,7 @@ def validate(root: Path = ROOT) -> list[str]:
     markdown = {
         path: path.read_text(encoding="utf-8-sig")
         for path in root.rglob("*.md")
-        if not any(part in {".git", "build", "out", "artifacts", ".venv"}
+        if not any(part in {".git", "build", "out", "artifacts", ".cache", ".venv"}
                    for part in path.relative_to(root).parts)
     }
     for path, content in markdown.items():

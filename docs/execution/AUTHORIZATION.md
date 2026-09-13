@@ -27,3 +27,13 @@ At roadmap completion, report the measured outcome and keep additional ideas pro
 For PR-004, the maintainer designated the current Windows GPU machine, requested conservative Linux Docker use, and said to prioritize Windows verification if necessary. Windows physical-GPU evidence is the immediate required target; attempt bounded Linux container checks and report whether they use hardware or software, with any unavailable Linux GPU lane explicitly `not_run`. Do not claim Linux desktop support from a container or silently replace a hardware test with software rendering. This changes verification priority, not authority to spend, modify trust or publish releases.
 
 The maintainer also explicitly required protection of personal details on the Windows machine. Public commits, PRs, logs and artifacts must omit local account names, home/worktree paths, hostnames, device UUID/LUID/serials, environment dumps and unrelated local software/processes. Retain necessary generic GPU model, driver/API/tool versions, source hashes, relative artifact paths and independently verified results. Redact before publishing; keep machine-specific orchestration details only in the private task.
+
+## Commit attribution authorization
+
+On 2026-09-13, the maintainer explicitly replied:
+
+> I authorize this for Omniweft commits.
+
+This answers the preceding request to use public GitHub identity `xsparc <10508303+xsparc@users.noreply.github.com>` for agent-generated Omniweft commits, including future increments. Use that exact name and noreply address for author and committer through per-command Git configuration/environment. Verify both fields before pushing. Do not use a connector that silently substitutes a personal email, or change global Git configuration.
+
+The earlier automatic approval-review attribution blocker is resolved by this explicit authorization. This is commit-attribution permission, not a DCO sign-off, human code-review approval, new merge authority or permission to rewrite shared history. Existing privacy, contribution, merge and release policies remain binding.

@@ -131,7 +131,7 @@
     {
       "id": "PR-004",
       "title": "Vulkan presentation of world objects",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [
         "PR-003"
@@ -150,11 +150,26 @@
       "execution": {
         "authorization": "docs/execution/AUTHORIZATION.md",
         "owner": "Codex coordinator",
-        "branch": "codex/pr-004-vulkan-presentation",
+        "branch": "codex/pr-004-vulkan-runtime",
         "claimed_at": "2026-09-13",
         "plan": "docs/execution/PR-004-PLAN.md",
         "handoff": "docs/execution/PR-004-HANDOFF.md",
-        "evidence": []
+        "evidence": [
+          "docs/evidence/PR-004/README.md",
+          "https://github.com/xsparc/omniweft/actions/runs/34749008421",
+          "https://github.com/xsparc/omniweft/actions/runs/34749008453",
+          "https://github.com/xsparc/omniweft/actions/runs/34749008417"
+        ],
+        "base_sha": "b5b8def8cff7109e6e8898b2f4ccc4979346dadb",
+        "contract_checkpoint": {
+          "pr_url": "https://github.com/xsparc/omniweft/pull/7",
+          "merge_sha": "b5b8def8cff7109e6e8898b2f4ccc4979346dadb",
+          "merged_at": "2026-09-13T05:44:38Z",
+          "scope": "Contract documentation only; PR-004 runtime implementation is not merged."
+        },
+        "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/8",
+        "runtime_candidate_sha": "973162f40536235c7dea24aff00bc7281cf93923"
       }
     },
     {

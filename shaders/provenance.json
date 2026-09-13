@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "sdk_version": "1.4.357.0",
+  "target_environment": "vulkan1.3",
+  "tools": {
+    "glslang_sha256": "82cbcb538fe8e9c5773fc13a35a41df3d22124754c4e3d2edad5d7e4a2602e12",
+    "spirv_val_sha256": "55b0bde93c20d427a95d6deb95181ab6621d9bb18e6f1519d30ceba8d3f1de17"
+  },
+  "shaders": {
+    "vert": {
+      "source": "shaders/world_cube.vert",
+      "source_sha256": "9ec55b6ddd3528678d4fe9eda4c0fddcfc4277271a65d0eefb364c1542e8e818",
+      "spirv_sha256": "701e544251c5b26dd38e3504f6372915b0616edf3a991693ef229586622edaa5",
+      "word_count": 259,
+      "validation": "passed"
+    },
+    "frag": {
+      "source": "shaders/world_cube.frag",
+      "source_sha256": "f9da860f5eaf03f1b094078aa3fa6215c138e0a07153772f0cdad46c1b1ff326",
+      "spirv_sha256": "72d2853770e5b8ee0e4a4618fc70b8f07e7d550bb69201c5bf40b8dfc24e7591",
+      "word_count": 145,
+      "validation": "passed"
+    }
+  },
+  "header_sha256": "372543e13f186898352b58a4779dfac45448476c4c4c9dcc56a343b853f8a699"
+}

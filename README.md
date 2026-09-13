@@ -4,7 +4,7 @@
 
 Omniweft treats a virtual world as structured data that people, game systems, and AI agents can inspect and change through the same interfaces. AI can compose a scene, sculpt terrain, modify geometry, paint textures, apply physical actions, and inspect the result. The engine validates and schedules those changes while simulation and rendering continue.
 
-**Status: headless bootstrap, command schema and atomic object execution merged (PR-001 through PR-003); Vulkan presentation in progress (PR-004).** The native runner provides a C++20 start/step/stop example and structural command validation with round-trip serialization. PR-003 adds bounded, synchronous create/transform/delete transactions, detached snapshots and complete rollback for in-memory root objects. Its Windows/Linux checks and actual merge are recorded in [the object execution handoff](docs/execution/PR-003-HANDOFF.md). Rendering, physics, authenticated SDK, persistence and performance targets below remain planned. See the runnable [bootstrap](examples/platform-bootstrap.md), [protocol](examples/protocol-reject_invalid.md) and [atomic object](examples/objects-atomic.md) examples.
+**Status: headless bootstrap, command schema and atomic object execution merged (PR-001 through PR-003); Vulkan presentation in progress (PR-004).** The native runner provides a C++20 start/step/stop example and structural command validation with round-trip serialization. PR-003 adds bounded, synchronous create/transform/delete transactions, detached snapshots and complete rollback for in-memory root objects. Its Windows/Linux checks and actual merge are recorded in [the object execution handoff](docs/execution/PR-003-HANDOFF.md). The PR-004 candidate adds optional SDL3/Vulkan presentation with verified Windows hardware evidence and passing hosted Windows/Linux builds; maintainer merge remains pending. Physics, authenticated SDK, persistence and performance targets below remain planned. See the runnable [bootstrap](examples/platform-bootstrap.md), [protocol](examples/protocol-reject_invalid.md) and [atomic object](examples/objects-atomic.md) examples.
 
 ## Start here
 
@@ -41,11 +41,13 @@ Pixel control means defined image coordinates and programmable bulk operations. 
 
 A local sandbox on Windows 11 x64 and Ubuntu 24.04 x64: a minimal editor, rigid bodies, basic physically based materials, editable static voxel terrain, mesh deformation, texture painting, a Python agent interface, and save/replay. All core examples work offline with a scripted AI provider. Cloud providers and downloadable models are optional.
 
-Proposed stack: **C++20, CMake, SDL3, Vulkan 1.3, Jolt Physics and an out-of-process Python SDK**. PR-001 pins the toolchain and actual dependencies of the headless bootstrap. SDL3, Vulkan and Jolt source revisions and licenses will be pinned and verified when their integration slices introduce them. See the [stack decision](docs/adr/0001-runtime-stack.md).
+Proposed stack: **C++20, CMake, SDL3, Vulkan 1.3, Jolt Physics and an out-of-process Python SDK**. PR-001 pins the toolchain and actual dependencies of the headless bootstrap. PR-004 pins optional SDL3/Vulkan-Headers sources and notices; Jolt remains deferred until its integration slice. See the [stack decision](docs/adr/0001-runtime-stack.md).
 
 ## Build and validate
 
 Build the native shell using the platform-specific instructions in [platform.bootstrap](examples/platform-bootstrap.md). It requires the pinned tools in `toolchains/bootstrap.json`; the executable itself needs no GPU, Python interpreter, provider key or network.
+
+For the optional renderer, use the build and independent verification commands in [render.world_cube](examples/render-world_cube.md); current limitations and evidence are recorded in [its handoff](docs/execution/PR-004-HANDOFF.md).
 
 Planning validation separately requires Python 3.11 or newer and no third-party Python packages:
 

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "world_id": "workshop",
+  "seed": 7,
+  "max_slots": 1024,
+  "entity_uuid": "00000007-0000-4000-8000-000000000001",
+  "generation": 1,
+  "camera": {
+    "position_m": [
+      0,
+      0,
+      5
+    ],
+    "left": -4,
+    "right": 4,
+    "bottom": -3,
+    "top": 3,
+    "near_m": 0.1,
+    "far_m": 20
+  },
+  "transforms": [
+    {
+      "position_m": [
+        -1,
+        0,
+        0
+      ],
+      "rotation_xyzw": [
+        0,
+        0.6,
+        0,
+        0.8
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "position_m": [
+        1,
+        0.25,
+        0
+      ],
+      "rotation_xyzw": [
+        0,
+        0.6,
+        0,
+        0.8
+      ],
+      "scale": [
+        0.5,
+        1.5,
+        1
+      ]
+    }
+  ],
+  "face_rgba8": [
+    [
+      255,
+      64,
+      64,
+      255
+    ],
+    [
+      128,
+      32,
+      32,
+      255
+    ],
+    [
+      64,
+      255,
+      64,
+      255
+    ],
+    [
+      32,
+      128,
+      32,
+      255
+    ],
+    [
+      64,
+      64,
+      255,
+      255
+    ],
+    [
+      32,
+      32,
+      128,
+      255
+    ]
+  ],
+  "clear_rgba8": [
+    16,
+    20,
+    24,
+    255
+  ],
+  "thresholds": {
+    "edge_mask_chebyshev_radius_pixels": 1,
+    "color_channel_abs": 1,
+    "normalized_depth_abs": 0.00001
+  },
+  "rationale": "Pixel-centre rays intersect the literal transformed unit cube. A one-pixel expected-label boundary band excludes rasterization ownership differences; one UNORM code accommodates conversion rounding and 1e-5 normalized depth bounds float projection/interpolation rounding. All other expected pixels remain mandatory. Never derive thresholds or masks from observed output."
+}
