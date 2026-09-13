@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "runtime_candidate_sha": "973162f40536235c7dea24aff00bc7281cf93923",
+  "dirty": false,
+  "executable_sha256": "f35f5d8663e3448d17bed72c3d38e321e890affa6800ee90e44a021d94981f6b",
+  "zip": {
+    "file": "windows-gpu-973162f.zip",
+    "bytes": 36882,
+    "sha256": "c07f0706259d747386ed33cd60f2a964cc0925f353b2546047cd57c0ace4b7c6",
+    "entries": 36,
+    "uncompressed_bytes": 6866317
+  },
+  "manifests": [
+    {
+      "kind": "oracle",
+      "manifest_sha256": "cd2075ac2b3638ec3e613bbc28eb9a348ce7d6525735e26348b0d5503c20360e",
+      "assertions": 1961,
+      "artifacts": 32,
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": true,
+          "source_directory": "<repo>"
+        },
+        "gpu": {
+          "api_version": "1.4.351",
+          "device_type": "discrete_gpu",
+          "driver_version": "2584739840",
+          "name": "NVIDIA GeForce RTX 5070"
+        }
+      }
+    },
+    {
+      "kind": "mutation",
+      "manifest_sha256": "db706e129602fd0f7a720cd15f3ad2cea29f6758586ce93e1a2ea9136f25e43e",
+      "assertions": 351,
+      "artifacts": 2,
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": true,
+          "source_directory": "<repo>"
+        }
+      }
+    }
+  ],
+  "privacy": "Inventoried allowlisted reports/readbacks only; no executable, PDB, raw workstation logs or private identity/path fields."
+}

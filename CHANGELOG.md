@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- PR-004 candidate: optional Vulkan presentation of committed cube transforms, independent color/ID/depth verification, bounded resize/minimize recovery and privacy-safe local evidence; final candidate checks and merge remain pending.
+- PR-004 candidate: optional Vulkan presentation of committed cube transforms, independent color/ID/depth verification, bounded resize/minimize recovery and privacy-safe local evidence; clean Windows GPU and hosted Windows/Linux checks passed; maintainer merge remains pending.
 
 - PR-003: bounded atomic root-object creation, transforms and deletion; complete-state rollback and generation reuse evidence (see execution handoff for checks and merge state).
 

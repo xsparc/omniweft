@@ -1,6 +1,6 @@
 # render.world_cube
 
-Status: **implemented in the PR-004 draft; final candidate verification and merge pending**. Work item: **PR-004 — Vulkan presentation of world objects**.
+Status: **implemented and verified in the PR-004 candidate; maintainer merge pending**. Work item: **PR-004 — Vulkan presentation of world objects**.
 
 Dependencies: PR-003. Validation lanes: cpu, gpu.
 
@@ -60,7 +60,7 @@ Record exact candidate SHA, commands, environment, seed, assertions, results, ar
 
 Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.
 
-The [handoff](../docs/execution/PR-004-HANDOFF.md) records actual checks and exact evidence hashes. Historical Windows evidence was collected from a dirty checkout; clean-candidate evidence must supersede it before delivery. The maintainer prioritized Windows physical-GPU checks and conservative Linux Docker attempts. The attempted Docker runtime exposed CPU llvmpipe; Linux hardware presentation remains `not_run`, and Linux desktop support is not claimed.
+The [handoff](../docs/execution/PR-004-HANDOFF.md) records actual checks and exact evidence hashes. The [public Windows GPU bundle](../docs/evidence/PR-004/README.md) verifies clean runtime commit `973162f40536235c7dea24aff00bc7281cf93923`. Later evidence/docs and hosted-setup commits are recorded separately; they do not relabel that hardware run. The maintainer prioritized Windows physical-GPU checks and conservative Linux Docker attempts. The attempted Docker runtime exposed CPU llvmpipe; Linux hardware presentation remains `not_run`, and Linux desktop support is not claimed.
 
 Record exact candidate SHA, dirty status, commands, tool/device versions, seed, assertions, result and artifact hashes using the [evidence template](../docs/templates/EVIDENCE.md). Publish only reviewed allowlisted reports and engine readbacks. Keep raw workstation build output, executable/PDB artifacts, personal/account/host names, absolute paths and device UUID/LUID/serials private.
 
