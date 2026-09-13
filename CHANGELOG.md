@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-- PR-004 candidate: optional Vulkan presentation of committed cube transforms, independent color/ID/depth verification, bounded resize/minimize recovery and privacy-safe local evidence; clean Windows GPU and hosted Windows/Linux checks passed; maintainer merge remains pending.
+- PR-005 candidate: authenticated native loopback control, private session renewal, typed Python SDK and independent authorization/expiry/framing/recovery evidence; clean Windows evidence and hosted Windows/Linux checks passed, runtime-expiry correction and independent review complete, maintainer merge pending.
+
+- PR-004 (merged): optional Vulkan presentation of committed cube transforms, independent color/ID/depth verification, bounded resize/minimize recovery and privacy-safe local evidence; clean Windows GPU and hosted Windows/Linux checks passed; maintainer merge recorded in the execution handoff.
 
 - PR-003: bounded atomic root-object creation, transforms and deletion; complete-state rollback and generation reuse evidence (see execution handoff for checks and merge state).
 
@@ -15,4 +17,4 @@
 - Open-source contribution, governance, security and licensing foundation.
 - Planning validator and Windows/Linux documentation CI.
 
-The native shell and command schema establish the first implementation slices; world mutation, rendering, physics and released binaries remain future work. The initial generated planning commit has no fabricated human DCO sign-off; subsequent contributions follow the normal contribution policy.
+The native shell, command schema, atomic objects and Vulkan presentation are implemented; broader engine features, physics and released binaries remain future work. The initial generated planning commit has no fabricated human DCO sign-off; subsequent contributions follow the normal contribution policy.

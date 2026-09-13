@@ -131,7 +131,7 @@
     {
       "id": "PR-004",
       "title": "Vulkan presentation of world objects",
-      "status": "in_review",
+      "status": "done",
       "milestone": "M1",
       "depends_on": [
         "PR-003"
@@ -158,7 +158,10 @@
           "docs/evidence/PR-004/README.md",
           "https://github.com/xsparc/omniweft/actions/runs/34749008421",
           "https://github.com/xsparc/omniweft/actions/runs/34749008453",
-          "https://github.com/xsparc/omniweft/actions/runs/34749008417"
+          "https://github.com/xsparc/omniweft/actions/runs/34749008417",
+          "https://github.com/xsparc/omniweft/actions/runs/34751087947",
+          "https://github.com/xsparc/omniweft/actions/runs/34751087956",
+          "https://github.com/xsparc/omniweft/actions/runs/34751087968"
         ],
         "base_sha": "b5b8def8cff7109e6e8898b2f4ccc4979346dadb",
         "contract_checkpoint": {
@@ -169,13 +172,16 @@
         },
         "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization",
         "pr_url": "https://github.com/xsparc/omniweft/pull/8",
-        "runtime_candidate_sha": "973162f40536235c7dea24aff00bc7281cf93923"
+        "runtime_candidate_sha": "973162f40536235c7dea24aff00bc7281cf93923",
+        "merge_sha": "ba80bb8392206a32810c8de989245e80cdfe055d",
+        "merged_at": "2026-09-13T10:08:36Z",
+        "delivery_sha": "8e03add6e01b53e991fedd2b8c4e82346e69347a"
       }
     },
     {
       "id": "PR-005",
       "title": "Authenticated local Python SDK",
-      "status": "proposed",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [
         "PR-003"
@@ -189,7 +195,26 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/pr-005-authenticated-sdk",
+        "claimed_at": "2026-09-13",
+        "eligibility": "Existing roadmap adopted; dependency PR-003 merged; promoted ready then claimed.",
+        "base_sha": "ba80bb8392206a32810c8de989245e80cdfe055d",
+        "plan": "docs/execution/PR-005-PLAN.md",
+        "handoff": "docs/execution/PR-005-HANDOFF.md",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/9",
+        "runtime_candidate_sha": "8ce2f06c6f9df626558a59bc694626d91c561a47",
+        "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization",
+        "evidence": [
+          "docs/evidence/PR-005/README.md",
+          "https://github.com/xsparc/omniweft/actions/runs/34755540239",
+          "https://github.com/xsparc/omniweft/actions/runs/34755540240",
+          "https://github.com/xsparc/omniweft/actions/runs/34755540235"
+        ]
+      }
     },
     {
       "id": "PR-006",

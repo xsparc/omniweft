@@ -1,5 +1,9 @@
 # PR-004 execution handoff
 
+## Actual maintainer merge
+
+Merged through [PR #8](https://github.com/xsparc/omniweft/pull/8) at 2026-09-13T10:08:36Z as `ba80bb8392206a32810c8de989245e80cdfe055d`. The squash tree equals the independently reviewed delivery tree `5baf923a0972fc099cfbc7c5082e5590b8ced98c`. All six post-merge planning/native/optional-render jobs passed; their run links and next slice are recorded in [PR-005 handoff](PR-005-HANDOFF.md). PR-004 is now **done**. The delivery record below is historical and preserves its original pre-merge status, evidence SHAs and limitations.
+
 State: **in_review**. [Implementation PR #8](https://github.com/xsparc/omniweft/pull/8), branch `codex/pr-004-vulkan-runtime`, base `b5b8def8cff7109e6e8898b2f4ccc4979346dadb`. Adopted scope and standing noreply attribution: [authorization](AUTHORIZATION.md). [Plan](PR-004-PLAN.md) · [runnable example](../../examples/render-world_cube.md) · [public GPU evidence](../evidence/PR-004/README.md).
 
 PR #7 merged only the eight-file contract checkpoint. PR-004 is not done: the runtime implementation is in PR #8 and requires actual maintainer merge. PR-003's actual merge remains `e994f054d1e13ba19f714f35696ec8a1bca221a9`.

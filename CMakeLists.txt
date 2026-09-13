@@ -51,6 +51,20 @@ target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation)
 target_include_directories(omniweft_examples SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_examples)
 
+find_package(Threads REQUIRED)
+add_library(ow_control STATIC src/control.cpp)
+target_link_libraries(ow_control PUBLIC ow_commands PRIVATE Threads::Threads)
+target_include_directories(ow_control PUBLIC include)
+target_include_directories(ow_control SYSTEM PRIVATE third_party)
+if(WIN32)
+  target_link_libraries(ow_control PRIVATE ws2_32 bcrypt)
+endif()
+ow_native_policy(ow_control)
+
+add_executable(omniweft_control src/control_main.cpp)
+target_link_libraries(omniweft_control PRIVATE ow_control ow_transactions)
+ow_native_policy(omniweft_control)
+
 option(OW_ENABLE_VULKAN "Build the optional SDL/Vulkan presentation adapter" OFF)
 if(OW_ENABLE_VULKAN)
   include(cmake/RenderDependencies.cmake)
@@ -97,4 +111,11 @@ if(BUILD_TESTING)
   add_test(NAME render.oracle_selftest
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/render_oracle_test.py")
   set_tests_properties(presentation.native render.structural render.oracle_selftest PROPERTIES TIMEOUT 120)
+
+  add_test(NAME sdk.move_cube
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sdk_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_control>")
+  add_test(NAME sdk.oracle_selftest
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sdk_oracle_test.py")
+  set_tests_properties(sdk.move_cube sdk.oracle_selftest PROPERTIES TIMEOUT 180)
 endif()
