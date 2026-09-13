@@ -1,6 +1,6 @@
 # objects.atomic
 
-Status: **implementation in progress; verification and merge pending**. Work item: **PR-003 — Atomic object lifecycle and transforms**.
+Status: **in review; maintainer merge pending**. Work item: **PR-003 — Atomic object lifecycle and transforms**.
 
 Dependencies: PR-002. Validation lanes: cpu.
 
@@ -42,4 +42,4 @@ Record exact candidate SHA, commands, environment, seed, assertions, results, ar
 
 Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.
 
-The [handoff](../docs/execution/PR-003-HANDOFF.md) records actual candidate checks and review. Required Windows/Linux native and planning checks are pending until implementation integration. The [roadmap](../docs/ROADMAP.md) and [backlog](../planning/backlog.json) retain the same work-item and example IDs.
+The [handoff](../docs/execution/PR-003-HANDOFF.md) records actual candidate checks and review. Initial Windows/Linux native and planning checks passed, including complete rollback and a deliberate rollback-regression mutation. The strict integer-token assertion follow-up requires fresh current-head CI; final readiness evidence is linked from the PR. The [roadmap](../docs/ROADMAP.md) and [backlog](../planning/backlog.json) retain the same work-item and example IDs.

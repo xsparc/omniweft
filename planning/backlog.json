@@ -89,7 +89,7 @@
     {
       "id": "PR-003",
       "title": "Atomic object lifecycle and transforms",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [
         "PR-002"
@@ -111,8 +111,15 @@
         "claimed_at": "2026-09-13",
         "plan": "docs/execution/PR-003-PLAN.md",
         "handoff": "docs/execution/PR-003-HANDOFF.md",
-        "evidence": [],
-        "pr_url": "https://github.com/xsparc/omniweft/pull/6"
+        "evidence": [
+          "https://github.com/xsparc/omniweft/actions/runs/34726759921",
+          "https://github.com/xsparc/omniweft/actions/runs/34726759918",
+          "docs/execution/PR-003-HANDOFF.md"
+        ],
+        "pr_url": "https://github.com/xsparc/omniweft/pull/6",
+        "functional_head": "fe4e684605268a1b1874722203fe2c2ea3e40b79",
+        "functional_tested_merge_candidate": "88030420557cb7c60a1d25e02442bf97e2d1b612",
+        "review": "Independent native, test, workflow and initial hosted evidence reviews found no actionable defects. The strict integer-token assertion follow-up requires passing current-head CI before PR readiness; see handoff and PR."
       }
     },
     {
