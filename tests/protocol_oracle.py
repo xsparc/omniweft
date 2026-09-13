@@ -217,6 +217,29 @@ def make_cases(valid, expected):
     for label, token in [("decimal", b"1.0"), ("exponent", b"1e0")]:
         rejected("generation-"+label, encoded(durable).replace(b'"generation":0', b'"generation":'+token),
                  "INVALID_SCHEMA", "/operations/1/target/generation")
+    deletion = copy.deepcopy(expected)
+    deletion["budget"]["max_operations"] = 1
+    deletion["operations"] = [{"type": "entity.delete", "target": {"temporary_id": "block"},
+                               "child_policy": "reject_if_children"}]
+    accepted("delete-temporary-target-roundtrip", deletion)
+    durable_deletion = copy.deepcopy(deletion)
+    durable_deletion["operations"][0]["target"] = {
+        "world_id": "another-world", "entity_uuid": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+        "generation": UINT64_MAX}
+    accepted("delete-durable-target-roundtrip", durable_deletion)
+    for label, policy in [("recursive", "recursive"), ("reparent", "reparent"), ("boolean", True)]:
+        item = copy.deepcopy(deletion)
+        item["operations"][0]["child_policy"] = policy
+        rejected("delete-policy-"+label, encoded(item), "INVALID_SCHEMA", "/operations/0/child_policy")
+    missing_policy = copy.deepcopy(deletion)
+    del missing_policy["operations"][0]["child_policy"]
+    rejected("delete-missing-policy", encoded(missing_policy), "INVALID_SCHEMA", "/operations/0/child_policy")
+    extra_delete = copy.deepcopy(deletion)
+    extra_delete["operations"][0]["unexpected"] = "ignored-fields-are-not-allowed"
+    rejected("delete-unknown-field", encoded(extra_delete), "INVALID_SCHEMA", "/operations/0/unexpected")
+    mixed_delete = copy.deepcopy(durable_deletion)
+    mixed_delete["operations"][0]["target"]["temporary_id"] = "block"
+    rejected("delete-mixed-target-forms", encoded(mixed_delete), "INVALID_SCHEMA", "/operations/0/target*")
     return cases
 
 def inspect_report(payload, cases):

@@ -39,6 +39,7 @@ jobs:
         run: |
           python tools/bootstrap.py
           python tests/protocol_mutation.py --build-dir build/linux-headless --evidence-dir artifacts/protocol-mutation
+          python tests/objects_mutation.py --build-dir build/linux-headless --evidence-dir artifacts/objects-mutation
       - name: Configure, build and verify on Windows
         if: runner.os == 'Windows'
         shell: pwsh
@@ -52,6 +53,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python tests/protocol_mutation.py --build-dir build/windows-headless --evidence-dir artifacts/protocol-mutation
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tests/objects_mutation.py --build-dir build/windows-headless --evidence-dir artifacts/objects-mutation
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Record candidate and fixture evidence
         shell: bash
         run: |
@@ -61,13 +64,17 @@ jobs:
         shell: bash
         run: |
           python tests/protocol_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_examples.exe' || 'linux-headless/omniweft_examples' }}" --evidence-dir artifacts/protocol
+      - name: Record atomic object evidence
+        shell: bash
+        run: |
+          python tests/objects_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_examples.exe' || 'linux-headless/omniweft_examples' }}" --evidence-dir artifacts/objects
       - name: Summarize retained evidence
         shell: bash
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          for name in ("bootstrap", "protocol", "protocol-mutation"):
+          for name in ("bootstrap", "protocol", "protocol-mutation", "objects", "objects-mutation"):
               manifest = json.loads((Path("artifacts") / name / "manifest.json").read_text(encoding="utf-8"))
               summary = {key: manifest[key] for key in ("work_item", "example", "candidate_sha", "candidate_worktree_dirty", "status", "environment")}
               summary["assertion_count"] = len(manifest["assertions"])
@@ -76,7 +83,7 @@ jobs:
               summary["executable"] = manifest["artifacts"]["executable"]
               print(json.dumps({"evidence": name, **summary}, sort_keys=True))
           PY
-      - name: Retain bootstrap and protocol evidence with CTest log
+      - name: Retain native evidence and CTest log
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4; official upstream pin
         with:
@@ -85,6 +92,8 @@ jobs:
             artifacts/bootstrap/
             artifacts/protocol/
             artifacts/protocol-mutation/
+            artifacts/objects/
+            artifacts/objects-mutation/
             build/*/Testing/Temporary/LastTest.log
           if-no-files-found: error
           retention-days: 7

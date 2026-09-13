@@ -1,6 +1,6 @@
 # PR-002 execution handoff
 
-- State: **in_review**; [GitHub PR #5](https://github.com/xsparc/omniweft/pull/5), pending maintainer integration. Do not mark done before an actual merge.
+- State: **done**. [GitHub PR #5](https://github.com/xsparc/omniweft/pull/5) was squash-merged by @xsparc at 2026-09-12T23:11:17Z as `32e32ae19b5138231159fe961246dbcf5c8a88c2`, independently verified through GitHub.
 - Work item: PR-002 — Versioned command schema; example `protocol.reject_invalid`.
 - Task: `01a09699-3e74-7103-80e4-63d80a8e978e`; coordinator branch `codex/pr-002-command-schema`.
 - Base: PR-001 squash merge `7283b8ad02b96195bb9e828b9945dc4c6c975c9a`, verified through GitHub after the user's merge confirmation. PR-001 is done in the shared ledger.
@@ -53,9 +53,6 @@ This handoff/ledger update changes documentation only. The PR must still pass ch
 
 Review is technical evidence; no human GitHub approval or DCO sign-off is fabricated.
 
-## Resume
+## Completed integration
 
-1. Inspect live PR #5 head, current Windows/Linux native and planning checks, and review conversations.
-2. If pending without new failures or actionable changes, stay quiet. If checks fail or review identifies a defect, resolve it in this bounded slice and refresh affected evidence.
-3. Await ordinary maintainer integration under the existing contribution policy. No release, paid resource or repository permission change is authorized here.
-4. After GitHub verifies an actual merge, record the merge SHA, mark PR-002 done and begin dependency-ready PR-003 from updated main.
+Final head `38affa15cbe12f770b15f50badeb7a6ac1a8ae69` passed [native run 34724489627](https://github.com/xsparc/omniweft/actions/runs/34724489627) and [planning run 34724489605](https://github.com/xsparc/omniweft/actions/runs/34724489605), including independent final documentation/evidence review. Final tested merge candidate was `a72b49d7ba03133c7cbb96a05d0aa92066f33040`. The maintainer subsequently performed the real squash merge above. Next: [PR-003 atomic object lifecycle](PR-003-HANDOFF.md). The recorded maintainer merge does not invent a DCO sign-off or future automatic merge authority.
