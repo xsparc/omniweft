@@ -1,22 +1,24 @@
 # PR-005 execution handoff
 
-State: **in_review**, not merged. [PR #9](https://github.com/xsparc/omniweft/pull/9), branch `codex/pr-005-authenticated-sdk`, base `ba80bb8392206a32810c8de989245e80cdfe055d`. Runtime candidate `3d23b2dfb089ecefbb69196fe5c779bdabb68dfa`, tree `01b9fe13202d7c03f8759ec0d6b7f58ff638f4ef`. [Authorization](AUTHORIZATION.md) · [frozen slice plan](PR-005-PLAN.md) · [example](../../examples/sdk-move_cube.md).
-
-## Runtime-expiry review follow-up
-
-PR #9 was returned to draft after the additional automated review identified a normal-expiry/watchdog race on delivery head 4abb3f4483af22bd645cbddecee9ea8ccf6f837d. Independent review confirmed it, and the local original binary reproduced failure exit 4 in nine of ten otherwise idle 1000 ms lifetimes. The earlier passing evidence below remains historical and did not cover this lifecycle case.
-
-The bounded correction retains the configured normal deadline for I/O, admission and renewals, and gives the hard watchdog a fixed additional 1000 ms for cleanup. SDK shutdown also reconciles a failed stop write with bounded waiting and a verified real exit code. Pinned local Windows build and all 11 integrated CTest checks passed. The strengthened SDK test was rerun after requiring natural child completion before cleanup and passed; planning validation passed 38 items. Independent source and lifecycle-test review passed. The new tests reject the preserved original native binary and, separately, the prior SDK with the corrected native binary; the corrected combination passes. Fresh clean-candidate retained evidence, current-head CI and review-thread disposition remain pending before returning this PR to ready.
+State: **in_review**, not merged. [PR #9](https://github.com/xsparc/omniweft/pull/9), branch `codex/pr-005-authenticated-sdk`, base `ba80bb8392206a32810c8de989245e80cdfe055d`. Current tested runtime is `8ce2f06c6f9df626558a59bc694626d91c561a47`, tree `738aa2cf26537aec74b82cb76b2e210e8cdac175`. [Authorization](AUTHORIZATION.md) · [contract](PR-005-PLAN.md) · [example](../../examples/sdk-move_cube.md).
 
 ## Implemented behavior
 
-The native `omniweft_control` process owns one World and admits authenticated loopback requests through the existing typed command coordinator. The separate standard-library Python SDK negotiates capabilities, creates/moves/deletes typed objects, observes complete snapshots, renews private sessions and requires explicit resynchronization after uncertain mutation responses. Request framing, credentials, expiry, world identity, revisions and sequence admission are bounded and validated. See [the wire contract](../../schemas/control-0.1.schema.json) and [SDK usage](../../sdk/python/README.md).
+The native `omniweft_control` process owns one World and admits bounded authenticated loopback requests through the existing typed command coordinator. The separate standard-library Python SDK negotiates capabilities, creates/moves/deletes typed objects, observes complete snapshots, renews private sessions and requires explicit resynchronization after uncertain mutation responses. See [the wire schema](../../schemas/control-0.1.schema.json) and [SDK usage](../../sdk/python/README.md).
 
-The slice adds native control files, Python SDK/example, five independent oracle/support files, the public schema, CMake/CPU CI integration and delivery documentation. Existing rendering runtime, shaders, dependency pins and permissions are unchanged. All native mutation callbacks run on the World owner thread. Admission is synchronous and volatile; there is no queued physics tick, receipt replay cache, scoped multi-principal policy, remote endpoint or persistent-format migration.
+All World callbacks run on the owner thread. Admission is synchronous and volatile; scoped multi-principal policies, filtered queries, replay/retention, remote endpoints and persistence remain later roadmap work. Existing rendering runtime, shaders, dependency/action pins and CI permissions are unchanged.
+
+## Runtime-expiry correction
+
+The additional automated review on earlier delivery `4abb3f4483af22bd645cbddecee9ea8ccf6f837d` found that normal runtime expiry and emergency termination shared one deadline. Independent review confirmed the race; the original local binary returned failure 4 in nine of ten idle 1000 ms lifetimes. PR #9 was returned to draft while the issue was corrected.
+
+The configured max_runtime_ms remains the admission, network-I/O and private-renewal cutoff. A fixed additional 1000 ms allows orderly cleanup before the still-armed watchdog terminates a stalled process with exit 4. SDK shutdown reconciles a failed stop write by performing a bounded wait and accepting only a verified real exit 0; nonzero exits and timeouts remain failures.
+
+Independent new regressions observe natural completion before requesting SDK cleanup, leave an actual HTTP body incomplete across process expiry, and force a real child exit between the SDK's alive poll and stop write. They fail against the preserved original native binary and, separately, the prior SDK with the corrected native binary. The corrected combination passes. No production test hook or fabricated child exit code is used.
 
 ## Actual validation and evidence
 
-From the repository root, with the pinned Windows toolchain configured:
+With the pinned Windows toolchain configured, run from the repository root:
 
 ~~~sh
 cmake --build --preset windows-headless
@@ -24,29 +26,28 @@ ctest --preset windows-headless --output-on-failure
 python tests/sdk_oracle.py --executable build/windows-headless/omniweft_control.exe --evidence-dir artifacts/sdk
 python tests/sdk_mutation.py --build-dir build/windows-headless --evidence-dir artifacts/sdk-mutation
 python tools/validate_plan.py
-python -m unittest discover -s tools -p 'test_*.py'
 ~~~
 
-- Windows configure/build and all 11 integrated CTest checks passed, including the separate-process SDK example and 10 oracle selftests.
-- Clean retained local SDK oracle: 6,467 assertions, 149 artifacts; separate SDK client report: 296 assertions.
-- Actual compiled authentication-bypass proof: 395 assertions; unauthorized full-world mutation detected; original source/executable unchanged.
-- Planning validation passed all 38 items. Tooling suite: 31 passed, one skip because local symlink creation was unavailable (32 collected).
-- All six hosted jobs passed for runtime head `3d23b2d`: [planning](https://github.com/xsparc/omniweft/actions/runs/34753912412), [native](https://github.com/xsparc/omniweft/actions/runs/34753912427), [optional renderer](https://github.com/xsparc/omniweft/actions/runs/34753912390).
-- Hosted merge candidate `3623856bd79849c179f6477fdd59e6064c4bd05d` has exactly the runtime tree above and parents `ba80bb8392206a32810c8de989245e80cdfe055d` and `3d23b2dfb089ecefbb69196fe5c779bdabb68dfa`. Both OS artifacts bind that candidate/tree, report clean passed oracle and mutation runs, and match the reviewed Python source hashes.
-- [Durable local evidence archive and independent audit](../evidence/PR-005/README.md). Raw local process/network streams and private session descriptors are excluded.
+- Pinned local Windows build and all 11 CTest checks passed; the SDK check passed again after strengthening natural-exit observation.
+- Current clean retained oracle: 6,502 assertions, 150 artifacts, including 310 separate SDK client assertions and the real lifetime-expiry outcome.
+- Current compiled authentication-mutation proof: 401 assertions; unauthorized full-world mutation detected and original source/executable preserved.
+- Planning validation passed 38 items. The unchanged tooling suite previously passed 31 tests with one skip for unavailable local symlink creation (32 collected).
+- All six hosted jobs passed for runtime `8ce2f06`: [planning](https://github.com/xsparc/omniweft/actions/runs/34755540239), [native](https://github.com/xsparc/omniweft/actions/runs/34755540240), [optional renderer](https://github.com/xsparc/omniweft/actions/runs/34755540235).
+- Hosted merge candidate `8674aea8b5f323b1ce54066c6afab384216ac58b` has the runtime tree above and parents `ba80bb8392206a32810c8de989245e80cdfe055d` and `8ce2f06c6f9df626558a59bc694626d91c561a47`. Both operating systems retain actual SDK and mutation evidence.
+- [Current durable evidence and historical predecessor](../evidence/PR-005/README.md). Previous `3d23b2d` evidence remains explicitly historical and does not certify the lifecycle fix.
 
-Later documentation/evidence commits require their own current-head hosted checks before delivery; the PR records the final exact head and check links. Runtime evidence remains explicitly bound to the clean candidate above. PR-005 GPU verification is `not_applicable`; no GPU support or performance claim is added by these CPU checks.
+Final documentation/evidence commits require their own current-head hosted checks; the PR records that exact delivery head and its checks. Runtime evidence remains bound to the clean candidate above. PR-005 GPU testing is `not_applicable`; it adds no GPU or performance claim.
 
-## Independent review and dispositions
+## Independent review and provenance
 
-Separate implementation and oracle authors used isolated worktrees; the coordinator alone integrated changes and edited the ledger. Independent native/SDK source, architecture/security, integration/CI, oracle/mutation and retained-artifact reviews completed with no unresolved blocking finding.
+Separate native and test authors worked in isolated worktrees; the coordinator alone integrated files and edited the ledger. Independent native/SDK security, integration/schema, oracle/mutation, lifecycle-test and retained-artifact reviews passed after findings were addressed.
 
-Three SDK findings were fixed and re-reviewed: reject decoded credential echoes before constructing public models; normalize arbitrarily large numeric inputs into typed protocol failures; enforce the whole-request deadline across connection establishment and I/O. Corresponding malformed-response, privacy and deadline regressions passed. One schema finding was fixed by reusing the authoritative command temporary-ID definition, preserving valid colon-containing IDs. A separate reviewer verified every public archive entry against the raw reviewed evidence, including exact hashes and privacy constraints.
+Earlier resolved SDK findings covered decoded credential echoes, large-number overflow and the whole-request deadline. The schema now reuses the authoritative temporary-ID definition. The lifecycle correction and real-process regressions were separately reviewed. Current and historical archives contain only reviewed fixed fixture/domain data and allowlisted metadata; raw private channels, personal paths and credential values/hashes are excluded.
 
-No dependency or action pins changed, no new third-party runtime library was added, and no human approval or DCO sign-off is fabricated. Every new commit uses the [standing authorized noreply author and committer](AUTHORIZATION.md#commit-attribution-authorization).
+No third-party runtime dependency, action pin, permission, save format or command schema was changed by the lifecycle correction. Every new commit uses the [authorized noreply author and committer](AUTHORIZATION.md#commit-attribution-authorization). No human approval, DCO sign-off or automatic merge authority is invented.
 
 ## Prior merge and next action
 
-PR-004 actually merged through [PR #8](https://github.com/xsparc/omniweft/pull/8) at 2026-09-13T10:08:36Z as `ba80bb8392206a32810c8de989245e80cdfe055d`. Its tree equals reviewed delivery `8e03add6e01b53e991fedd2b8c4e82346e69347a`; all six post-merge jobs passed: [planning](https://github.com/xsparc/omniweft/actions/runs/34751087947), [native](https://github.com/xsparc/omniweft/actions/runs/34751087956), [renderer](https://github.com/xsparc/omniweft/actions/runs/34751087968). Windows GPU evidence remains bound to `973162f40536235c7dea24aff00bc7281cf93923`; Linux physical GPU remains `not_run`.
+PR-004 merged through [PR #8](https://github.com/xsparc/omniweft/pull/8) at 2026-09-13T10:08:36Z as `ba80bb8392206a32810c8de989245e80cdfe055d`; its tree matches reviewed delivery `8e03add6e01b53e991fedd2b8c4e82346e69347a` and all six post-merge checks passed. Windows GPU evidence remains bound to `973162f40536235c7dea24aff00bc7281cf93923`; Linux physical GPU remains `not_run`.
 
-The coordinator owns final delivery documentation and the ledger. Prior user/checkouts and helper worktrees remain preserved; machine-local paths stay in the private task. Finish current-head CI and review-thread disposition, make PR #9 ready, then wait for maintainer review/certification and squash merge. Automatic merge remains disabled. On the next wakeup, inspect the actual remote head/checks and merge state before claiming PR-006; record the actual merge before marking PR-005 done. No further routine commit-attribution permission is needed.
+The coordinator owns delivery docs and the ledger; all earlier user/helper worktrees remain preserved. Finish final-head checks and review-thread disposition, return PR #9 to ready, then await maintainer review/certification and squash merge. Check any new automated findings before integration. On a later wakeup, verify the actual remote merge SHA/tree/checks and reconcile the ledger before marking PR-005 done or claiming dependent PR-006. Routine authorization already covers that continuation.

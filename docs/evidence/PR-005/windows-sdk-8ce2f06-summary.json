@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "work_item": "PR-005",
+  "runtime_candidate_sha": "8ce2f06c6f9df626558a59bc694626d91c561a47",
+  "candidate_tree": "738aa2cf26537aec74b82cb76b2e210e8cdac175",
+  "dirty": false,
+  "executable_sha256": "c27419eb3086b98ba71d9cb747531a1685054962f97f2826992816cfe4efc83d",
+  "manifests": [
+    {
+      "kind": "oracle",
+      "manifest_sha256": "02178d1a038cd182147ffff6d5cf625aa6c8c8533be911b0e78af098b7e54e6f",
+      "assertions": 6502,
+      "artifacts": 150,
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": false,
+          "source_directory": "<repo>"
+        }
+      }
+    },
+    {
+      "kind": "mutation",
+      "manifest_sha256": "957546589bda136a34b56fb4a74a32dc50566cd8e0579462713fca824b659c85",
+      "assertions": 401,
+      "artifacts": 2,
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": false,
+          "source_directory": "<repo>"
+        }
+      }
+    }
+  ],
+  "zip": {
+    "file": "windows-sdk-8ce2f06.zip",
+    "bytes": 77865,
+    "sha256": "9f94859d21770fdee65b7250c51818666bbf8f5f336cf6d940d056a85fbd4d87",
+    "entries": 154,
+    "uncompressed_bytes": 890548
+  },
+  "sdk_client_assertions": 310,
+  "runtime_lifecycle": {
+    "schema_version": 1,
+    "incomplete_connection_closed": true,
+    "native_exit_code": 0
+  },
+  "privacy": "Inventoried fixed fixtures, typed receipts, full snapshots, canonical bytes, assertions, lifecycle outcome and one native mutation patch only; no executable, PDB, raw HTTP/process stream, descriptor, token, epoch value, credential hash or personal machine path/identifier."
+}

@@ -206,13 +206,13 @@
         "plan": "docs/execution/PR-005-PLAN.md",
         "handoff": "docs/execution/PR-005-HANDOFF.md",
         "pr_url": "https://github.com/xsparc/omniweft/pull/9",
-        "runtime_candidate_sha": "3d23b2dfb089ecefbb69196fe5c779bdabb68dfa",
+        "runtime_candidate_sha": "8ce2f06c6f9df626558a59bc694626d91c561a47",
         "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization",
         "evidence": [
           "docs/evidence/PR-005/README.md",
-          "https://github.com/xsparc/omniweft/actions/runs/34753912412",
-          "https://github.com/xsparc/omniweft/actions/runs/34753912427",
-          "https://github.com/xsparc/omniweft/actions/runs/34753912390"
+          "https://github.com/xsparc/omniweft/actions/runs/34755540239",
+          "https://github.com/xsparc/omniweft/actions/runs/34755540240",
+          "https://github.com/xsparc/omniweft/actions/runs/34755540235"
         ]
       }
     },

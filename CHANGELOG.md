@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- PR-005 candidate: authenticated native loopback control, private session renewal, typed Python SDK and independent authorization/expiry/framing/recovery evidence; clean Windows evidence and hosted Windows/Linux checks passed, initial independent review complete, runtime-expiry follow-up under verification, maintainer merge pending.
+- PR-005 candidate: authenticated native loopback control, private session renewal, typed Python SDK and independent authorization/expiry/framing/recovery evidence; clean Windows evidence and hosted Windows/Linux checks passed, runtime-expiry correction and independent review complete, maintainer merge pending.
 
 - PR-004 (merged): optional Vulkan presentation of committed cube transforms, independent color/ID/depth verification, bounded resize/minimize recovery and privacy-safe local evidence; clean Windows GPU and hosted Windows/Linux checks passed; maintainer merge recorded in the execution handoff.
 
