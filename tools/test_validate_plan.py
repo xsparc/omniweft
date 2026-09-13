@@ -28,6 +28,12 @@ class PlanningGateTests(unittest.TestCase):
     def test_valid_repository(self):
         self.assertEqual(validate(self.root), [])
 
+    def test_generated_dependency_markdown_is_ignored(self):
+        cached = self.root / ".cache" / "render-deps" / "upstream.md"
+        cached.parent.mkdir(parents=True)
+        cached.write_text("[upstream-only link](missing.md)\n", encoding="utf-8")
+        self.assertEqual(validate(self.root), [])
+
     def test_cycle_is_rejected(self):
         self.alter_backlog(lambda data: data["items"][0]["depends_on"].append("PR-003"))
         self.assertTrue(any("Dependency cycle" in e for e in validate(self.root)))

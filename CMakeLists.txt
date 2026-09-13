@@ -41,10 +41,20 @@ target_link_libraries(ow_transactions PUBLIC ow_world ow_commands)
 target_include_directories(ow_transactions PUBLIC include)
 ow_native_policy(ow_transactions)
 
-add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp)
-target_link_libraries(omniweft_examples PRIVATE ow_transactions)
+add_library(ow_presentation STATIC src/presentation.cpp)
+target_link_libraries(ow_presentation PUBLIC ow_world)
+target_include_directories(ow_presentation PUBLIC include)
+ow_native_policy(ow_presentation)
+
+add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp)
+target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation)
 target_include_directories(omniweft_examples SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_examples)
+
+option(OW_ENABLE_VULKAN "Build the optional SDL/Vulkan presentation adapter" OFF)
+if(OW_ENABLE_VULKAN)
+  include(cmake/RenderDependencies.cmake)
+endif()
 
 include(CTest)
 if(BUILD_TESTING)
@@ -76,4 +86,15 @@ if(BUILD_TESTING)
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/objects_oracle.py"
       --executable "$<TARGET_FILE:omniweft_examples>")
   set_tests_properties(objects.native objects.atomic PROPERTIES TIMEOUT 120)
+
+  add_executable(presentation_native_test tests/presentation_native_test.cpp)
+  target_link_libraries(presentation_native_test PRIVATE ow_presentation ow_transactions)
+  ow_native_policy(presentation_native_test)
+  add_test(NAME presentation.native COMMAND presentation_native_test)
+  add_test(NAME render.structural
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/render_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_examples>" --headless)
+  add_test(NAME render.oracle_selftest
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/render_oracle_test.py")
+  set_tests_properties(presentation.native render.structural render.oracle_selftest PROPERTIES TIMEOUT 120)
 endif()

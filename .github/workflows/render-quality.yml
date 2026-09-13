@@ -1,0 +1,79 @@
+name: Optional renderer build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: render-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  optional-build:
+    name: render-build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # shared repository pin
+        with:
+          persist-credentials: false
+      - name: Set up pinned Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # shared repository pin
+        with:
+          python-version: '3.12.10'
+      - name: Install hashed build tools
+        run: python -m pip install --require-hashes --only-binary=:all: --no-deps -r toolchains/build-tools.txt
+      - name: Provision pinned optional source dependencies
+        run: python tools/provision_render.py
+      - name: Install Linux window-system development headers
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev wayland-protocols libdrm-dev libgbm-dev
+      - name: Build optional Linux renderer and run CPU checks
+        if: runner.os == 'Linux'
+        run: |
+          cmake --preset linux-vulkan
+          cmake --build --preset linux-vulkan --parallel 2
+          ctest --preset linux-vulkan
+      - name: Build optional Windows renderer and run CPU checks
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+          $installation = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $installation) { throw 'Install MSVC x64 build tools with toolset 14.44.35207.' }
+          Import-Module (Join-Path $installation 'Common7/Tools/Microsoft.VisualStudio.DevShell.dll')
+          Enter-VsDevShell -VsInstallPath $installation -SkipAutomaticLocation -DevCmdArguments '-arch=x64 -host_arch=x64 -vcvars_ver=14.44'
+          cmake --preset windows-vulkan
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cmake --build --preset windows-vulkan --parallel 2
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ctest --preset windows-vulkan
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Retain Linux structural renderer evidence
+        if: runner.os == 'Linux'
+        run: python tests/render_oracle.py --executable build/linux-vulkan/omniweft_examples --headless --evidence-dir artifacts/render-structural
+      - name: Retain Windows structural renderer evidence
+        if: runner.os == 'Windows'
+        run: python tests/render_oracle.py --executable build/windows-vulkan/omniweft_examples.exe --headless --evidence-dir artifacts/render-structural
+      - name: Retain allowlisted structural evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # shared repository pin
+        with:
+          name: render-structural-${{ matrix.os }}-${{ github.sha }}
+          path: artifacts/render-structural/
+          if-no-files-found: error
+          retention-days: 7
+      - name: State scope of hosted evidence
+        run: echo "Optional renderer compiled and CPU checks ran. Physical GPU presentation is a separate local evidence gate."

@@ -150,11 +150,19 @@
       "execution": {
         "authorization": "docs/execution/AUTHORIZATION.md",
         "owner": "Codex coordinator",
-        "branch": "codex/pr-004-vulkan-presentation",
+        "branch": "codex/pr-004-vulkan-runtime",
         "claimed_at": "2026-09-13",
         "plan": "docs/execution/PR-004-PLAN.md",
         "handoff": "docs/execution/PR-004-HANDOFF.md",
-        "evidence": []
+        "evidence": [],
+        "base_sha": "b5b8def8cff7109e6e8898b2f4ccc4979346dadb",
+        "contract_checkpoint": {
+          "pr_url": "https://github.com/xsparc/omniweft/pull/7",
+          "merge_sha": "b5b8def8cff7109e6e8898b2f4ccc4979346dadb",
+          "merged_at": "2026-09-13T05:44:38Z",
+          "scope": "Contract documentation only; PR-004 runtime implementation is not merged."
+        },
+        "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization"
       }
     },
     {

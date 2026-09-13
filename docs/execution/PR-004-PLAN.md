@@ -1,6 +1,6 @@
 # PR-004: Vulkan presentation of committed objects
 
-Status: adopted, in progress. Dependency PR-003 was actually merged as `e994f054d1e13ba19f714f35696ec8a1bca221a9`. Coordinator branch `codex/pr-004-vulkan-presentation`. [Authorization](AUTHORIZATION.md), [example](../../examples/render-world_cube.md), [renderer design](../SIMULATION_AND_RENDERING.md), [runtime ADR](../adr/0001-runtime-stack.md), [handoff](PR-004-HANDOFF.md).
+Status: adopted, in progress. Dependency PR-003 was actually merged as `e994f054d1e13ba19f714f35696ec8a1bca221a9`. Coordinator branch `codex/pr-004-vulkan-runtime`, based on contract-only PR #7 squash `b5b8def8cff7109e6e8898b2f4ccc4979346dadb`. The renderer still requires its implementation PR. [Authorization](AUTHORIZATION.md), [example](../../examples/render-world_cube.md), [renderer design](../SIMULATION_AND_RENDERING.md), [runtime ADR](../adr/0001-runtime-stack.md), [handoff](PR-004-HANDOFF.md).
 
 ## One observable behavior
 
@@ -41,6 +41,8 @@ Require Vulkan runtime ≥1.3, graphics+present queue, required color/depth/ID f
 Require KHR swapchain maintenance1 or equivalent EXT capability with its actual dependencies and enabled feature. Each submission and presentation carries its own completion fence. Fence completion must precede reuse, swapchain replacement and resource destruction. `vkDeviceWaitIdle` alone is not a presentation lifetime proof. Unsupported capabilities produce bounded, actionable startup failure, never a false success or fallback hardware claim.
 
 Render to same-format, same-extent color image, copy its full contents to the acquired swapchain image with `vkCmdCopyImage`, then present that image. Capture that exact source color plus its ID/depth attachments; record source generation, swapchain generation, image index, submission serial and full-copy provenance. Review the command/barrier/fence path independently; an unrelated offscreen readback is insufficient.
+
+Allocation limits: width and height each at most 1,024; at most 786,432 pixels; at most 64 MiB aggregate explicitly owned GPU allocations (attachments, readback, mesh and related buffers); at most three swapchain images. Check integer arithmetic, queried memory requirements and actual image counts before allocation/use. Reject an oversized actual extent without clamping or oversized allocation; a later valid run must recover.
 
 Pump actual OS events. Observe changed pixel extent and new swapchain generation on resize. Observe actual minimized event/state, with no zero-extent allocation or presentation while minimized, then restore and present a valid revision-2 frame. SDL request success alone is not evidence. Finite verification run: at most 120 frames / 30 seconds; interactive inspection is explicit opt-in. Enable core and synchronization validation; passing GPU verification requires zero validation warnings/errors. Missing layer, denied minimize or unavailable device is recorded, not silently passed. Exercise resize with queued work and final shutdown.
 
