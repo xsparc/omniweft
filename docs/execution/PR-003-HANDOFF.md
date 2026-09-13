@@ -1,8 +1,8 @@
 # PR-003 execution handoff
 
-State: **in_review**, awaiting final current-head checks and maintainer merge in [GitHub PR #6](https://github.com/xsparc/omniweft/pull/6). Branch `codex/pr-003-atomic-objects`; base `32e32ae19b5138231159fe961246dbcf5c8a88c2`. Task `01a09699-3e74-7103-80e4-63d80a8e978e`. [Adopted scope](AUTHORIZATION.md) and [slice plan](PR-003-PLAN.md).
+State: **done**. [GitHub PR #6](https://github.com/xsparc/omniweft/pull/6) was squash-merged by xsparc at 2026-09-13T00:14:29Z as `e994f054d1e13ba19f714f35696ec8a1bca221a9`. Final reviewed head `825cdf3f3bb3d0e6bc68be22cc68ffb9e1e7c4e8`; branch `codex/pr-003-atomic-objects`; base `32e32ae19b5138231159fe961246dbcf5c8a88c2`. [Adopted scope](AUTHORIZATION.md) and [slice plan](PR-003-PLAN.md).
 
-PR #5 was independently verified merged by xsparc at 2026-09-12T23:11:17Z, with squash commit `32e32ae19b5138231159fe961246dbcf5c8a88c2`. Its final Windows/Linux run 34724489627 and planning run 34724489605 passed. PR-002 is done; PR-003 remains unmerged and later items remain proposed.
+PR #5 was independently verified merged by xsparc at 2026-09-12T23:11:17Z, with squash commit `32e32ae19b5138231159fe961246dbcf5c8a88c2`. Its final Windows/Linux run 34724489627 and planning run 34724489605 passed. PR-002 is done; PR-003 is done; PR-004 is the next claimed item.
 
 ## Delivered behavior
 
@@ -63,3 +63,9 @@ Before merge, verify final current-head planning and both native checks, evidenc
 The hourly task resumes from remote state. After merge, record the squash SHA/time, preserve this evidence and claim the next dependency-ready bounded item, starting with PR-004. Recheck its GPU/device evidence requirements before implementation; CPU checks cannot prove presentation or hardware support.
 
 Rollback: revert this PR, retaining source fixtures and previous evidence. No persistent world data or save format is introduced. Do not discard user changes, alter protections, fabricate sign-offs or publish a release.
+
+## Final checks and actual merge
+
+The strict integer-token follow-up passed [native run 34727171603](https://github.com/xsparc/omniweft/actions/runs/34727171603) and [planning run 34727171597](https://github.com/xsparc/omniweft/actions/runs/34727171597) before merge. Candidate `5597f168bab98a24ce18855bd5d6fc1864af263f` has parents equal to the base and final head above; its tree `ae3f0f8b06c7d57c16667f8937e89d4314711b55` also equals the squash commit's tree. Both native lanes passed CTest 6/6 and the final object oracle recorded **4,126 assertions / 9 commands**; all earlier object hashes and other suite totals above stayed unchanged. Both planning lanes passed validation and 13 regression tests. Independent final source/test/docs/log/artifact review found no actionable findings. No unresolved GitHub review conversations existed at merge.
+
+Final retained artifacts: Linux 10307829293, ZIP SHA-256 `450a6742c7badd6fa68d44631c8109e1184df4b1e947e7bd48131108afbcaf33`; Windows 10307744552, ZIP SHA-256 `6ec66ab1fb845f245542a2dad5f2fbb41efdf9d27718696ddad7c7668a199500`. Both were unexpired when checked. Post-merge [native run 34727459583](https://github.com/xsparc/omniweft/actions/runs/34727459583) and [planning run 34727459619](https://github.com/xsparc/omniweft/actions/runs/34727459619) passed on the actual squash SHA. Earlier pending-check wording is the historical checkpoint, superseded by this final verified result.
