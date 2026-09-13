@@ -40,7 +40,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev wayland-protocols libdrm-dev libgbm-dev
+          sudo apt-get install -y --no-install-recommends libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev wayland-protocols libdrm-dev libgbm-dev
       - name: Build optional Linux renderer and run CPU checks
         if: runner.os == 'Linux'
         run: |
