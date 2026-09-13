@@ -32,7 +32,8 @@ jobs:
         with:
           python-version: '3.12.10'
       - name: Install hashed build tools
-        run: python -m pip install --require-hashes --only-binary=:all: --no-deps -r toolchains/build-tools.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r toolchains/build-tools.txt
       - name: Provision pinned optional source dependencies
         run: python tools/provision_render.py
       - name: Install Linux window-system development headers
