@@ -1,6 +1,6 @@
 # PR-006 execution plan
 
-State: **in_progress**. Adopted scope: [authorization](AUTHORIZATION.md). Dependency PR-004 merged as ba80bb8392206a32810c8de989245e80cdfe055d and PR-005 merged as 3ab7bf114aa4acdef52387b1709be3fcaccb17b9. Base is that verified PR-005 squash, tree 6a31fa40a5fa5bc25683e9d821cde3fa53385c03. The coordinator promoted the adopted, dependency-ready item to ready and claimed it on 2026-09-13, branch codex/pr-006-fixed-step-provider.
+State: **in_review**. [PR #10](https://github.com/xsparc/omniweft/pull/10) and [reviewed evidence](../evidence/PR-006/README.md) are available; completion requires maintainer merge. Adopted scope: [authorization](AUTHORIZATION.md). Dependency PR-004 merged as ba80bb8392206a32810c8de989245e80cdfe055d and PR-005 merged as 3ab7bf114aa4acdef52387b1709be3fcaccb17b9. Base is that verified PR-005 squash, tree 6a31fa40a5fa5bc25683e9d821cde3fa53385c03. The coordinator promoted the adopted, dependency-ready item to ready and claimed it on 2026-09-13, branch codex/pr-006-fixed-step-provider.
 
 ## Outcome and ownership
 

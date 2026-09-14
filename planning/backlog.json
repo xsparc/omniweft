@@ -229,7 +229,7 @@
     {
       "id": "PR-006",
       "title": "Fixed-step loop and scripted provider",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [
         "PR-004",
@@ -255,7 +255,20 @@
         "base_sha": "3ab7bf114aa4acdef52387b1709be3fcaccb17b9",
         "plan": "docs/execution/PR-006-PLAN.md",
         "handoff": "docs/execution/PR-006-HANDOFF.md",
-        "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization"
+        "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/10",
+        "runtime_candidate_sha": "dc604ebd83a08ba0d23dcac473d5f10c7e74a362",
+        "runtime_candidate_tree": "5e0cd4e71935d82cdc4ce0eb7087819a8b45270e",
+        "test_portability_sha": "989a88002b3049bd7f1194aeaf4b390436096134",
+        "evidence": [
+          "docs/evidence/PR-006/README.md",
+          "docs/execution/PR-006-HANDOFF.md",
+          "https://github.com/xsparc/omniweft/actions/runs/34833363616",
+          "https://github.com/xsparc/omniweft/actions/runs/34833363557",
+          "https://github.com/xsparc/omniweft/actions/runs/34833363690"
+        ],
+        "review": "Independent implementation, oracle, SDK, failure/admission and evidence reviews found no remaining blocker; current hosted checks and maintainer certification/merge remain required.",
+        "tested_merge_candidate": "fbd009bb90d7ff1619cfb9ac3d8667b8e44bcf20"
       }
     },
     {

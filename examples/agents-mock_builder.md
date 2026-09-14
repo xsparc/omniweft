@@ -1,6 +1,6 @@
 # agents.mock_builder
 
-Status: **implementation in progress; required runtime/GPU verification and merge pending**. Work item: **PR-006 — Fixed-step loop and scripted provider**.
+Status: **implemented with reviewed Windows CPU/GPU evidence; final PR review and merge pending**. Work item: **PR-006 — Fixed-step loop and scripted provider**.
 
 Dependencies: PR-004, PR-005. Validation lanes: cpu, gpu.
 

@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "work_item": "PR-006",
+  "runtime_candidate_sha": "dc604ebd83a08ba0d23dcac473d5f10c7e74a362",
+  "candidate_tree": "5e0cd4e71935d82cdc4ce0eb7087819a8b45270e",
+  "dirty": false,
+  "validated_tracked_files": 205,
+  "owner_dispatch": "passed",
+  "manifests": [
+    {
+      "kind": "cpu",
+      "manifest_sha256": "1f6445ae1a9c66aab464f3eb16e7ed856f13d9b05bb83a0f8f7b7fc3ef28e2a3",
+      "assertions": 1606,
+      "artifacts": 30,
+      "executable_sha256": "ece10e102aa872e10933b4043a2a431df79fefc7b9b01e8e4ed36d1392dc5dc8",
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": false,
+          "source_directory": "<repo>"
+        }
+      }
+    },
+    {
+      "kind": "gpu",
+      "manifest_sha256": "f8ef1b6858c7a6adf0e95e78734928b6d634a9da29210e897448865b336747de",
+      "assertions": 4065,
+      "artifacts": 53,
+      "executable_sha256": "1915b5e570a51cbe812c1370087241a505a28ce3eaa377fbefe30107a7e3ee5f",
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": true,
+          "source_directory": "<repo>"
+        },
+        "gpu": {
+          "api_version": "1.4.351",
+          "device_type": "discrete_gpu",
+          "driver_version": "2584739840",
+          "name": "NVIDIA GeForce RTX 5070"
+        }
+      }
+    },
+    {
+      "kind": "clock-mutation",
+      "manifest_sha256": "71571ed3b9082a53d5e60027e1d452af0a303b02778c59e83ef8b9a582b821af",
+      "assertions": 455,
+      "artifacts": 3,
+      "executable_sha256": "e965b0de3b3ac772a0f043931a977d0a1319393a90a0b4477609ae5d4016053d",
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": false,
+          "source_directory": "<repo>"
+        }
+      }
+    },
+    {
+      "kind": "publication-fault",
+      "manifest_sha256": "60a3270f0a750c85af4445606a0d4bce3b424f69665071477a3ee27eaf810c3f",
+      "assertions": 465,
+      "artifacts": 2,
+      "executable_sha256": "ece10e102aa872e10933b4043a2a431df79fefc7b9b01e8e4ed36d1392dc5dc8",
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": false,
+          "source_directory": "<repo>"
+        }
+      }
+    },
+    {
+      "kind": "owner-dispatch",
+      "manifest_sha256": "620bf2bf7d96d588fba462dfe25a4908af2d4f525341b8697dc33dd6f811f8df",
+      "assertions": 253,
+      "artifacts": 3,
+      "executable_sha256": "ece10e102aa872e10933b4043a2a431df79fefc7b9b01e8e4ed36d1392dc5dc8",
+      "environment": {
+        "os": "Windows",
+        "python_version": "3.12.14",
+        "build": {
+          "cmake": "3.31.6",
+          "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+          "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+          "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+          "compiler": {
+            "id": "MSVC",
+            "version": "19.44.35227.0",
+            "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+          },
+          "configuration": "Debug",
+          "generator": "Ninja",
+          "vulkan_enabled": false,
+          "source_directory": "<repo>"
+        }
+      }
+    }
+  ],
+  "source_sha256": {
+    "CMakeLists.txt": "ed6ed7d4dda0d3d17d2f7d862808a1df3c2711fe88cd8f965633d15856b1d1ea",
+    "CMakePresets.json": "3587b8642a1544bf46c158b29cb458c705ce1158290fdb7e477b158a09532f4e",
+    "include/omniweft/commands.hpp": "c2c4d5dad4942d8e8796fa0a0785c498948cf6c8bbaedd9bf98e4667c83589b9",
+    "include/omniweft/control.hpp": "12c67938793e4bee9f874894201fc6eddd052f61050d27d7fb4bb342f4ebbfa9",
+    "include/omniweft/presentation.hpp": "ad3410a7a6d988a4ca73c261e6d56ffeb44b6b178d79b7b7c1d7cfce8574cce0",
+    "include/omniweft/render.hpp": "7b7512672218666b07f7fa457b7616179f26ab3c44c0d15b67d6f5a6343b131c",
+    "include/omniweft/simulation.hpp": "65c8e5f8a1c4ee4905425d94dcc8a86a9a28d38776eb8c3aa2c4f30688405a84",
+    "include/omniweft/transactions.hpp": "1fb4c352fa2650c7ae515b514e175dd9b176ea26225f53fc93113c4157deec8f",
+    "include/omniweft/world.hpp": "f8d6e39eb73e4eefc17688c3de47fb0b53ed0d72db4b239006d036e253ebf0fd",
+    "sdk/python/README.md": "ea66419e6e2102ee43759b1c4cf5a5b98ef7bf8233fe6efd8f20b12db60c3333",
+    "sdk/python/examples/mock_builder.py": "916a6b96d543b9ba80bcd3b1310dd3dfb6a91e2def2ef5dc14d0aed084a20e6b",
+    "sdk/python/examples/move_cube.py": "55d37d2e3573e2777656616a0d334fe0ef01b899b73ba086b1bf0d3ce1a226ae",
+    "sdk/python/omniweft_sdk/__init__.py": "198a9a46190c27ceab046536f49a5ec7d5b55ad822360cb7c880b6ebd7548c43",
+    "sdk/python/omniweft_sdk/_scripted_worker.py": "b662f746ffde414b8cd34a1023c5c61199aa3562ceb34f7e871e1ae965177a84",
+    "sdk/python/omniweft_sdk/client.py": "e0df8a790bfae183f26a2a8bfad5eda6ff3ae2917a8426d4806848be1ce18954",
+    "sdk/python/omniweft_sdk/models.py": "f316d2fc473e2065053494c5d26eab9cd703ef1c17baba1a4ab1058384d3b2d5",
+    "sdk/python/omniweft_sdk/runtime.py": "f9383cf43faae8db12dd5a8971e61320e2ba18a0c6da62f297f45605e7595d33",
+    "sdk/python/omniweft_sdk/scripted.py": "e1959b1ce0bb4bf76e0da51aa96d3fbdfdf748069493d555956ffe4b781d7661",
+    "sdk/python/omniweft_sdk/session.py": "8ee75c0944aa53eaa45a96f21c72086f92f217f83fb94f2bd5d59a1194d95595",
+    "src/agents_main.cpp": "e94bcf7e0b033483e6e1050fdac5dc9999c217764dcb21fb0da5a4d7fdb1ae8a",
+    "src/bootstrap_main.cpp": "2e0b7b87c44543f01e8564329d076413f1b1107406c40aa6a9234245869eda5a",
+    "src/commands.cpp": "780bbbd8897d1236cee6b21f09d8e92b23cb773ab65be7ccec80c35c5d8a0c49",
+    "src/control.cpp": "438df8e8d07d38644df6c2dde2454d70f64589c206f5a04006b4a6dbedc37eb1",
+    "src/control_main.cpp": "fad212f5b87e276503f4869f6b281bd865fec3dfee7f9678b4a6055dc0e94fba",
+    "src/objects_example.cpp": "85c9011cc361a9af661b9382f5508dc361e826dc08834ae4591ed9e09ac705f6",
+    "src/objects_example.hpp": "c3430b7bef3a911ee945c7512aa1dd43277b2418f98bc60df0b38f925029871e",
+    "src/presentation.cpp": "542d098f3a42f97e91d66b1ac81650e82cfe051209bacba47e39d134baec1af1",
+    "src/protocol_example.cpp": "a599270070fc89225e087e2e2256422ca897183f4edc067fd50e2d8f2264ceb4",
+    "src/protocol_example.hpp": "e263faab82d8c73f45d3b8795be5ada7e0667965050eb8a483e256106aeab397",
+    "src/render_example.cpp": "f4de5fb513a353f4ed59fd34b935e21461e74c649805921cea17abf6fc9ec8b0",
+    "src/render_example.hpp": "6f5898af3a421b9d93e37630d39c39df25bfdd036d6aaabe2af0fd73123cbad7",
+    "src/render_vulkan.cpp": "d7e1aef6ac9aa791456f2284fbb22688ab3a7c5c9362e1c698d09e9e5889f9d2",
+    "src/simulation.cpp": "85878b8b2057bc454cfcbd486c0bd3c7f501514f2444c72fa47ba017f4f13e2a",
+    "src/transactions.cpp": "c2384b16ca314a14ae7f9bb5bd0035f8d75efc7908678f5a886a115b8f9dd928",
+    "src/world.cpp": "1027289626411ae5332a1e5e4f5b71b225b1e448b712e3ec51cd14f9ef55c67d",
+    "src/world_cube_spirv.hpp": "372543e13f186898352b58a4779dfac45448476c4c4c9dcc56a343b853f8a699",
+    "tests/agents_failure.py": "dde6ecadb33a51dbbe3bd1f4ca24fa8c62af37746e42315a945ce66b9077371e",
+    "tests/agents_gpu_oracle.py": "26d2cf98d3a5fd2345c4611bc96e6982c9c7e47235bfbec213a2f0210145af13",
+    "tests/agents_mutation.py": "93660d2860ac22d700102407b18a81d7016f43ef2570ee9f56bbf1a657fec129",
+    "tests/agents_oracle.py": "167f8349f3f3c594a7c7ea5cf2f309d3d1d492a388222f3fec357d132e338f17",
+    "tests/agents_oracle_test.py": "1730aefced640df629872a83d903be51e5dd229948d3a24b427bdc2b7d7dc96d",
+    "tests/agents_owner_native_test.cpp": "af33f7b24d1e9125d7c8a027a47ddf2b39630c6f3fb34ceb795d675eabc55280",
+    "tests/agents_owner_test.py": "dec521210f80f95beb04e0905490916b5b1ebe3b22808e5c5e81105e2c5fa6a4",
+    "tests/agents_sdk_test.py": "21a980848f03a946d6d4d5078af13bbcaa61d5adbb58dd8371ac60b623d84ff2",
+    "tests/agents_test_support.py": "5ff4713856c01a375ae8a731755678931222630e2a623752ae3c9f5ff51cf2c3",
+    "tests/bootstrap_oracle.py": "9ec8cc594811638d1ea27f3967677c95a6841be849d88d4e56900ee1964792eb",
+    "tests/fixtures/agents/fixed-clock.json": "f4006c06341c6929c2db30e1a2ecf6382ae93ae92869dc7c00082209599ef9f1",
+    "tests/fixtures/agents/mock-builder.json": "b94802ad456d71bc917b70f45009a51055670af2b52001832b950ab6fcf4faab",
+    "tests/fixtures/objects/empty-canonical.json": "bf5221572a10a53fd8a66cac4c83c018e494dafe846921adecaf7694c9679428",
+    "tests/fixtures/protocol/expected-envelope.json": "9885722f510491ac5d651cd8af24ae70fa9021d1dc27503f21d84b36b5d32c61",
+    "tests/fixtures/protocol/valid-envelope.json": "9885722f510491ac5d651cd8af24ae70fa9021d1dc27503f21d84b36b5d32c61",
+    "tests/fixtures/render/world-cube.json": "b676e08bc4f27acd6840d8cf9b8a9fa0be0bb7572b04526c3db6912416f9615e",
+    "tests/objects_mutation.py": "6a5a8264103bb8ec2cfbcb6041d16e99eb36fc386ce87cd7f644d27f48f22c16",
+    "tests/objects_native_test.cpp": "00f19a99f4d239e44871934b59e8a178cecde9cde542c2adda3b991d5fe32cde",
+    "tests/objects_oracle.py": "28067370ae98cd938570baa832f40f804923030a9b0a15588b70ab4d03da29a7",
+    "tests/preflight_test.py": "b4fdd1d2581877f767156e380e61586bbd2d4857bfabed48be644db55a91e7df",
+    "tests/presentation_native_test.cpp": "1dc56d13b52eec7ab81287c367b69bd8fed399cde8e58d3cffe1169ded949b84",
+    "tests/protocol_mutation.py": "67f9be18a1488d0d01d387fc9736a00a9639ff01221deaf02f8f499458bd5739",
+    "tests/protocol_native_test.cpp": "87c32b08d63ad29a0b27f800119b831e9617f2ceab505de6597a3d2c8792bcb3",
+    "tests/protocol_oracle.py": "0ab33992f74a2be4d29f7d2f51dc3a7b5b354e4101ba9da905f3efbd63468d71",
+    "tests/render_mutation.py": "15f09e8facef10e7e9d227e0ed9d400109a93e602af87238dd32069bde4825e0",
+    "tests/render_oracle.py": "97f718c8af08670a5f8837392d12dfe7675784f35de0ca81caf2b37d9ac1ae53",
+    "tests/render_oracle_test.py": "4a1b811ef288168bd42991a26a02f19af0afbbee4cd9565dff87682d01bf12da",
+    "tests/render_test_support.py": "dc165939b22a779708e29774c1f737cf3e4a1537272143686013291e18474241",
+    "tests/sdk_client_probe.py": "0ad102023f2c6f487ab5583ba64b46cb455d2269464767d8fce7bb1d0468f09e",
+    "tests/sdk_mutation.py": "abedf9a7e14647f7e99463264c9347dbffbd4be5ebcc616de5cda9e804950121",
+    "tests/sdk_oracle.py": "73f0df634bbd6009a5c07165346ba90b134f6ac6f86eaac455c080dd754fb405",
+    "tests/sdk_oracle_test.py": "5865b8baa01fcc170ab1b9d9c2f668aba4f71da423f4c4fcadbb3f3dc8dbd105",
+    "tests/sdk_test_support.py": "8b99020426594144ad058c964fcb2b03b28d4d102549e7099398a2a8e87101ef",
+    "tests/simulation_native_test.cpp": "2fbd81e687592ba72ddde70c2c707fcfb7a695ff733dfa9a354641d614e612d9",
+    "toolchains/bootstrap.json": "12dc3fa9b6825e31e5442775107d7e3b9c18cb961c573b8ee658adddb47e2007"
+  },
+  "privacy": "Exact inventoried domain artifacts and reviewed failure patches; no raw streams, credentials, epoch values or credential hashes, personal identities/paths, executables or PDBs.",
+  "limitations": [
+    "Build-time clean status and binary provenance require coordinator evidence; this audit verifies retained claims and committed source bytes.",
+    "GPU validation zero counts are bound to recorded passing assertions; raw native validation reports are not published.",
+    "No GPU rerun occurs. Physical Linux GPU remains not_run."
+  ],
+  "zip": {
+    "file": "windows-agents-dc604eb.zip",
+    "bytes": 80649,
+    "sha256": "179c9b84155ffbadee7e331d6ba1e75a27e1a3394a2fc82905869e726e83b4f7",
+    "entries": 96,
+    "uncompressed_bytes": 4588635
+  },
+  "audit_checks": 71717
+}
