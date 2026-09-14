@@ -64,6 +64,7 @@ def main():
         with tempfile.TemporaryDirectory(prefix="ow-agents-owner-boundary-") as temporary:
             source, target_build = Path(temporary) / "source", Path(temporary) / "build"
             source.mkdir()
+            source = source.resolve(strict=True)
             indexed = evidence.run(["git", "ls-files", "-z"], ["git", "ls-files", "-z"],
                                    cwd=repository, timeout=10)
             require(indexed.returncode == 0, "enumerate exact indexed owner candidate sources")

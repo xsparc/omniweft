@@ -222,6 +222,7 @@ def main():
             source = Path(temporary) / "source"
             target_build = Path(temporary) / "build"
             source.mkdir()
+            source = source.resolve(strict=True)
             protected = copy_indexed(repository, source, evidence)
             (source / TARGET).write_text(injected_text, encoding="utf-8", newline="\n")
             evidence.manifest["failure_injection"] = {
