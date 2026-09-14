@@ -587,14 +587,17 @@ class Host {
       if (protocol == request.headers.end() || protocol->second != "0.1")
         reject(400, "UNSUPPORTED_VERSION", "/protocol_version");
       if (request.route != "/v0/capabilities" && request.route != "/v0/observe" &&
-          request.route != "/v0/transactions") reject(404, "NOT_FOUND");
+          request.route != "/v0/transactions" &&
+          !(request.route == "/v0/runtime" && callbacks_.runtime_status)) reject(404, "NOT_FOUND");
       const bool capabilities = request.route == "/v0/capabilities";
-      if (request.method != (capabilities ? "GET" : "POST")) reject(405, "UNSUPPORTED_OPERATION");
+      const bool runtime_status = request.route == "/v0/runtime";
+      if (request.method != (capabilities || runtime_status ? "GET" : "POST")) reject(405, "UNSUPPORTED_OPERATION");
       const auto body = read_body(socket, request, deadline);
       if (capabilities) {
-        check_deadline(deadline);
-        check_expiry();
-        const auto snapshot = bounded_snapshot();
+        world::Snapshot snapshot;
+        boundary(deadline, false, [&] {
+          check_deadline(deadline); check_expiry(); snapshot = bounded_snapshot();
+        });
         respond(socket, 200, {
           {"protocol_version", "0.1"}, {"epoch", epoch_}, {"next_sequence", next_sequence_},
           {"world_id", config_.world_id}, {"world_revision", snapshot.world_revision},
@@ -604,12 +607,27 @@ class Host {
             {"max_slots", config_.max_slots}, {"request_timeout_ms", request_timeout.count()},
             {"session_ttl_ms", config_.session_ttl_ms}}},
           {"admission", "synchronous"}, {"durability", "volatile"}, {"retry_mode", "resync_only"}}, deadline);
+      } else if (runtime_status) {
+        RuntimeStatus status;
+        boundary(deadline, false, [&] {
+          check_deadline(deadline); check_expiry(); status = callbacks_.runtime_status();
+        });
+        respond(socket, 200, {{"protocol_version", "0.1"}, {"epoch", epoch_}, {"next_sequence", next_sequence_},
+          {"runtime", {{"schema_version", 1}, {"tick_rate_hz", 60}, {"max_catch_up_steps", 4},
+            {"simulation_tick", status.simulation_tick}, {"snapshot_sequence", status.snapshot_sequence},
+            {"overload_count", status.overload_count}, {"dropped_ticks", status.dropped_ticks},
+            {"remainder_units", status.remainder_units}, {"snapshot", snapshot_json(status.snapshot)},
+            {"presentation", {{"enabled", status.presentation.enabled}, {"ready", status.presentation.ready},
+              {"frame_count", status.presentation.frame_count}, {"world_revision", status.presentation.world_revision},
+              {"snapshot_sequence", status.presentation.snapshot_sequence}}}}}}, deadline);
       } else if (request.route == "/v0/observe") {
         validate_observe(body, config_.world_id);
-        check_deadline(deadline);
-        check_expiry();
+        world::Snapshot snapshot;
+        boundary(deadline, false, [&] {
+          check_deadline(deadline); check_expiry(); snapshot = bounded_snapshot();
+        });
         respond(socket, 200, {{"protocol_version", "0.1"}, {"epoch", epoch_}, {"next_sequence", next_sequence_},
-          {"snapshot", snapshot_json(bounded_snapshot())}}, deadline);
+          {"snapshot", snapshot_json(snapshot)}}, deadline);
       } else {
         const auto parsed = commands::parse(body);
         if (!parsed.envelope) {
@@ -628,17 +646,23 @@ class Host {
             }
           }, envelope.operations[index]);
         }
-        if (!same_secret(envelope.idempotency.epoch, epoch_))
-          reject(409, "REQUIRES_RESYNC", "/idempotency/epoch");
-        if (exhausted_ || envelope.idempotency.sequence != next_sequence_)
-          reject(409, "REQUIRES_RESYNC", "/idempotency/sequence");
-        check_deadline(deadline);
-        // Expiry is checked immediately at admission, after all body/schema/
-        // grant/epoch/sequence work, never just at header arrival.
-        check_expiry();
-        if (next_sequence_ == std::numeric_limits<std::uint64_t>::max()) exhausted_ = true;
-        else ++next_sequence_;
-        const auto receipt = callbacks_.apply(envelope);
+        transactions::Receipt receipt;
+        boundary(deadline, true, [&] {
+          check_deadline(deadline);
+          check_expiry();
+          if (!same_secret(envelope.idempotency.epoch, epoch_))
+            reject(409, "REQUIRES_RESYNC", "/idempotency/epoch");
+          if (exhausted_ || envelope.idempotency.sequence != next_sequence_)
+            reject(409, "REQUIRES_RESYNC", "/idempotency/sequence");
+          // Final session/deadline checks and sequence consumption occur together
+          // at the actual owner boundary, after any queue delay.
+          check_deadline(deadline);
+          check_expiry();
+          if (callbacks_.should_stop && callbacks_.should_stop()) throw Closed{};
+          if (next_sequence_ == std::numeric_limits<std::uint64_t>::max()) exhausted_ = true;
+          else ++next_sequence_;
+          receipt = callbacks_.apply(envelope);
+        });
         if (receipt.created.size() > commands::max_operations || receipt.errors.size() > commands::max_operations)
           throw Failure{};
         respond(socket, 200, {{"protocol_version", "0.1"}, {"epoch", epoch_}, {"next_sequence", next_sequence_},
@@ -661,6 +685,11 @@ class Host {
   bool exhausted_ = false;
   Time expires_{};
 
+  void boundary(Time deadline, bool authoring, std::function<void()> action) {
+    if (callbacks_.at_boundary) {
+      if (!callbacks_.at_boundary(std::move(action), deadline, authoring)) throw Closed{};
+    } else action();
+  }
   bool authorized(const Request& request) const {
     const auto found = request.headers.find("authorization");
     if (found == request.headers.end() || !std::string_view(found->second).starts_with("Bearer ")) return false;
@@ -686,7 +715,7 @@ int run(const Config& config, const Callbacks& callbacks) noexcept {
     config_valid(config);
     if (!callbacks.snapshot || !callbacks.apply) throw Failure{};
     PrivatePipes pipes;
-    const auto deadline = Clock::now() + Milliseconds(config.max_runtime_ms);
+    const auto deadline = callbacks.normal_deadline.value_or(Clock::now() + Milliseconds(config.max_runtime_ms));
     Watchdog watchdog(deadline + shutdown_grace);
     SocketRuntime runtime;
     std::uint16_t port = 0;
@@ -694,7 +723,8 @@ int run(const Config& config, const Callbacks& callbacks) noexcept {
     Host host(config, callbacks, pipes, port);
     if (!host.renew(deadline)) return 0;
     std::uint32_t count = 0;
-    while (Clock::now() < deadline && count < config.max_requests) {
+    while (Clock::now() < deadline && count < config.max_requests &&
+           !(callbacks.should_stop && callbacks.should_stop())) {
       if (!host.host_commands(deadline)) return 0;
       if (!ready(listener.get(), false, std::min(deadline, Clock::now() + Milliseconds(20)))) continue;
       sockaddr_in peer{};

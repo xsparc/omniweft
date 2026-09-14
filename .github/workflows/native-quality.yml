@@ -41,6 +41,9 @@ jobs:
           python tests/protocol_mutation.py --build-dir build/linux-headless --evidence-dir artifacts/protocol-mutation
           python tests/objects_mutation.py --build-dir build/linux-headless --evidence-dir artifacts/objects-mutation
           python tests/sdk_mutation.py --build-dir build/linux-headless --evidence-dir artifacts/sdk-mutation
+          python tests/agents_mutation.py --build-dir build/linux-headless --evidence-dir artifacts/agents-mutation
+          python tests/agents_failure.py --build-dir build/linux-headless --evidence-dir artifacts/agents-failure
+          python tests/agents_owner_test.py --build-dir build/linux-headless --evidence-dir artifacts/agents-owner
       - name: Configure, build and verify on Windows
         if: runner.os == 'Windows'
         shell: pwsh
@@ -57,6 +60,12 @@ jobs:
           python tests/objects_mutation.py --build-dir build/windows-headless --evidence-dir artifacts/objects-mutation
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python tests/sdk_mutation.py --build-dir build/windows-headless --evidence-dir artifacts/sdk-mutation
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tests/agents_mutation.py --build-dir build/windows-headless --evidence-dir artifacts/agents-mutation
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tests/agents_failure.py --build-dir build/windows-headless --evidence-dir artifacts/agents-failure
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tests/agents_owner_test.py --build-dir build/windows-headless --evidence-dir artifacts/agents-owner
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Record candidate and fixture evidence
         shell: bash
@@ -75,6 +84,10 @@ jobs:
         shell: bash
         run: |
           python tests/sdk_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_control.exe' || 'linux-headless/omniweft_control' }}" --evidence-dir artifacts/sdk
+      - name: Record fixed-step provider evidence
+        shell: bash
+        run: |
+          python tests/agents_oracle.py --executable "build/${{ runner.os == 'Windows' && 'windows-headless/omniweft_agents.exe' || 'linux-headless/omniweft_agents' }}" --headless --evidence-dir artifacts/agents
       - name: Summarize retained evidence
         shell: bash
         run: |
@@ -89,7 +102,7 @@ jobs:
               summary["result"] = manifest["artifacts"]["result"]
               summary["executable"] = manifest["artifacts"]["executable"]
               print(json.dumps({"evidence": name, **summary}, sort_keys=True))
-          for name in ("sdk", "sdk-mutation"):
+          for name in ("sdk", "sdk-mutation", "agents", "agents-mutation", "agents-failure", "agents-owner"):
               manifest = json.loads((Path("artifacts") / name / "manifest.json").read_text(encoding="utf-8"))
               print(json.dumps({"evidence": name, "work_item": manifest["work_item"],
                                 "candidate_sha": manifest["candidate_sha"], "dirty": manifest["dirty"],
@@ -109,6 +122,10 @@ jobs:
             artifacts/objects-mutation/
             artifacts/sdk/
             artifacts/sdk-mutation/
+            artifacts/agents/
+            artifacts/agents-mutation/
+            artifacts/agents-failure/
+            artifacts/agents-owner/
             build/*/Testing/Temporary/LastTest.log
           if-no-files-found: error
           retention-days: 7

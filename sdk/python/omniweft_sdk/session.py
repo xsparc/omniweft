@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import os
+import json
 import queue
 import subprocess
 import threading
@@ -14,11 +15,17 @@ from .models import ConnectionInfo, ProtocolError, integer
 
 class NativeSession:
     def __init__(self, executable: str | Path, *, session_ttl_ms: int = 30000,
-                 max_slots: int = 8, max_runtime_ms: int = 60000, max_requests: int = 1024) -> None:
+                 max_slots: int = 8, max_runtime_ms: int = 60000, max_requests: int = 1024,
+                 gpu: bool = False, interactive: bool = False, output: str | Path | None = None) -> None:
         integer(session_ttl_ms, 50, 300000)
         integer(max_slots, 1, 1024)
         integer(max_runtime_ms, 1000, 600000)
         integer(max_requests, 1, 4096)
+        if type(gpu) is not bool or type(interactive) is not bool or (interactive and not gpu):
+            raise ProtocolError()
+        if gpu and output is None:
+            raise ProtocolError()
+        self._gpu, self._interactive, self._output = gpu, interactive, output
         self._executable = executable
         self._config = (session_ttl_ms, max_slots, max_runtime_ms, max_requests)
         self._process: subprocess.Popen | None = None
@@ -76,6 +83,11 @@ class NativeSession:
                 args = [str(executable), "--world", "workshop", "--seed", "7",
                         "--max-slots", str(slots), "--session-ttl-ms", str(ttl),
                         "--max-runtime-ms", str(runtime), "--max-requests", str(requests)]
+                if self._gpu or self._output is not None:
+                    args.extend(["--gpu", "1" if self._gpu else "0",
+                                 "--interactive", "1" if self._interactive else "0"])
+                    if self._output is not None:
+                        args.extend(["--output", str(Path(self._output).resolve())])
                 self._process = subprocess.Popen(
                     args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
                     bufsize=0, close_fds=True,
@@ -87,11 +99,27 @@ class NativeSession:
                 self._terminate()
                 raise ProtocolError() from None
 
+    @property
+    def is_running(self) -> bool:
+        with self._lock:
+            return self._process is not None and self._process.poll() is None
+
     def client(self) -> Client:
         with self._lock:
             if self._process is None or self._info is None or self._process.poll() is not None:
                 raise ProtocolError()
             return Client(self._info)
+
+    def _provider_descriptor(self) -> bytes:
+        # Package-private transfer to the fixed repository-authored worker.
+        with self._lock:
+            if self._process is None or self._info is None or self._process.poll() is not None:
+                raise ProtocolError()
+            info = self._info
+            value = {"schema_version": 1, "protocol_version": "0.1", "host": info.host,
+                     "port": info.port, "token": info.token, "epoch": info.epoch,
+                     "session_ttl_ms": info.session_ttl_ms}
+            return json.dumps(value, separators=(",", ":")).encode("utf-8")
 
     def renew(self) -> Client:
         with self._lock:

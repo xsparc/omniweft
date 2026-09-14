@@ -3,10 +3,13 @@
 from .client import Capabilities, Client, Limits
 from .models import (ApiError, ConnectionInfo, CreateCube, CreatedBinding, DeleteEntity,
                      Entity, EntityHandle, OutcomeUnknown, ProtocolError, Receipt,
-                     ReceiptError, SetTransform, Slot, Snapshot, Transform)
+                     ReceiptError, SetTransform, Slot, Snapshot, TemporaryTarget, Transform)
 from .session import NativeSession
+from .runtime import PresentationStatus, RuntimeStatus
+from .scripted import BuilderProgress, ScriptedBuilder
 
 __all__ = ["ApiError", "Capabilities", "Client", "ConnectionInfo", "CreateCube",
            "CreatedBinding", "DeleteEntity", "Entity", "EntityHandle", "Limits",
            "NativeSession", "OutcomeUnknown", "ProtocolError", "Receipt",
-           "ReceiptError", "SetTransform", "Slot", "Snapshot", "Transform"]
+           "ReceiptError", "SetTransform", "Slot", "Snapshot", "Transform", "TemporaryTarget", "PresentationStatus",
+           "RuntimeStatus", "BuilderProgress", "ScriptedBuilder"]

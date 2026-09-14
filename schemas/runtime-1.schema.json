@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/xsparc/omniweft/blob/main/schemas/runtime-1.schema.json",
+  "title": "Omniweft fixed-step runtime observation profile 1",
+  "description": "Optional authenticated GET /v0/runtime response. Existing control 0.1 route shapes remain unchanged.",
+  "$comment": "Reject duplicate decoded keys, extra fields, nonfinite/overflow values and non-integer lexical tokens. Cross-field rules require snapshot_sequence=simulation_tick+1; presentation stamps cannot exceed the enclosing publication; disabled presentation has false ready and zero counters. Credentials in the private wrapper never enter public evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "epoch",
+    "next_sequence",
+    "runtime"
+  ],
+  "properties": {
+    "protocol_version": {
+      "const": "0.1"
+    },
+    "epoch": {
+      "$ref": "control-0.1.schema.json#/$defs/epoch"
+    },
+    "next_sequence": {
+      "$ref": "control-0.1.schema.json#/$defs/positiveSequence"
+    },
+    "runtime": {
+      "$ref": "#/$defs/RuntimeStatus"
+    }
+  },
+  "$defs": {
+    "RuntimeStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "tick_rate_hz",
+        "max_catch_up_steps",
+        "simulation_tick",
+        "snapshot_sequence",
+        "overload_count",
+        "dropped_ticks",
+        "remainder_units",
+        "snapshot",
+        "presentation"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "tick_rate_hz": {
+          "type": "integer",
+          "const": 60
+        },
+        "max_catch_up_steps": {
+          "type": "integer",
+          "const": 4
+        },
+        "simulation_tick": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "snapshot_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "overload_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "dropped_ticks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "remainder_units": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "snapshot": {
+          "$ref": "control-0.1.schema.json#/$defs/Snapshot"
+        },
+        "presentation": {
+          "$ref": "#/$defs/Presentation"
+        }
+      }
+    },
+    "Presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "ready",
+        "frame_count",
+        "world_revision",
+        "snapshot_sequence"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "ready": {
+          "type": "boolean"
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "world_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "snapshot_sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        }
+      }
+    }
+  }
+}

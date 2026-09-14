@@ -3,8 +3,10 @@
 #include "omniweft/commands.hpp"
 #include "omniweft/transactions.hpp"
 #include "omniweft/world.hpp"
+#include <chrono>
 #include <cstdint>
 #include <functional>
+#include <optional>
 #include <string>
 
 namespace ow::control {
@@ -17,12 +19,28 @@ struct Config {
   std::uint32_t max_runtime_ms = 60000;
   std::uint32_t max_requests = 1024;
 };
+struct PresentationStatus {
+  bool enabled = false, ready = false;
+  std::uint64_t frame_count = 0, world_revision = 0, snapshot_sequence = 0;
+};
+struct RuntimeStatus {
+  std::uint64_t simulation_tick = 0, snapshot_sequence = 1, overload_count = 0, dropped_ticks = 0, remainder_units = 0;
+  world::Snapshot snapshot;
+  PresentationStatus presentation;
+};
 struct Callbacks {
   std::function<world::Snapshot()> snapshot;
   std::function<transactions::Receipt(const commands::Envelope&)> apply;
+  // Synchronously dispatch onto an owner. False means canceled before claim;
+  // true means finished. Claimed tasks must finish before returning, including
+  // exception propagation. The gateway never accesses session state concurrently.
+  std::function<bool(std::function<void()>, std::chrono::steady_clock::time_point, bool)> at_boundary = {};
+  std::function<RuntimeStatus()> runtime_status = {};
+  std::function<bool()> should_stop = {};
+  std::optional<std::chrono::steady_clock::time_point> normal_deadline = {};
 };
 
-// Invokes callbacks synchronously on this calling owner thread only.
+// Invokes callbacks inline unless an explicit synchronous owner dispatcher is supplied.
 // Requires private stdin/stdout pipes; descriptors are the only stdout output.
 // Returns 0 for stop/EOF/bounded completion, 3 for unavailable private pipes,
 // or 4 for failure. Normal I/O/admission stops at max_runtime_ms. The watchdog

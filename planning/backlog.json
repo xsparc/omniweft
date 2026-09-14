@@ -181,7 +181,7 @@
     {
       "id": "PR-005",
       "title": "Authenticated local Python SDK",
-      "status": "in_review",
+      "status": "done",
       "milestone": "M1",
       "depends_on": [
         "PR-003"
@@ -212,14 +212,24 @@
           "docs/evidence/PR-005/README.md",
           "https://github.com/xsparc/omniweft/actions/runs/34755540239",
           "https://github.com/xsparc/omniweft/actions/runs/34755540240",
-          "https://github.com/xsparc/omniweft/actions/runs/34755540235"
-        ]
+          "https://github.com/xsparc/omniweft/actions/runs/34755540235",
+          "https://github.com/xsparc/omniweft/actions/runs/34756733068",
+          "https://github.com/xsparc/omniweft/actions/runs/34756733065",
+          "https://github.com/xsparc/omniweft/actions/runs/34756733062"
+        ],
+        "final_head": "5b89546baaf8e0437abe809d855b0afcc5ba5f39",
+        "merge_sha": "3ab7bf114aa4acdef52387b1709be3fcaccb17b9",
+        "merge_tree": "6a31fa40a5fa5bc25683e9d821cde3fa53385c03",
+        "merged_at": "2026-09-13T12:18:32Z",
+        "merged_by": "xsparc",
+        "review": "Independent source, SDK, lifecycle, oracle and public evidence reviews passed; final additional automated review completed without new findings. The prior lifecycle finding is resolved and outdated.",
+        "completion_reference": "Actual maintainer squash merge independently verified against reviewed delivery tree and expected sole parent; all six post-merge checks passed."
       }
     },
     {
       "id": "PR-006",
       "title": "Fixed-step loop and scripted provider",
-      "status": "proposed",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [
         "PR-004",
@@ -235,7 +245,31 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/pr-006-fixed-step-provider",
+        "claimed_at": "2026-09-13",
+        "eligibility": "Adopted existing roadmap; PR-004 and PR-005 actually merged; frozen bounded contract independently reviewed, promoted ready then claimed.",
+        "base_sha": "3ab7bf114aa4acdef52387b1709be3fcaccb17b9",
+        "plan": "docs/execution/PR-006-PLAN.md",
+        "handoff": "docs/execution/PR-006-HANDOFF.md",
+        "commit_attribution_authorization": "docs/execution/AUTHORIZATION.md#commit-attribution-authorization",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/10",
+        "runtime_candidate_sha": "dc604ebd83a08ba0d23dcac473d5f10c7e74a362",
+        "runtime_candidate_tree": "5e0cd4e71935d82cdc4ce0eb7087819a8b45270e",
+        "test_portability_sha": "989a88002b3049bd7f1194aeaf4b390436096134",
+        "evidence": [
+          "docs/evidence/PR-006/README.md",
+          "docs/execution/PR-006-HANDOFF.md",
+          "https://github.com/xsparc/omniweft/actions/runs/34833363616",
+          "https://github.com/xsparc/omniweft/actions/runs/34833363557",
+          "https://github.com/xsparc/omniweft/actions/runs/34833363690"
+        ],
+        "review": "Independent implementation, oracle, SDK, failure/admission and evidence reviews found no remaining blocker; current hosted checks and maintainer certification/merge remain required.",
+        "tested_merge_candidate": "fbd009bb90d7ff1619cfb9ac3d8667b8e44bcf20"
+      }
     },
     {
       "id": "PR-007",

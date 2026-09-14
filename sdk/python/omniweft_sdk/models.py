@@ -312,8 +312,16 @@ class CreateCube:
 
 
 @dataclass(frozen=True)
+class TemporaryTarget:
+    temporary_id: str
+
+    def to_dict(self) -> dict:
+        return {"temporary_id": text(self.temporary_id, 64)}
+
+
+@dataclass(frozen=True)
 class SetTransform:
-    target: EntityHandle
+    target: EntityHandle | TemporaryTarget
     transform: Transform
 
     def to_dict(self) -> dict:

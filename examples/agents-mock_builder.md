@@ -1,6 +1,6 @@
 # agents.mock_builder
 
-Status: **planned specification; not implemented**. Work item: **PR-006 — Fixed-step loop and scripted provider**.
+Status: **implemented with reviewed Windows CPU/GPU evidence; final PR review and merge pending**. Work item: **PR-006 — Fixed-step loop and scripted provider**.
 
 Dependencies: PR-004, PR-005. Validation lanes: cpu, gpu.
 
@@ -10,15 +10,21 @@ Implement only the named behavior, its public contract, corresponding runnable e
 
 Use a tiny deterministic fixture with seed 7, generated locally or covered by an explicit asset license manifest. Exercise the public command/query interfaces once available, avoiding privileged test-only mutation paths.
 
-## Proposed run command
+## Build and run
 
-This command becomes available only when this work item is implemented:
+Use the pinned build instructions in [platform.bootstrap](platform-bootstrap.md). The SDK/provider uses only Python's standard library; no provider key or package install is required.
 
-```sh
-omniweft_examples --example agents.mock_builder --gpu --seed 7 --verify --output artifacts/agents.mock_builder
-```
+~~~sh
+cmake --preset windows-headless
+cmake --build --preset windows-headless --parallel 2
+python sdk/python/examples/mock_builder.py --executable build/windows-headless/omniweft_agents.exe --headless --seed 7 --verify --output artifacts/agents.mock_builder
+~~~
 
-Also supply a headless structural verification mode and an interactive inspection mode; neither substitutes for the real-GPU lane.
+For actual GPU verification, build the optional Vulkan adapter using the pinned [rendering instructions](render-world_cube.md), select that build's omniweft_agents executable and use --gpu in place of --headless. Add --interactive for inspection until window close or the bounded host lifetime. The independent oracle, rather than inspection alone, establishes the GPU lane. Linux uses its corresponding preset and unsuffixed executable.
+
+The Python launcher owns a separate fixed scripted-provider process and a native agents host. It holds the provider at explicit barriers while an independent client observes fixed-step progress, then releases three SDK create/transform batches. Live GPU inspection presents the same committed state. This actual Python entry point replaces the earlier proposed native example command.
+
+See the [frozen execution contract](../docs/execution/PR-006-PLAN.md) for exact fixture values, canonical hashes, timing arithmetic, privacy boundaries and compatibility limits. [The handoff](../docs/execution/PR-006-HANDOFF.md) records current verification; commands here are not proof that the candidate passed.
 
 ## Pass criteria
 

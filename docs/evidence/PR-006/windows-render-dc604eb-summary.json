@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "work_item": "PR-006",
+  "regression_example": "render.world_cube",
+  "runtime_candidate_sha": "dc604ebd83a08ba0d23dcac473d5f10c7e74a362",
+  "candidate_tree": "5e0cd4e71935d82cdc4ce0eb7087819a8b45270e",
+  "dirty": false,
+  "manifest_sha256": "b01583e3f3f433dfdc5cc478752189ceef3ee9ccaf0441b7a9bbc97318f85537",
+  "assertions": 1961,
+  "artifacts": 32,
+  "executable_sha256": "609eb7ccd027767d944dc8179ca23dddd7e32800a5bd0aa128a16a41a2bf3757",
+  "environment": {
+    "os": "Windows",
+    "python_version": "3.12.14",
+    "build": {
+      "cmake": "3.31.6",
+      "cmake_executable_sha256": "3fe22eb02e1c6184ec207366ed21a6f2f9c3828c1e9f3324546befadfb362be3",
+      "ninja": "1.13.2.git.kitware.jobserver-pipe-1",
+      "ninja_executable_sha256": "a7f084e8ee37bff0872aa8bd3d17cc19632d2a37734f6c242dd3dee22d77c0b4",
+      "compiler": {
+        "id": "MSVC",
+        "version": "19.44.35227.0",
+        "executable_sha256": "7a154e5136cc538b42e6944997fc5e3bb49112894e41dd88a70940aaff9aa831"
+      },
+      "configuration": "Debug",
+      "generator": "Ninja",
+      "vulkan_enabled": true,
+      "source_directory": "<repo>"
+    },
+    "gpu": {
+      "api_version": "1.4.351",
+      "device_type": "discrete_gpu",
+      "driver_version": "2584739840",
+      "name": "NVIDIA GeForce RTX 5070"
+    }
+  },
+  "source_sha256": {
+    "CMakeLists.txt": "ed6ed7d4dda0d3d17d2f7d862808a1df3c2711fe88cd8f965633d15856b1d1ea",
+    "CMakePresets.json": "3587b8642a1544bf46c158b29cb458c705ce1158290fdb7e477b158a09532f4e",
+    "include/omniweft/commands.hpp": "c2c4d5dad4942d8e8796fa0a0785c498948cf6c8bbaedd9bf98e4667c83589b9",
+    "include/omniweft/control.hpp": "12c67938793e4bee9f874894201fc6eddd052f61050d27d7fb4bb342f4ebbfa9",
+    "include/omniweft/presentation.hpp": "ad3410a7a6d988a4ca73c261e6d56ffeb44b6b178d79b7b7c1d7cfce8574cce0",
+    "include/omniweft/render.hpp": "7b7512672218666b07f7fa457b7616179f26ab3c44c0d15b67d6f5a6343b131c",
+    "include/omniweft/simulation.hpp": "65c8e5f8a1c4ee4905425d94dcc8a86a9a28d38776eb8c3aa2c4f30688405a84",
+    "include/omniweft/transactions.hpp": "1fb4c352fa2650c7ae515b514e175dd9b176ea26225f53fc93113c4157deec8f",
+    "include/omniweft/world.hpp": "f8d6e39eb73e4eefc17688c3de47fb0b53ed0d72db4b239006d036e253ebf0fd",
+    "shaders/provenance.json": "77214f95eaec67934f2014ce301e2f094da5eac797b96bf0c7f6b2b685397533",
+    "shaders/world_cube.frag": "f9da860f5eaf03f1b094078aa3fa6215c138e0a07153772f0cdad46c1b1ff326",
+    "shaders/world_cube.vert": "9ec55b6ddd3528678d4fe9eda4c0fddcfc4277271a65d0eefb364c1542e8e818",
+    "src/agents_main.cpp": "e94bcf7e0b033483e6e1050fdac5dc9999c217764dcb21fb0da5a4d7fdb1ae8a",
+    "src/bootstrap_main.cpp": "2e0b7b87c44543f01e8564329d076413f1b1107406c40aa6a9234245869eda5a",
+    "src/commands.cpp": "780bbbd8897d1236cee6b21f09d8e92b23cb773ab65be7ccec80c35c5d8a0c49",
+    "src/control.cpp": "438df8e8d07d38644df6c2dde2454d70f64589c206f5a04006b4a6dbedc37eb1",
+    "src/control_main.cpp": "fad212f5b87e276503f4869f6b281bd865fec3dfee7f9678b4a6055dc0e94fba",
+    "src/objects_example.cpp": "85c9011cc361a9af661b9382f5508dc361e826dc08834ae4591ed9e09ac705f6",
+    "src/objects_example.hpp": "c3430b7bef3a911ee945c7512aa1dd43277b2418f98bc60df0b38f925029871e",
+    "src/presentation.cpp": "542d098f3a42f97e91d66b1ac81650e82cfe051209bacba47e39d134baec1af1",
+    "src/protocol_example.cpp": "a599270070fc89225e087e2e2256422ca897183f4edc067fd50e2d8f2264ceb4",
+    "src/protocol_example.hpp": "e263faab82d8c73f45d3b8795be5ada7e0667965050eb8a483e256106aeab397",
+    "src/render_example.cpp": "f4de5fb513a353f4ed59fd34b935e21461e74c649805921cea17abf6fc9ec8b0",
+    "src/render_example.hpp": "6f5898af3a421b9d93e37630d39c39df25bfdd036d6aaabe2af0fd73123cbad7",
+    "src/render_vulkan.cpp": "d7e1aef6ac9aa791456f2284fbb22688ab3a7c5c9362e1c698d09e9e5889f9d2",
+    "src/simulation.cpp": "85878b8b2057bc454cfcbd486c0bd3c7f501514f2444c72fa47ba017f4f13e2a",
+    "src/transactions.cpp": "c2384b16ca314a14ae7f9bb5bd0035f8d75efc7908678f5a886a115b8f9dd928",
+    "src/world.cpp": "1027289626411ae5332a1e5e4f5b71b225b1e448b712e3ec51cd14f9ef55c67d",
+    "src/world_cube_spirv.hpp": "372543e13f186898352b58a4779dfac45448476c4c4c9dcc56a343b853f8a699",
+    "tests/fixtures/render/world-cube.json": "b676e08bc4f27acd6840d8cf9b8a9fa0be0bb7572b04526c3db6912416f9615e",
+    "tests/render_oracle.py": "97f718c8af08670a5f8837392d12dfe7675784f35de0ca81caf2b37d9ac1ae53",
+    "tests/render_test_support.py": "dc165939b22a779708e29774c1f737cf3e4a1537272143686013291e18474241",
+    "third_party/render/NOTICE.md": "c1c74010c11bcb0c381fee393c68fca23bf390b92d5731d94a59d14858872815",
+    "third_party/render/SDL-LICENSE.txt": "1c040b8271b37e5076359f8fd54240e371114112924d2df81ef87c7d6a1dfdfd",
+    "third_party/render/Vulkan-Headers-Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "third_party/render/Vulkan-Headers-LICENSE.md": "95ad366d23fadf701d355bc45fb8b82ae2d700239471d35d41286ac3b08ff903",
+    "third_party/render/Vulkan-Headers-MIT.txt": "1ca3502222d967f3be5751c55f6b7ee735b5383909c3b501495f54b216dbf227",
+    "toolchains/bootstrap.json": "12dc3fa9b6825e31e5442775107d7e3b9c18cb961c573b8ee658adddb47e2007",
+    "toolchains/build-tools.txt": "15a3a12bd892526f0c003328baab7b918fcdb7b7ee8bde5a3ac017f1f44de9a9",
+    "toolchains/render-dependencies.json": "b3525294f4adf0d34d58133eed8e93cef4fd0f0f5c44dfe659b622db94531d58"
+  },
+  "validation": {
+    "enabled": true,
+    "errors": 0,
+    "warnings": 0,
+    "evidence": "recorded independent oracle assertions"
+  },
+  "verification": "Six retained physical Windows GPU captures, full fixed geometry/receipts/snapshots, resize/minimize/restore retirement and unsupported-startup recovery were independently re-evaluated without a GPU rerun.",
+  "privacy": "Unmodified reviewed manifest and exactly 32 inventoried allowlisted domain artifacts; no binaries, raw streams, credentials, epochs, personal paths or host/device identifiers.",
+  "limitations": [
+    "Evidence certifies runtime dc604eb and its original renderer oracle; later helper-only commits are separate.",
+    "Physical Linux GPU remains not_run."
+  ],
+  "zip": {
+    "file": "windows-render-dc604eb.zip",
+    "bytes": 34258,
+    "sha256": "fc7b111cd2de4a786d299b8a0ac0ecb4e5cc23a21e0e7d2b863c971d614f4bc9",
+    "entries": 33,
+    "uncompressed_bytes": 6824795
+  }
+}

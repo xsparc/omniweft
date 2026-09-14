@@ -65,9 +65,20 @@ add_executable(omniweft_control src/control_main.cpp)
 target_link_libraries(omniweft_control PRIVATE ow_control ow_transactions)
 ow_native_policy(omniweft_control)
 
+add_library(ow_simulation STATIC src/simulation.cpp)
+target_include_directories(ow_simulation PUBLIC include)
+ow_native_policy(ow_simulation)
+
+add_executable(omniweft_agents src/agents_main.cpp)
+target_link_libraries(omniweft_agents PRIVATE ow_control ow_transactions ow_presentation ow_simulation Threads::Threads)
+target_include_directories(omniweft_agents SYSTEM PRIVATE third_party)
+ow_native_policy(omniweft_agents)
+
 option(OW_ENABLE_VULKAN "Build the optional SDL/Vulkan presentation adapter" OFF)
 if(OW_ENABLE_VULKAN)
   include(cmake/RenderDependencies.cmake)
+  target_link_libraries(omniweft_agents PRIVATE ow_render)
+  target_compile_definitions(omniweft_agents PRIVATE OW_ENABLE_VULKAN=1)
 endif()
 
 include(CTest)
@@ -118,4 +129,22 @@ if(BUILD_TESTING)
   add_test(NAME sdk.oracle_selftest
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sdk_oracle_test.py")
   set_tests_properties(sdk.move_cube sdk.oracle_selftest PROPERTIES TIMEOUT 180)
+  add_executable(simulation_native_test tests/simulation_native_test.cpp)
+  target_link_libraries(simulation_native_test PRIVATE ow_simulation)
+  ow_native_policy(simulation_native_test)
+  add_test(NAME simulation.native COMMAND simulation_native_test)
+  add_test(NAME agents.mock_builder
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/agents_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_agents>" --headless)
+  add_test(NAME agents.oracle_selftest
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/agents_oracle_test.py")
+  set_tests_properties(simulation.native agents.mock_builder agents.oracle_selftest PROPERTIES TIMEOUT 180)
+  add_test(NAME agents.sdk_boundary
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/agents_sdk_test.py"
+      --executable "$<TARGET_FILE:omniweft_agents>")
+  set_tests_properties(agents.sdk_boundary PROPERTIES TIMEOUT 90)
+  add_test(NAME agents.sdk_compatibility
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sdk_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_agents>")
+  set_tests_properties(agents.sdk_compatibility PROPERTIES TIMEOUT 180)
 endif()

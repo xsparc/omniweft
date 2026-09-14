@@ -1,6 +1,6 @@
 # PR-005 execution plan
 
-State: **in_progress**. Adopted scope: [authorization](AUTHORIZATION.md). Dependency PR-003 actually merged at `e994f054d1e13ba19f714f35696ec8a1bca221a9`. Base: PR-004's verified squash `ba80bb8392206a32810c8de989245e80cdfe055d`, tree `5baf923a0972fc099cfbc7c5082e5590b8ced98c`. Owner: Codex coordinator; branch `codex/pr-005-authenticated-sdk`. Roadmap authorization makes this bounded item eligible; it was promoted from proposed to ready and claimed on 2026-09-13.
+State: **done**. This is the historical implementation contract; actual merge and final checks are recorded in [the handoff](PR-005-HANDOFF.md). Adopted scope: [authorization](AUTHORIZATION.md). Dependency PR-003 actually merged at `e994f054d1e13ba19f714f35696ec8a1bca221a9`. Base: PR-004's verified squash `ba80bb8392206a32810c8de989245e80cdfe055d`, tree `5baf923a0972fc099cfbc7c5082e5590b8ced98c`. Owner: Codex coordinator; branch `codex/pr-005-authenticated-sdk`. Roadmap authorization makes this bounded item eligible; it was promoted from proposed to ready and claimed on 2026-09-13.
 
 ## Outcome and scope
 
