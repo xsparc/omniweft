@@ -70,3 +70,11 @@ Client.runtime() returns immutable profile-1 metadata and a complete detached sn
 Typed TemporaryTarget references allow CreateCube and SetTransform in one public SDK transaction. The same native atomic coordinator validates and applies these operations. A ScriptedBuilder whose build/finish result is lost becomes unusable and raises OutcomeUnknown; inspect the world and explicitly resynchronize before deciding on further mutations. The SDK never replays the uncertain builder batch.
 
 The [runnable example](../../examples/agents-mock_builder.md) includes headless, real GPU and bounded interactive modes. NativeSession accepts optional gpu, interactive and output parameters for the new agents executable. Credentials stay on private pipes, and public progress objects contain only reviewed domain data. Verification state and limitations are recorded in the [PR-006 handoff](../../docs/execution/PR-006-HANDOFF.md).
+
+## Scoped policy fixture
+
+PR-007's opt-in PolicySession launches omniweft_policy with two independent private credentials. Obtain session.client("west") or session.client("east"); existing typed transact/move/delete operations retain their receipt contract. Create and place a cube atomically with CreateCube and a TemporaryTarget transform because an unplaced cube cannot survive commit.
+
+PolicyClient.policy_status() returns an immutable version 1 profile with host-issued write bounds, an explicit whole-world read grant, limits and usage. These effective limits are separate from unchanged legacy global capabilities. PolicyClient.resync_policy() recovers revision/sequence after an uncertain outcome or oversized observation without retrying mutations. Renewal rotates both principals' credentials and retains world/quota sponsorship. Default NativeSession behavior remains unchanged.
+
+See [policy.denied_edits](../../examples/policy-denied_edits.md) for accounting, response-size limits, request recovery and commands.

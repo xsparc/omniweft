@@ -1,5 +1,11 @@
 # PR-006 execution handoff
 
+Merged by maintainer xsparc through [PR #10](https://github.com/xsparc/omniweft/pull/10) at 2026-09-14T10:45:10Z as 270f67b21237c180d8c37906bd03fc31f3be0010. Its tree 02be55d4f26810a8a24ad3915dd09ffb8d89f7dc exactly matches reviewed delivery d83be1c1fa5245a734d5dfd8b274ccb813ce4234, with sole parent 3ab7bf114aa4acdef52387b1709be3fcaccb17b9. Both OS jobs passed in all post-merge workflows: [planning](https://github.com/xsparc/omniweft/actions/runs/34834737476), [native](https://github.com/xsparc/omniweft/actions/runs/34834737539), [optional renderer](https://github.com/xsparc/omniweft/actions/runs/34834737458). PR-006 is **done**.
+
+All six final-delivery checks also passed: [planning](https://github.com/xsparc/omniweft/actions/runs/34834213071), [native](https://github.com/xsparc/omniweft/actions/runs/34834213059), [optional renderer](https://github.com/xsparc/omniweft/actions/runs/34834212957). Eight retained Windows/Linux proofs passed with verified hashes; tested merge candidate f7f85c0be2ff17e8fbec9a7db84fc71f2b6acf14 has the reviewed delivery tree. Runtime/GPU evidence remains bound to dc604ebd83a08ba0d23dcac473d5f10c7e74a362.
+
+The delivery record below is historical and preserves its original review state. The next dependency-ready roadmap item is PR-007, capabilities and resource budgets.
+
 State: **in_review**. [PR #10](https://github.com/xsparc/omniweft/pull/10), branch codex/pr-006-fixed-step-provider, base 3ab7bf114aa4acdef52387b1709be3fcaccb17b9. [Adopted scope and attribution](AUTHORIZATION.md) · [contract](PR-006-PLAN.md) · [example](../../examples/agents-mock_builder.md) · [public evidence](../evidence/PR-006/README.md).
 
 ## Delivered behavior

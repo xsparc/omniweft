@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 #pragma once
 #include "omniweft/commands.hpp"
+#include "omniweft/policy.hpp"
 #include "omniweft/transactions.hpp"
 #include "omniweft/world.hpp"
 #include <chrono>
@@ -46,4 +47,11 @@ struct Callbacks {
 // or 4 for failure. Normal I/O/admission stops at max_runtime_ms. The watchdog
 // exits with 4 on a stalled host after a fixed additional 1000ms cleanup grace.
 int run(const Config& config, const Callbacks& callbacks) noexcept;
+// Opt-in fixed two-principal profile; no legacy descriptor/capability changes.
+struct PolicyCallbacks {
+  Callbacks shared;
+  policy::Ledger* ledger = nullptr;
+  std::function<transactions::Receipt(const commands::Envelope&, policy::Lease&)> apply;
+};
+int run_policy(const Config& config, const PolicyCallbacks& callbacks) noexcept;
 }  // namespace ow::control

@@ -41,6 +41,11 @@ target_link_libraries(ow_transactions PUBLIC ow_world ow_commands)
 target_include_directories(ow_transactions PUBLIC include)
 ow_native_policy(ow_transactions)
 
+add_library(ow_policy STATIC src/policy.cpp)
+target_link_libraries(ow_policy PUBLIC ow_transactions)
+target_include_directories(ow_policy PUBLIC include)
+ow_native_policy(ow_policy)
+
 add_library(ow_presentation STATIC src/presentation.cpp)
 target_link_libraries(ow_presentation PUBLIC ow_world)
 target_include_directories(ow_presentation PUBLIC include)
@@ -53,7 +58,7 @@ ow_native_policy(omniweft_examples)
 
 find_package(Threads REQUIRED)
 add_library(ow_control STATIC src/control.cpp)
-target_link_libraries(ow_control PUBLIC ow_commands PRIVATE Threads::Threads)
+target_link_libraries(ow_control PUBLIC ow_commands ow_policy PRIVATE Threads::Threads)
 target_include_directories(ow_control PUBLIC include)
 target_include_directories(ow_control SYSTEM PRIVATE third_party)
 if(WIN32)
@@ -68,6 +73,10 @@ ow_native_policy(omniweft_control)
 add_library(ow_simulation STATIC src/simulation.cpp)
 target_include_directories(ow_simulation PUBLIC include)
 ow_native_policy(ow_simulation)
+
+add_executable(omniweft_policy src/policy_main.cpp)
+target_link_libraries(omniweft_policy PRIVATE ow_control ow_policy ow_simulation Threads::Threads)
+ow_native_policy(omniweft_policy)
 
 add_executable(omniweft_agents src/agents_main.cpp)
 target_link_libraries(omniweft_agents PRIVATE ow_control ow_transactions ow_presentation ow_simulation Threads::Threads)
@@ -93,6 +102,16 @@ if(BUILD_TESTING)
   add_test(NAME platform.preflight
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/preflight_test.py")
   set_tests_properties(platform.bootstrap platform.preflight PROPERTIES TIMEOUT 30)
+
+  add_executable(policy_native_test tests/policy_native_test.cpp)
+  target_link_libraries(policy_native_test PRIVATE ow_policy)
+  ow_native_policy(policy_native_test)
+  add_test(NAME policy.native COMMAND policy_native_test)
+  add_test(NAME policy.denied_edits
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/policy_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_policy>")
+  set_tests_properties(policy.denied_edits PROPERTIES TIMEOUT 90)
+  set_tests_properties(policy.native PROPERTIES TIMEOUT 30)
 
   add_executable(protocol_native_test tests/protocol_native_test.cpp)
   target_link_libraries(protocol_native_test PRIVATE ow_commands)

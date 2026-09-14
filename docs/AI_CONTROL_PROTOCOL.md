@@ -4,7 +4,7 @@ Status: PR-002 defines the [authoritative schema 0.1 envelope](../schemas/protoc
 
 The [PR-003 execution contract](execution/PR-003-PLAN.md) is limited to immediate single-owner-thread root-object transactions and volatile receipts. Envelope idempotency/scheduling metadata does not establish epoch admission, deduplication or queued deadline behavior at this internal boundary. The PR-005 gateway enforces active session/epoch and exact-next-sequence admission before invoking that executor. Its next_tick mode consumes the immediate synchronous host boundary; it does not claim queued deadlines or physics ticks.
 
-The PR-006 candidate adds an opt-in agents host whose synchronous transactions execute at actual fixed-step boundaries. Its separately versioned [runtime observation](../schemas/runtime-1.schema.json) adds GET /v0/runtime without changing legacy capabilities, observations or receipts. The [PR-006 contract](execution/PR-006-PLAN.md) defines bounded handoff, overload deferral and publication semantics. Tick-expiry metadata remains deferred; HTTP, session and normal-process deadlines are enforced. The original control host retains its immediate synchronous boundary.
+Merged PR-006 adds an opt-in agents host whose synchronous transactions execute at actual fixed-step boundaries. Its separately versioned [runtime observation](../schemas/runtime-1.schema.json) adds GET /v0/runtime without changing legacy capabilities, observations or receipts. The [PR-006 contract](execution/PR-006-PLAN.md) defines bounded handoff, overload deferral and publication semantics. Tick-expiry metadata remains deferred; HTTP, session and normal-process deadlines are enforced. The original control host retains its immediate synchronous boundary.
 
 ## Control loop
 
