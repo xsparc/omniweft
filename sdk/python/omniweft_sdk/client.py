@@ -15,6 +15,8 @@ from .models import (ApiError, ConnectionInfo, CreateCube, DeleteEntity, EntityH
                      OutcomeUnknown, ProtocolError, Receipt, SetTransform, Snapshot,
                      Transform, UINT64_MAX, decode, epoch, fields, integer, text)
 
+from .runtime import RuntimeStatus
+
 MAX_RESPONSE = 4194304
 ERROR_CODES = frozenset({
     "NOT_AUTHORIZED", "SESSION_EXPIRED", "INVALID_SCHEMA", "UNSUPPORTED_VERSION",
@@ -243,6 +245,18 @@ class Client:
                 raise ProtocolError()
             self._next = v["next_sequence"]
             return snapshot
+
+    def runtime(self) -> RuntimeStatus:
+        """Read opt-in runtime profile 1; legacy hosts reject this route."""
+        with self._lock:
+            caps = self._ensure_negotiated()
+            v = self._wrapper(self._request("GET", "/v0/runtime"), "runtime")
+            status = RuntimeStatus.from_dict(v["runtime"])
+            if (status.snapshot.world_id != caps.world_id
+                    or status.snapshot.max_slots != caps.limits.max_slots):
+                raise ProtocolError()
+            self._next = v["next_sequence"]
+            return status
 
     def get_entity(self, handle: EntityHandle):
         return self.observe().get_entity(handle)

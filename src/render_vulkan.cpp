@@ -104,6 +104,8 @@ class Context {
   ~Context() { cleanup(); }
   void initialize(const std::array<Packet,2>& packets);
   void execute(const std::array<Packet,2>& packets,bool interactive);
+  void initialize_capacity(std::size_t max_vertices,std::size_t max_indices);
+  void execute_live(const LiveConfig& config,const LiveCallbacks& callbacks);
  private:
   Api api_;
   RunResult& result_;
@@ -125,7 +127,8 @@ class Context {
   std::vector<VkImage> swap_images_;
   VkFormat color_format_=VK_FORMAT_UNDEFINED;
   Extent extent_;
-  std::uint64_t generation_=0, serial_=0, frame_count_=0, allocated_=0;
+  std::uint64_t generation_=0, serial_=0, frame_count_=0, allocated_=0, max_frames_=120;
+  bool live_=false;
   Image color_, ids_, depth_;
   Buffer vertices_, indices_, color_read_, id_read_, depth_read_;
   VkRenderPass render_pass_=VK_NULL_HANDLE;
@@ -171,6 +174,10 @@ class Context {
   void capture(const Packet& packet,const char* phase,std::uint32_t image_index,VkResult presented);
 };
 void Context::initialize(const std::array<Packet,2>& packets) {
+  initialize_capacity(std::max(packets[0].vertices.size(),packets[1].vertices.size()),
+                      std::max(packets[0].indices.size(),packets[1].indices.size()));
+}
+void Context::initialize_capacity(std::size_t max_vertices,std::size_t max_indices) {
   SDL_SetMainReady();
   if (!SDL_Init(SDL_INIT_VIDEO)) fail("WINDOW_UNAVAILABLE","SDL video initialization failed; use an available desktop session.",true);
   sdl_=true;
@@ -311,8 +318,6 @@ void Context::initialize(const std::array<Packet,2>& packets) {
   check(api_.vkCreateFence(device_,&fence,nullptr,&acquire_fence_),"Acquisition fence creation failed.");
   check(api_.vkCreateFence(device_,&fence,nullptr,&graphics_fence_),"Graphics fence creation failed.");
   check(api_.vkCreateFence(device_,&fence,nullptr,&present_fence_),"Presentation fence creation failed.");
-  const auto max_vertices=std::max(packets[0].vertices.size(),packets[1].vertices.size());
-  const auto max_indices=std::max(packets[0].indices.size(),packets[1].indices.size());
   if(max_vertices>24*1024 || max_indices>36*1024) fail("BUDGET_EXCEEDED","Presentation packet exceeds the mesh budget.");
   make_buffer(vertices_,std::max<std::size_t>(1,max_vertices)*sizeof(Vertex),VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
   make_buffer(indices_,std::max<std::size_t>(1,max_indices)*sizeof(std::uint32_t),VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
@@ -567,7 +572,7 @@ bool Context::draw(const Packet& packet,const char* phase,bool retain) {
   static_cast<void>(presentation::checked_pixel_count(actual));
   wait_work();
   if(actual!=extent_ || !swapchain_) recreate();
-  if(!interactive_ && frame_count_>=120) fail("FRAME_BUDGET_EXCEEDED","Verification exceeded 120 submitted frames.");
+  if((!interactive_ || live_) && frame_count_>=max_frames_) fail("FRAME_BUDGET_EXCEEDED","Presentation exceeded its submitted-frame budget.");
   std::uint32_t image_index=0;
   auto acquired=api_.vkAcquireNextImageKHR(device_,swapchain_,100000000ULL,VK_NULL_HANDLE,acquire_fence_,&image_index);
   if(acquired==VK_TIMEOUT || acquired==VK_NOT_READY) return false;
@@ -715,6 +720,33 @@ void Context::execute(const std::array<Packet,2>& packets,bool interactive) {
     present_until(packets[1],"",false);
   }
 }
+void Context::execute_live(const LiveConfig& config,const LiveCallbacks& callbacks) {
+  live_=true;interactive_=config.interactive;max_frames_=interactive_?40000:600;
+  bool initial=false,final=false;
+  callbacks.ready();
+  while(!callbacks.should_stop()) {
+    deadline();pump();if(closed_) break;
+    const auto current=callbacks.latest();
+    const auto revision=current.packet.world_revision;
+    const char* phase=nullptr;
+    if(!initial && revision==1) phase="initial";
+    if(initial && !final && revision==3) phase="final";
+    if(!initial && revision>1) fail("MISSED_LIVE_REVISION","The initial live revision was not presented.");
+    if(!minimized_ && draw(current.packet,phase?phase:"",phase!=nullptr)) {
+      // Publish presentation progress only after actual graphics AND present
+      // completion. A queued present alone is not visible-completion evidence.
+      wait_work();
+      if(phase) {
+        auto& capture=result_.frames.back();
+        capture.simulation_tick=current.simulation_tick;capture.snapshot_sequence=current.snapshot_sequence;
+        if(revision==1) initial=true;else final=true;
+      }
+      callbacks.presented(current,frame_count_);
+    }
+    SDL_Delay(16);
+  }
+  if(!initial || !final) fail("INCOMPLETE_LIVE_SCENE","Both live committed scene revisions must be presented.");
+}
 void Context::cleanup() noexcept {
   try {
     if(device_ && api_.vkWaitForFences) wait_work();
@@ -759,6 +791,28 @@ RunResult run_world_cube(const std::array<Packet,2>& revisions,bool interactive)
       result.errors.push_back({"INVALID_PRESENTATION_DATA","Presentation data or pixel extent exceeds the bounded contract."});
     } catch(const std::exception&) {
       result.errors.push_back({"RUNTIME_ERROR","The bounded presentation run could not complete."});
+    }
+  }
+  if(result.validation.errors || result.validation.warnings) {
+    result.status="failed";result.errors.push_back({"VALIDATION_FAILED","Khronos validation reported a warning or error."});
+  }
+  return result;
+}
+RunResult run_live(const LiveConfig& config,const LiveCallbacks& callbacks) {
+  RunResult result;
+  {
+    Context context(result);bool initialized=false;
+    try {
+      if(config.max_slots<1 || config.max_slots>1024 || !callbacks.latest || !callbacks.should_stop ||
+         !callbacks.ready || !callbacks.presented) throw std::invalid_argument("Invalid live renderer configuration.");
+      context.initialize_capacity(static_cast<std::size_t>(config.max_slots)*24,
+                                  static_cast<std::size_t>(config.max_slots)*36);
+      initialized=true;context.execute_live(config,callbacks);result.status="passed";
+    } catch(const Failure& error) {
+      result.status=(error.unsupported||!initialized)?"unsupported":"failed";
+      result.errors.push_back({error.code,error.what()});
+    } catch(const std::exception&) {
+      result.errors.push_back({"LIVE_RENDER_FAILED","Live presentation could not complete within its bounded contract."});
     }
   }
   if(result.validation.errors || result.validation.warnings) {

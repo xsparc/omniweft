@@ -1,6 +1,12 @@
 # PR-005 execution handoff
 
-State: **in_review**, not merged. [PR #9](https://github.com/xsparc/omniweft/pull/9), branch `codex/pr-005-authenticated-sdk`, base `ba80bb8392206a32810c8de989245e80cdfe055d`. Current tested runtime is `8ce2f06c6f9df626558a59bc694626d91c561a47`, tree `738aa2cf26537aec74b82cb76b2e210e8cdac175`. [Authorization](AUTHORIZATION.md) · [contract](PR-005-PLAN.md) · [example](../../examples/sdk-move_cube.md).
+State: **done**, merged by the maintainer at 2026-09-13T12:18:32Z as `3ab7bf114aa4acdef52387b1709be3fcaccb17b9`. [PR #9](https://github.com/xsparc/omniweft/pull/9), branch `codex/pr-005-authenticated-sdk`, base `ba80bb8392206a32810c8de989245e80cdfe055d`. Retained tested runtime is `8ce2f06c6f9df626558a59bc694626d91c561a47`, tree `738aa2cf26537aec74b82cb76b2e210e8cdac175`. [Authorization](AUTHORIZATION.md) · [contract](PR-005-PLAN.md) · [example](../../examples/sdk-move_cube.md).
+
+## Verified completion
+
+Final delivered head `5b89546baaf8e0437abe809d855b0afcc5ba5f39` and the actual squash merge have identical tree `6a31fa40a5fa5bc25683e9d821cde3fa53385c03`. The squash has the expected sole parent `ba80bb8392206a32810c8de989245e80cdfe055d`. The final additional automated review completed without new findings; the earlier lifecycle thread is resolved and outdated. Two independent checks of the live GitHub state confirmed these facts.
+
+All six post-merge jobs passed: [Windows/Linux planning](https://github.com/xsparc/omniweft/actions/runs/34756733068), [Windows/Linux native](https://github.com/xsparc/omniweft/actions/runs/34756733065) and [Windows/Linux optional renderer build](https://github.com/xsparc/omniweft/actions/runs/34756733062). Completion records merge and checks; it does not invent a separate DCO sign-off or human review identity.
 
 ## Implemented behavior
 
@@ -50,4 +56,4 @@ No third-party runtime dependency, action pin, permission, save format or comman
 
 PR-004 merged through [PR #8](https://github.com/xsparc/omniweft/pull/8) at 2026-09-13T10:08:36Z as `ba80bb8392206a32810c8de989245e80cdfe055d`; its tree matches reviewed delivery `8e03add6e01b53e991fedd2b8c4e82346e69347a` and all six post-merge checks passed. Windows GPU evidence remains bound to `973162f40536235c7dea24aff00bc7281cf93923`; Linux physical GPU remains `not_run`.
 
-The coordinator owns delivery docs and the ledger; all earlier user/helper worktrees remain preserved. Finish final-head checks and review-thread disposition, return PR #9 to ready, then await maintainer review/certification and squash merge. Check any new automated findings before integration. On a later wakeup, verify the actual remote merge SHA/tree/checks and reconcile the ledger before marking PR-005 done or claiming dependent PR-006. Routine authorization already covers that continuation.
+The coordinator owns delivery docs and the ledger; all earlier user/helper worktrees remain preserved. PR #9 is closed and must receive no further pushes. PR-006 is dependency-ready under the existing authorization; its new isolated worktree starts from the verified squash above. Resume the PR-006 contract and handoff once claimed.

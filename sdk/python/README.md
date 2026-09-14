@@ -1,6 +1,6 @@
 # Omniweft local Python SDK
 
-The PR-005 candidate connects a separate Python process to a native `omniweft_control` host. It implements the bounded synchronous control profile in [the slice plan](../../docs/execution/PR-005-PLAN.md) and [wire schema](../../schemas/control-0.1.schema.json). Python 3.12 is used by the pinned verification lanes; no third-party Python package is required.
+The merged PR-005 SDK connects a separate Python process to a native `omniweft_control` host. It implements the bounded synchronous control profile in [the slice plan](../../docs/execution/PR-005-PLAN.md) and [wire schema](../../schemas/control-0.1.schema.json). Python 3.12 is used by the pinned verification lanes; no third-party Python package is required.
 
 ## Run the example
 
@@ -45,3 +45,28 @@ Capabilities declare `retry_mode="resync_only"`. Duplicate receipts, concurrent-
 ## Evidence hygiene
 
 Credential descriptors and live client metadata are private control data, not log material. Token and epoch fields are suppressed from representations; decoded responses echoing those secrets are rejected before public models are constructed. Publish only the independently reviewed fixed fixture/receipt/snapshot evidence, never raw HTTP or process streams, local paths, IDs or credential hashes.
+
+
+## Fixed-step runtime and scripted builder
+
+The PR-006 candidate adds an opt-in native omniweft_agents host. Its world advances fixed 60 Hz steps on a dedicated owner thread while gateway I/O and the fixed provider process run separately. The existing omniweft_control executable and control 0.1 response shapes remain supported.
+
+~~~python
+from omniweft_sdk import NativeSession, ScriptedBuilder
+
+with NativeSession("build/windows-headless/omniweft_agents") as host:
+    observer = host.client()
+    with ScriptedBuilder(host) as provider:
+        initial = provider.initial.snapshots[0]
+        first = provider.create_first()
+        progress = observer.runtime()
+        completed = provider.finish()
+~~~
+
+On Windows use the .exe filename. The fixed builder creates the seed-7 three-cube fixture; its ready and first barriers permit deliberate provider delay while another client observes simulation progress. It is a checked-in provider implementation and does not evaluate model output or arbitrary code. A separate 30-second worker lifetime bounds abandoned private barriers and pipe writes. Each active result read is bounded to three seconds and 64 KiB.
+
+Client.runtime() returns immutable profile-1 metadata and a complete detached snapshot. Authoring revision, executed tick and presentation source stamps are distinct. The clock executes at most four catch-up steps per advance, reports overload and dropped whole debt, and retains the fractional remainder. This does not establish physics determinism. The [runtime schema](../../schemas/runtime-1.schema.json) is separate from the unchanged legacy route schemas; older hosts reject the new route.
+
+Typed TemporaryTarget references allow CreateCube and SetTransform in one public SDK transaction. The same native atomic coordinator validates and applies these operations. A ScriptedBuilder whose build/finish result is lost becomes unusable and raises OutcomeUnknown; inspect the world and explicitly resynchronize before deciding on further mutations. The SDK never replays the uncertain builder batch.
+
+The [runnable example](../../examples/agents-mock_builder.md) includes headless, real GPU and bounded interactive modes. NativeSession accepts optional gpu, interactive and output parameters for the new agents executable. Credentials stay on private pipes, and public progress objects contain only reviewed domain data. Verification state and limitations are recorded in the [PR-006 handoff](../../docs/execution/PR-006-HANDOFF.md).

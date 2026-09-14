@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "tick_rate_hz": 60,
+  "max_catch_up_steps": 4,
+  "fresh_cases": [
+    {
+      "label": "zero",
+      "elapsed_ns": 0,
+      "due_ticks": 0,
+      "executed_ticks": 0,
+      "dropped_ticks": 0,
+      "remainder_units": 0,
+      "overloaded": false
+    },
+    {
+      "label": "below-one-step",
+      "elapsed_ns": 16666666,
+      "due_ticks": 0,
+      "executed_ticks": 0,
+      "dropped_ticks": 0,
+      "remainder_units": 999999960,
+      "overloaded": false
+    },
+    {
+      "label": "above-one-step",
+      "elapsed_ns": 16666667,
+      "due_ticks": 1,
+      "executed_ticks": 1,
+      "dropped_ticks": 0,
+      "remainder_units": 20,
+      "overloaded": false
+    },
+    {
+      "label": "four-step-boundary",
+      "elapsed_ns": 83333333,
+      "due_ticks": 4,
+      "executed_ticks": 4,
+      "dropped_ticks": 0,
+      "remainder_units": 999999980,
+      "overloaded": false
+    },
+    {
+      "label": "clock-cap",
+      "elapsed_ns": 83333334,
+      "due_ticks": 5,
+      "executed_ticks": 4,
+      "dropped_ticks": 1,
+      "remainder_units": 40,
+      "overloaded": true
+    },
+    {
+      "label": "one-second-overload",
+      "elapsed_ns": 1000000000,
+      "due_ticks": 60,
+      "executed_ticks": 4,
+      "dropped_ticks": 56,
+      "remainder_units": 0,
+      "overloaded": true
+    }
+  ],
+  "uint64_max_case": {"elapsed_ns": 18446744073709551615, "due_ticks": 1106804644422, "executed_ticks": 4, "dropped_ticks": 1106804644418, "remainder_units": 573096900, "overloaded": true},
+  "sequences": [
+    {
+      "label": "fractional-carry",
+      "cases": [
+        {
+          "elapsed_ns": 16666666,
+          "due_ticks": 0,
+          "executed_ticks": 0,
+          "dropped_ticks": 0,
+          "remainder_units": 999999960,
+          "overloaded": false
+        },
+        {
+          "elapsed_ns": 1,
+          "due_ticks": 1,
+          "executed_ticks": 1,
+          "dropped_ticks": 0,
+          "remainder_units": 20,
+          "overloaded": false
+        },
+        {
+          "elapsed_ns": 16666666,
+          "due_ticks": 0,
+          "executed_ticks": 0,
+          "dropped_ticks": 0,
+          "remainder_units": 999999980,
+          "overloaded": false
+        },
+        {
+          "elapsed_ns": 1,
+          "due_ticks": 1,
+          "executed_ticks": 1,
+          "dropped_ticks": 0,
+          "remainder_units": 40,
+          "overloaded": false
+        }
+      ]
+    },
+    {
+      "label": "overload-recovery",
+      "cases": [
+        {
+          "elapsed_ns": 1000000000,
+          "due_ticks": 60,
+          "executed_ticks": 4,
+          "dropped_ticks": 56,
+          "remainder_units": 0,
+          "overloaded": true
+        },
+        {
+          "elapsed_ns": 16666667,
+          "due_ticks": 1,
+          "executed_ticks": 1,
+          "dropped_ticks": 0,
+          "remainder_units": 20,
+          "overloaded": false
+        },
+        {
+          "elapsed_ns": 0,
+          "due_ticks": 0,
+          "executed_ticks": 0,
+          "dropped_ticks": 0,
+          "remainder_units": 20,
+          "overloaded": false
+        }
+      ]
+    }
+  ]
+}

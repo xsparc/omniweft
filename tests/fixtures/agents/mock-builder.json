@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "example": "agents.mock_builder",
+  "world_id": "workshop",
+  "seed": 7,
+  "max_slots": 8,
+  "transaction_ids": [
+    "018f7242-4387-7c98-a114-67787915a601",
+    "018f7242-4387-7c98-a114-67787915a602",
+    "018f7242-4387-7c98-a114-67787915a603"
+  ],
+  "objects": [
+    {
+      "temporary_id": "left",
+      "entity_uuid": "00000007-0000-4000-8000-000000000001",
+      "authoring_revision": 1,
+      "transform": {
+        "position_m": [
+          -2,
+          0,
+          0
+        ],
+        "rotation_xyzw": [
+          0,
+          0.6,
+          0,
+          0.8
+        ],
+        "scale": [
+          0.75,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "temporary_id": "centre",
+      "entity_uuid": "00000007-0000-4000-8000-000000000002",
+      "authoring_revision": 2,
+      "transform": {
+        "position_m": [
+          0,
+          0.5,
+          0
+        ],
+        "rotation_xyzw": [
+          0,
+          0.6,
+          0,
+          0.8
+        ],
+        "scale": [
+          1,
+          0.5,
+          1
+        ]
+      }
+    },
+    {
+      "temporary_id": "right",
+      "entity_uuid": "00000007-0000-4000-8000-000000000003",
+      "authoring_revision": 3,
+      "transform": {
+        "position_m": [
+          2,
+          -0.5,
+          0
+        ],
+        "rotation_xyzw": [
+          0,
+          0.6,
+          0,
+          0.8
+        ],
+        "scale": [
+          0.5,
+          1.5,
+          1
+        ]
+      }
+    }
+  ],
+  "canonical_states": [
+    {
+      "world_revision": 0,
+      "bytes": 40,
+      "sha256": "85b1d8cd51e10301ffb78f9aba4116c09ea48b41a4cb9786fef0870bdd2ba780"
+    },
+    {
+      "world_revision": 1,
+      "bytes": 195,
+      "sha256": "4e7ee3306d01bc46098f63977d39d12022e4fcb4286d7bb08b2e6168536b0cd2"
+    },
+    {
+      "world_revision": 2,
+      "bytes": 350,
+      "sha256": "a3c35848d0ac4512f9586958e0a935471ec039ef26eb6fe9000a9a4bb7d0ebec"
+    },
+    {
+      "world_revision": 3,
+      "bytes": 505,
+      "sha256": "75d3387aa74edb50e43287305c5581d3c0cf0fef49df8b598ae19aa5d9b06918"
+    }
+  ],
+  "camera": {
+    "position_m": [
+      0,
+      0,
+      5
+    ],
+    "left": -4,
+    "right": 4,
+    "bottom": -3,
+    "top": 3,
+    "near_m": 0.1,
+    "far_m": 20
+  },
+  "pixel_extent": {
+    "width": 320,
+    "height": 240
+  },
+  "face_rgba8": [
+    [
+      255,
+      64,
+      64,
+      255
+    ],
+    [
+      128,
+      32,
+      32,
+      255
+    ],
+    [
+      64,
+      255,
+      64,
+      255
+    ],
+    [
+      32,
+      128,
+      32,
+      255
+    ],
+    [
+      64,
+      64,
+      255,
+      255
+    ],
+    [
+      32,
+      32,
+      128,
+      255
+    ]
+  ],
+  "clear_rgba8": [
+    16,
+    20,
+    24,
+    255
+  ],
+  "thresholds": {
+    "edge_mask_chebyshev_radius_pixels": 1,
+    "color_channel_abs": 1,
+    "normalized_depth_abs": 0.00001
+  }
+}

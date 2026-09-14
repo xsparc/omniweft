@@ -1,6 +1,6 @@
 # sdk.move_cube
 
-Status: **verified on Windows/Linux in the PR-005 candidate; maintainer merge pending**. Work item: **PR-005 — Authenticated local Python SDK**.
+Status: **implemented and merged; Windows/Linux verification passed**. Work item: **PR-005 — Authenticated local Python SDK**.
 
 Dependencies: PR-003. Validation lanes: cpu.
 
