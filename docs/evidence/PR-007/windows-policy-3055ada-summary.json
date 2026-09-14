@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "work_item": "PR-007",
+  "candidate_sha": "3055ada3604f7df879454d71f44956437496dd56",
+  "candidate_tree": "66a46165fe9b7e4797f4758dfa6a161ef54a684d",
+  "proofs": {
+    "policy": {
+      "work_item": "PR-007",
+      "assertions": 1007,
+      "artifacts": 7,
+      "manifest_sha256": "189e08e588d76588c3e639baf96d6fc0fe1b400115bf0646d39761eb00f06035"
+    },
+    "scope-mutation": {
+      "work_item": "PR-007",
+      "assertions": 480,
+      "artifacts": 2,
+      "manifest_sha256": "29a8657d81f6153143855a504d2f58761a33829811490fa28450573bd82fa389"
+    },
+    "sdk-regression": {
+      "work_item": "PR-005",
+      "assertions": 479,
+      "artifacts": 2,
+      "manifest_sha256": "38b03dfddc7d0df9ec1fc3d5f9621b30d289d77d9cd614e6d911ebd04f48906d"
+    },
+    "owner-regression": {
+      "work_item": "PR-006",
+      "assertions": 268,
+      "artifacts": 3,
+      "manifest_sha256": "ee359ea76866e0c9b3a19a72eaddd88fdfb81de38eececff94b2b56d1008aae2"
+    }
+  },
+  "limitations": {
+    "hosted_windows_linux": "not_run; temporarily unavailable",
+    "linux_container": "not_run; engine unavailable",
+    "policy_gpu": "not_applicable; CPU-only fixture",
+    "merge": "not_merged"
+  },
+  "native_checks": {
+    "policy_native_assertions": 843,
+    "windows_ctest_passed": 18,
+    "windows_ctest_failed": 0,
+    "ctest_note": "All CTests passed before final test-only wire-oracle refinement; refined oracle reran against clean candidate. Production binaries unchanged.",
+    "policy_native_executable_sha256": "43a58d222c7b02f36ee189bfacacb6da8f4a1f726ba3557e62fc9e9d226d61c8"
+  },
+  "privacy": "Allowlisted fixture/domain data only; no raw HTTP/process streams, credentials, account information, machine paths or executable bytes.",
+  "archive": {
+    "name": "windows-policy-3055ada.zip",
+    "bytes": 21872,
+    "entries": 19,
+    "sha256": "b26ad98823ec2b3a5b1f227bdca31302b94b594b9a957b15d99a33bd07ed0c76"
+  }
+}

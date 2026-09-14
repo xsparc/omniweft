@@ -1,27 +1,36 @@
 # PR-007 handoff
 
-State: in_progress; implemented local candidate, not merged. Adopted scope: [authorization](AUTHORIZATION.md).
+State: **blocked on required hosted validation; locally implemented and reviewed, not merged**.
+Adopted scope: [authorization](AUTHORIZATION.md).
 Branch: codex/pr-007-capabilities-budgets. Base: 270f67b21237c180d8c37906bd03fc31f3be0010.
-PR: not opened. Exact candidate identity is to be recorded after local commit; no push is planned while hosted runs are unavailable.
+Runtime candidate: 3055ada3604f7df879454d71f44956437496dd56.
+Runtime tree: 66a46165fe9b7e4797f4758dfa6a161ef54a684d.
+PR URL: not opened; branch remains local. Maintainer certification/review and actual merge remain required.
 
-## Implemented behavior
+## Result
 
-The [slice plan](PR-007-PLAN.md) defines the fixed two-principal policy profile. Native working/request admission precedes body allocation and typed serialization/staging; the shared Coordinator checks whole-cube bounds and atomic retained-memory sponsorship. A separate CPU-only fixed-step host serves three bounded transport workers. PolicySession and PolicyClient expose two private credentials, immutable grants/usage and quota-safe resynchronization. Legacy host/profile shapes and canonical world format remain unchanged. No new dependency or external asset is introduced.
+The [plan](PR-007-PLAN.md) and [runnable example](../../examples/policy-denied_edits.md) define the fixed two-principal behavior. The shared typed Coordinator checks complete cube bounds and atomically commits World and retained-memory sponsorship. Native admission and header-only policy ingress precede body allocation/serialization/staging. A separate CPU-only fixed-step host has three bounded transport workers; a stable request lease covers body reception, Owner dispatch and response completion. PolicySession/PolicyClient expose private principal credentials, immutable grants/usage and quota-safe resynchronization. Canonical world bytes and default host/profile shapes remain compatible.
 
-The [runnable example](../../examples/policy-denied_edits.md) exercises scoped edits, denied foreign/current-destination edits, staging amplification, repeated late rollback, slot generation/sponsor reuse and renewal. Its independent oracle checks literal complete world/receipt data, a valid four-operation batch, actual 512/513-byte transmitted observation bodies, exact declared-body memory boundaries, incomplete A body admission, prompt excess-A denial, B's real authored progress, timeout refund and A recovery.
+All scopes, operation counts, retained/working charges and observations use the versioned fixture contract. Memory figures are deterministic charges, not heap/RSS guarantees. Whole-world reads are explicitly granted to both principals. General fairness, confidential filtering, rates, grant administration, persistence and new representations are outside the slice. No new dependency or external asset is introduced.
 
-## Actual local checks
+## Actual verification
 
-Pinned Windows Release build passed using MSVC 19.44.35227, CMake 3.31.6 and Python 3.12.14 with two build jobs. All 18 CTests passed sequentially. The subsequently tightened policy oracle passed 1007 assertions. These are working-tree checks; clean-candidate retained evidence and compiled scope-bypass proof remain pending.
+- Pinned Windows Release build passed with two build jobs.
+- All 18 Windows CTests passed sequentially. The later test-only raw-wire refinement reran through the clean-candidate policy oracle; production binaries stayed unchanged.
+- Native policy tests passed 843 assertions: scope, prefix amplification, repeated rollback, sponsor/identity recovery and native admission lifetime.
+- Clean runtime policy oracle passed 1007 retained assertions, including literal complete state and real HTTP timeout/isolation/recovery.
+- A compiled native destination-scope bypass was detected: 480 retained assertions.
+- Existing native authentication-bypass regression passed 479 retained assertions; existing Owner lifetime/failure regression passed 268, including its 33 native checks.
+- Planning validation passed all 38 items. This is documentation/graph validation, not a runtime or GPU test.
 
-Development failures were fixed before those passes: the new two-principal private descriptor needed its separate 2048-byte limit while legacy remains 513; the example required handle() conversion; independent numeric fixtures needed literal floating-point values; the raw-byte oracle delimiter needed correction. Planning initially rejected missing exact example scope/evidence/rollback/dependency/lane declarations; these were restored and all 38 planning items validated.
+[Public-safe evidence](../evidence/PR-007/README.md) contains the original clean-candidate manifests and hashed fixture artifacts. Its archive is bound to runtime 3055ada, not relabeled as a later documentation delivery. Independent read-only archive audit passed with no blocking finding. Full ZIP structure/bytes, all inventories/hashes, exact candidate/tree and source bindings, privacy allowlists and compiled mutation failures were verified. The audit did not replay the separately reported CTests or native suite.
 
-Independent architecture/implementation review identified admission reuse through a replacement guard, missing rejected receipt correlation and body read-ahead before reservation. All were fixed. Evidence review identified unchecked extra fields/error text and missing successful operation/actual-wire observation boundaries. Exact allowlists and literal errors now reject arbitrary metadata; real boundary tests passed. Final source/evidence review and mutation proof are pending; no self-approval or merge is claimed.
+Independent architecture, implementation and oracle review closed with no remaining source blocker. Findings fixed before the final passes included admission reuse across replacement guards, missing receipt correlation on early rejection, pre-admission body read-ahead, unchecked evidence metadata and missing successful operation/actual-wire observation boundaries. The oracle now rejects unexpected fields and compares every fixed error field literally. Windows proof manifests record actual commands/results and preserved baseline hashes.
 
-## Delivery and limitations
+## Remaining checks and delivery
 
-Hosted validation is temporarily unavailable. Hosted Windows/Linux checks are not_run. Avoid pushes/new hosted runs for now; no permissions, workflow-disable or merge-gate changes are authorized. Existing CI is prepared to run policy evidence and the compiled mutation proof when available. Local work continues; a passing Windows run does not establish Linux behavior.
+Hosted Windows/Linux checks are not_run because hosted validation is temporarily unavailable. Local Docker's engine was unavailable during the latest bounded read-only probe; no engine, context or global configuration was changed. GPU testing is not applicable to this CPU-only policy host; physical Linux GPU remains not_run. Passing local Windows tests does not establish Linux behavior.
 
-Linux Docker was previously unavailable; no Docker Desktop, context, driver or global host change has been made. Policy GPU verification is not applicable to this CPU-only fixture; an unchanged renderer's prior evidence is not relabeled as policy evidence. Physical Linux GPU remains not_run.
+Do not push or trigger new hosted runs while this restriction remains. Existing workflow changes prepare policy oracle/mutation artifacts for eventual Windows/Linux CI; no required checks or permissions have been weakened. Once hosted validation becomes available, inspect the current remote base, reconcile changes as needed, run current required checks and prepare the bounded PR for maintainer certification/review and squash merge. Never mark this work done from local checks alone.
 
-Root owns this isolated worktree and all changes. PR-006 actual merge, exact tree match and six post-merge passes are reconciled here, with immutable PR-006 archives preserved. Next action: commit the reviewed candidate with authorized noreply author/committer, run the compiled mutation proof and retain clean-candidate local evidence; close any review findings. Prepare a reviewable local delivery while required hosted validation and maintainer merge remain pending.
+Root owns this worktree, delivery docs and backlog. The original user checkout was verified clean and unchanged. PR-006 actual merge/tree/six post-merge checks are reconciled in this branch, and its existing archives are unchanged. Keep this local candidate, proof archives and durable state until hosted validation and maintainer integration can resume.

@@ -283,7 +283,7 @@
     {
       "id": "PR-007",
       "title": "Capabilities and resource budgets",
-      "status": "in_progress",
+      "status": "blocked",
       "milestone": "M1",
       "depends_on": [
         "PR-005",
@@ -306,7 +306,15 @@
         "claimed_at": "2026-09-14",
         "plan": "docs/execution/PR-007-PLAN.md",
         "handoff": "docs/execution/PR-007-HANDOFF.md",
-        "review": "Independent architecture review accepted bounded contract with explicit accounting, control-plane, runtime-size and queue-isolation limitations; implementation/evidence review pending."
+        "review": "Independent architecture, implementation, oracle and archive integrity/privacy reviews closed with no remaining local blocker. Hosted checks and maintainer certification/review/merge remain pending.",
+        "implementation_sha": "3055ada3604f7df879454d71f44956437496dd56",
+        "implementation_tree": "66a46165fe9b7e4797f4758dfa6a161ef54a684d",
+        "blocker": "Required hosted Windows/Linux validation is temporarily unavailable; local Linux container engine is unavailable. Candidate stays local and unmerged; no required gate is waived.",
+        "next_action": "Preserve reviewed local candidate and evidence. Resume hosted validation and PR delivery when available; maintainer review/certification and actual merge remain required.",
+        "evidence": [
+          "docs/evidence/PR-007/README.md",
+          "docs/execution/PR-007-HANDOFF.md"
+        ]
       }
     },
     {

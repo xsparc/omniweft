@@ -1,6 +1,6 @@
 # PR-007 slice plan
 
-State: in_progress. Adopted scope: [authorization](AUTHORIZATION.md).
+State: blocked on required hosted validation after local implementation and review. Adopted scope: [authorization](AUTHORIZATION.md).
 Owner: Codex coordinator. Branch: codex/pr-007-capabilities-budgets.
 Base: 270f67b21237c180d8c37906bd03fc31f3be0010.
 PR-005 and PR-006 are merged; the PR-006 handoff records exact tree and post-merge verification.
@@ -31,4 +31,4 @@ Windows and Linux CPU lanes are required. Reuse pinned tools; existing regressio
 
 Tests will cover scoped success, foreign current/target regions, rotated footprint and overflow, unplaced create rejection, temporary targets, per-prefix amplification, repeated late rollback of world/generations/sponsors, exact body/operation/observation boundaries, retained quota across renewal, independent principal quotas and actual transport saturation. A real incomplete A body plus excess A and B traffic must prove rejection, progress, timeout refund and A recovery. Native global-limit-one tests supplement real transport evidence. A compiled scope-check mutant must fail the independent oracle.
 
-Independent architecture review found the freeze coherent with these memory, control-plane, runtime-size and queue boundaries. Implementation/evidence review remains required. No implementation or runtime pass is claimed by this plan.
+Independent architecture and implementation/oracle reviews found no remaining source blocker after the documented fixes. Actual results and evidence-review disposition belong to the handoff; this plan does not establish runtime passes by itself.

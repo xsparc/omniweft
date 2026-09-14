@@ -93,7 +93,9 @@ The recovery example injects crashes before blob flush, before/after journal flu
 
 Grants bind a principal to worlds, entity sets/regions, operation classes, observation fields, expiration and resource limits. A world tag saying `owner=agentA` is not an authorization check. Grants come from the host/editor, never from model output. Engine policies override smaller/larger budgets declared by clients.
 
-Initial limits below are conservative configuration defaults to benchmark in PR-007; they are not throughput claims:
+The PR-007 local candidate implements a separate bounded policy.v1 fixture: four operations per transaction, one data-plane request per principal/two globally, deterministic retained/working resource charges and 512/4096-byte west/east observations. Grants permit scoped cube writes and explicitly grant whole-world reads. Policy status supplies revision/sequence recovery when full observations exceed quota; it does not automatically retry an uncertain mutation. Exact limits, admission semantics and current verification are in [policy.denied_edits](../examples/policy-denied_edits.md).
+
+The larger defaults below remain proposed for broader representations and workload benchmarking; they are not the current fixture's effective limits or throughput claims:
 
 | Resource | Initial default |
 | --- | --- |
@@ -108,7 +110,7 @@ Initial limits below are conservative configuration defaults to benchmark in PR-
 | Agent/provider deadline | 30 seconds by default, separate from frame timing |
 | World CPU/GPU memory | Configured at world creation and reported in capabilities |
 
-Quotas cover resulting allocation, decompressed size, derived jobs, GPU dispatch dimensions and observation egress, not just input byte count. Continuous rate limits and fair scheduling prevent one agent from filling every queue. Essential simulation work has priority over authoring jobs.
+Broader planned quotas cover resulting allocation, decompressed size, derived jobs, GPU dispatch dimensions and observation egress, not just input byte count. Continuous rate limits and general fair scheduling remain planned; the PR-007 fixture proves the narrower data-plane saturation isolation documented in its example. Essential simulation work has priority over authoring jobs.
 
 ## Provider and SDK behavior
 
