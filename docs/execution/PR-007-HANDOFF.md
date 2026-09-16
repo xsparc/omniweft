@@ -22,6 +22,7 @@ All scopes, operation counts, retained/working charges and observations use the 
 - A compiled native destination-scope bypass was detected: 480 retained assertions.
 - Existing native authentication-bypass regression passed 479 retained assertions; existing Owner lifetime/failure regression passed 268, including its 33 native checks.
 - Planning validation passed all 38 items. This is documentation/graph validation, not a runtime or GPU test.
+- On 2026-09-16 the same clean runtime passed local Ubuntu 24.04 container validation: pinned Release build, 18/18 CTests, native policy 843 assertions, policy oracle 1007, scope mutation 480, authentication mutation 479 and Owner dispatch/lifetime proof 268. All 32 planning regression tests also passed. The retained Linux package and provisioning recovery are described in the evidence README; independent archive integrity/privacy audit passed with no blocking finding, without runtime replay or independent live-container inspection.
 
 [Public-safe evidence](../evidence/PR-007/README.md) contains the original clean-candidate manifests and hashed fixture artifacts. Its archive is bound to runtime 3055ada, not relabeled as a later documentation delivery. Independent read-only archive audit passed with no blocking finding. Full ZIP structure/bytes, all inventories/hashes, exact candidate/tree and source bindings, privacy allowlists and compiled mutation failures were verified. The audit did not replay the separately reported CTests or native suite.
 
@@ -29,7 +30,7 @@ Independent architecture, implementation and oracle review closed with no remain
 
 ## Remaining checks and delivery
 
-Hosted Windows/Linux checks are not_run because hosted validation is temporarily unavailable. Local Docker's engine was unavailable during the latest bounded read-only probe; no engine, context or global configuration was changed. GPU testing is not applicable to this CPU-only policy host; physical Linux GPU remains not_run. Passing local Windows tests does not establish Linux behavior.
+Hosted Windows/Linux checks are not_run because hosted validation is temporarily unavailable. Docker became available and the maintainer requested resumption. Bounded local Linux CPU validation now passes using two CPUs and 3 GiB RAM, with no network or host mounts. The initial missing dependency scanner was repaired inside the disposable toolchain image; no host/global configuration changed. GPU testing is not applicable to this CPU-only policy host; physical Linux GPU remains not_run. The Linux container result establishes local headless CPU behavior only; hosted Windows/Linux checks remain outstanding.
 
 Do not push or trigger new hosted runs while this restriction remains. Existing workflow changes prepare policy oracle/mutation artifacts for eventual Windows/Linux CI; no required checks or permissions have been weakened. Once hosted validation becomes available, inspect the current remote base, reconcile changes as needed, run current required checks and prepare the bounded PR for maintainer certification/review and squash merge. Never mark this work done from local checks alone.
 
