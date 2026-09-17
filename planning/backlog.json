@@ -283,7 +283,7 @@
     {
       "id": "PR-007",
       "title": "Capabilities and resource budgets",
-      "status": "blocked",
+      "status": "in_review",
       "milestone": "M1",
       "depends_on": [
         "PR-005",
@@ -309,12 +309,12 @@
         "review": "Independent architecture, implementation, oracle and Windows/Linux archive integrity/privacy reviews closed with no remaining local blocker. Hosted checks and maintainer certification/review/merge remain pending.",
         "implementation_sha": "3055ada3604f7df879454d71f44956437496dd56",
         "implementation_tree": "66a46165fe9b7e4797f4758dfa6a161ef54a684d",
-        "blocker": "Required hosted Windows/Linux validation is temporarily unavailable. Local Windows and Linux container CPU checks pass; candidate stays local and unmerged, with no required gate waived.",
-        "next_action": "Preserve the reviewed local candidate and Windows/Linux proof packages, then resume required hosted validation and PR delivery when available; maintainer certification/review and actual merge remain required.",
+        "next_action": "Monitor required checks on the current draft PR head, resolve failures within this slice, then await maintainer certification/review and actual squash merge. Do not start the next slice before merge.",
         "evidence": [
           "docs/evidence/PR-007/README.md",
           "docs/execution/PR-007-HANDOFF.md"
-        ]
+        ],
+        "pr_url": "https://github.com/xsparc/omniweft/pull/11"
       }
     },
     {

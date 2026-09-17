@@ -1,11 +1,11 @@
 # PR-007 handoff
 
-State: **blocked on required hosted validation; locally implemented and reviewed, not merged**.
+State: **draft PR open; locally implemented and reviewed, hosted validation pending, not merged**.
 Adopted scope: [authorization](AUTHORIZATION.md).
 Branch: codex/pr-007-capabilities-budgets. Base: 270f67b21237c180d8c37906bd03fc31f3be0010.
 Runtime candidate: 3055ada3604f7df879454d71f44956437496dd56.
 Runtime tree: 66a46165fe9b7e4797f4758dfa6a161ef54a684d.
-PR URL: not opened; branch remains local. Maintainer certification/review and actual merge remain required.
+PR URL: [draft #11](https://github.com/xsparc/omniweft/pull/11). The maintainer explicitly requested draft publication on 2026-09-17. Maintainer certification/review and actual merge remain required.
 
 ## Result
 
@@ -30,8 +30,8 @@ Independent architecture, implementation and oracle review closed with no remain
 
 ## Remaining checks and delivery
 
-Hosted Windows/Linux checks are not_run because hosted validation is temporarily unavailable. Docker became available and the maintainer requested resumption. Bounded local Linux CPU validation now passes using two CPUs and 3 GiB RAM, with no network or host mounts. The initial missing dependency scanner was repaired inside the disposable toolchain image; no host/global configuration changed. GPU testing is not applicable to this CPU-only policy host; physical Linux GPU remains not_run. The Linux container result establishes local headless CPU behavior only; hosted Windows/Linux checks remain outstanding.
+Hosted validation was unavailable at local evidence capture. After the maintainer requested draft publication, initial Windows/Linux planning checks passed and native/optional-renderer jobs started. Check the PR for current results; running jobs are not passes. Docker became available and the maintainer requested resumption. Bounded local Linux CPU validation now passes using two CPUs and 3 GiB RAM, with no network or host mounts. The initial missing dependency scanner was repaired inside the disposable toolchain image; no host/global configuration changed. GPU testing is not applicable to this CPU-only policy host; physical Linux GPU remains not_run. The Linux container result establishes local headless CPU behavior only; hosted Windows/Linux checks remain outstanding.
 
-Do not push or trigger new hosted runs while this restriction remains. Existing workflow changes prepare policy oracle/mutation artifacts for eventual Windows/Linux CI; no required checks or permissions have been weakened. Once hosted validation becomes available, inspect the current remote base, reconcile changes as needed, run current required checks and prepare the bounded PR for maintainer certification/review and squash merge. Never mark this work done from local checks alone.
+The explicit draft request supersedes the previous publication hold for this slice. Existing workflow changes prepare policy oracle/mutation artifacts for eventual Windows/Linux CI; no required checks or permissions have been weakened. Inspect the latest PR head and required checks, resolve any failures, then prepare the bounded PR for maintainer certification/review and squash merge. Never mark this work done from local checks alone.
 
-Root owns this worktree, delivery docs and backlog. The original user checkout was verified clean and unchanged. PR-006 actual merge/tree/six post-merge checks are reconciled in this branch, and its existing archives are unchanged. Keep this local candidate, proof archives and durable state until hosted validation and maintainer integration can resume.
+Root owns this worktree, delivery docs and backlog. The original user checkout was verified clean and unchanged. PR-006 actual merge/tree/six post-merge checks are reconciled in this branch, and its existing archives are unchanged. Preserve this reviewed candidate and proof archives through hosted validation and maintainer integration.

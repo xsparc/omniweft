@@ -29,7 +29,7 @@ Complete observe/runtime UTF-8 response bodies are limited to 512/4096 bytes. Th
 
 ## Limits and evidence
 
-No capability administration, confidential filtering, pagination, rate quotas, persistence or generalized entity representations are claimed. Canonical world bytes retain their format; sponsorship is volatile host metadata. The policy host is CPU-only; default renderer/SDK behavior remains subject to regression checks. Actual passes, development failures, independent findings and pending delivery are recorded in the handoff. Hosted validation is temporarily unavailable; no required check is waived.
+No capability administration, confidential filtering, pagination, rate quotas, persistence or generalized entity representations are claimed. Canonical world bytes retain their format; sponsorship is volatile host metadata. The policy host is CPU-only; default renderer/SDK behavior remains subject to regression checks. Actual passes, development failures, independent findings and pending delivery are recorded in the handoff. Hosted validation is tracked in [draft PR #11](https://github.com/xsparc/omniweft/pull/11); no required check is waived.
 
 ## Execution contract
 
