@@ -13,3 +13,6 @@ __all__ = ["ApiError", "Capabilities", "Client", "ConnectionInfo", "CreateCube",
            "NativeSession", "OutcomeUnknown", "ProtocolError", "Receipt",
            "ReceiptError", "SetTransform", "Slot", "Snapshot", "Transform", "TemporaryTarget", "PresentationStatus",
            "RuntimeStatus", "BuilderProgress", "ScriptedBuilder"]
+
+from .policy import PolicyClient, PolicyLimits, PolicySession, PolicyStatus, PolicyUsage
+__all__ += ["PolicyClient", "PolicyLimits", "PolicySession", "PolicyStatus", "PolicyUsage"]

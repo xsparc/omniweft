@@ -87,10 +87,15 @@ world::Slot& resolve(world::Snapshot& staged, const commands::Target& target, co
 }
 }  // namespace
 
-Receipt Coordinator::apply_at_boundary(world::World& target_world, const commands::Envelope& envelope) {
+Receipt Coordinator::apply_at_boundary(world::World& target_world, const commands::Envelope& envelope, StagingGuard* guard) {
   Receipt receipt;
-  receipt.transaction_id = envelope.transaction_id;
+  // Preserve valid receipt correlation without copying unbounded typed input.
+  if (!guard || envelope.transaction_id.size() <= 128) receipt.transaction_id = envelope.transaction_id;
   receipt.world_revision = target_world.state_.world_revision;
+  // Policy admission precedes serialization, complete-world clone and staging
+  // allocation. A guard exception leaves both authoritative stores untouched.
+  try { if (guard) guard->begin(target_world, target_world.state_, envelope); }
+  catch (const Error& error) { receipt.errors.push_back(error); return receipt; }
   const auto validated = commands::serialize(envelope);
   if (!validated.json) {
     for (const auto& error : validated.errors) receipt.errors.push_back(schema_error(error));
@@ -130,10 +135,12 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
           if (slot == staged.slots.end()) {
             if (staged.slots.size() >= staged.max_slots)
               reject("BUDGET_EXCEEDED", path, "World slot capacity is exhausted.", index);
+            if (guard) guard->create(staged.slots.size(), index);
             const auto identifier = uuid(staged.seed, staged.slots.size());
             staged.slots.push_back(world::Slot{identifier, 1, false, std::nullopt});
             slot = std::prev(staged.slots.end());
           }
+          else if (guard) guard->create(static_cast<std::size_t>(slot - staged.slots.begin()), index);
           slot->entity = world::Entity{operation.prefab, next_revision, {}};
           names.emplace(operation.temporary_id, commands::EntityTarget{
             staged.world_id, slot->entity_uuid, slot->generation});
@@ -141,10 +148,14 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
         } else if constexpr (std::is_same_v<Type, commands::TransformSet>) {
           const auto replacement = transform(operation, path, index);
           auto& slot = resolve(staged, operation.target, names, path + "/target", index);
+          if (guard) guard->transform(static_cast<std::size_t>(&slot - staged.slots.data()),
+                                      slot.entity->transform, replacement, index);
           slot.entity->transform = replacement;
           slot.entity->authoring_revision = next_revision;
         } else {
           auto& slot = resolve(staged, operation.target, names, path + "/target", index);
+          if (guard) guard->erase(static_cast<std::size_t>(&slot - staged.slots.data()),
+                                  slot.entity->transform, index);
           slot.entity.reset();
           if (slot.generation == std::numeric_limits<std::uint64_t>::max())
             slot.retired = true;
@@ -153,6 +164,7 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
         }
       }, envelope.operations[index]);
     }
+    if (guard) guard->finish(staged);
   } catch (const Error& error) {
     // Rejection discards every staged write and provisional identity binding.
     receipt.errors.push_back(error);
@@ -168,6 +180,7 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
   static_assert(std::is_nothrow_move_constructible_v<Receipt>);
   using std::swap;
   swap(target_world.state_, staged);
+  if (guard) guard->commit();
   return receipt;
 }
 }  // namespace ow::transactions

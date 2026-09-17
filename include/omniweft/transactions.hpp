@@ -33,9 +33,24 @@ struct Receipt {
   bool operator==(const Receipt&) const = default;
 };
 
+// Optional trusted policy hook. The Coordinator owns identity resolution and
+// staging; hooks can reject with Error and must not mutate authoritative World.
+class StagingGuard {
+ public:
+  virtual ~StagingGuard() = default;
+  virtual void begin(const world::World&, const world::Snapshot&, const commands::Envelope&) = 0;
+  virtual void create(std::size_t slot, std::size_t operation) = 0;
+  virtual void transform(std::size_t slot, const world::Transform& before,
+                         const world::Transform& after, std::size_t operation) = 0;
+  virtual void erase(std::size_t slot, const world::Transform& before, std::size_t operation) = 0;
+  virtual void finish(const world::Snapshot&) = 0;
+  virtual void commit() noexcept = 0;
+};
+
 // Trusted host boundary only: no authentication, scheduling or exactly-once admission.
 class Coordinator {
  public:
-  static Receipt apply_at_boundary(world::World& target_world, const commands::Envelope& envelope);
+  static Receipt apply_at_boundary(world::World& target_world, const commands::Envelope& envelope,
+                                   StagingGuard* guard = nullptr);
 };
 }  // namespace ow::transactions

@@ -4,7 +4,7 @@ Status: PR-002 defines the [authoritative schema 0.1 envelope](../schemas/protoc
 
 The [PR-003 execution contract](execution/PR-003-PLAN.md) is limited to immediate single-owner-thread root-object transactions and volatile receipts. Envelope idempotency/scheduling metadata does not establish epoch admission, deduplication or queued deadline behavior at this internal boundary. The PR-005 gateway enforces active session/epoch and exact-next-sequence admission before invoking that executor. Its next_tick mode consumes the immediate synchronous host boundary; it does not claim queued deadlines or physics ticks.
 
-The PR-006 candidate adds an opt-in agents host whose synchronous transactions execute at actual fixed-step boundaries. Its separately versioned [runtime observation](../schemas/runtime-1.schema.json) adds GET /v0/runtime without changing legacy capabilities, observations or receipts. The [PR-006 contract](execution/PR-006-PLAN.md) defines bounded handoff, overload deferral and publication semantics. Tick-expiry metadata remains deferred; HTTP, session and normal-process deadlines are enforced. The original control host retains its immediate synchronous boundary.
+Merged PR-006 adds an opt-in agents host whose synchronous transactions execute at actual fixed-step boundaries. Its separately versioned [runtime observation](../schemas/runtime-1.schema.json) adds GET /v0/runtime without changing legacy capabilities, observations or receipts. The [PR-006 contract](execution/PR-006-PLAN.md) defines bounded handoff, overload deferral and publication semantics. Tick-expiry metadata remains deferred; HTTP, session and normal-process deadlines are enforced. The original control host retains its immediate synchronous boundary.
 
 ## Control loop
 
@@ -93,7 +93,9 @@ The recovery example injects crashes before blob flush, before/after journal flu
 
 Grants bind a principal to worlds, entity sets/regions, operation classes, observation fields, expiration and resource limits. A world tag saying `owner=agentA` is not an authorization check. Grants come from the host/editor, never from model output. Engine policies override smaller/larger budgets declared by clients.
 
-Initial limits below are conservative configuration defaults to benchmark in PR-007; they are not throughput claims:
+The PR-007 local candidate implements a separate bounded policy.v1 fixture: four operations per transaction, one data-plane request per principal/two globally, deterministic retained/working resource charges and 512/4096-byte west/east observations. Grants permit scoped cube writes and explicitly grant whole-world reads. Policy status supplies revision/sequence recovery when full observations exceed quota; it does not automatically retry an uncertain mutation. Exact limits, admission semantics and current verification are in [policy.denied_edits](../examples/policy-denied_edits.md).
+
+The larger defaults below remain proposed for broader representations and workload benchmarking; they are not the current fixture's effective limits or throughput claims:
 
 | Resource | Initial default |
 | --- | --- |
@@ -108,7 +110,7 @@ Initial limits below are conservative configuration defaults to benchmark in PR-
 | Agent/provider deadline | 30 seconds by default, separate from frame timing |
 | World CPU/GPU memory | Configured at world creation and reported in capabilities |
 
-Quotas cover resulting allocation, decompressed size, derived jobs, GPU dispatch dimensions and observation egress, not just input byte count. Continuous rate limits and fair scheduling prevent one agent from filling every queue. Essential simulation work has priority over authoring jobs.
+Broader planned quotas cover resulting allocation, decompressed size, derived jobs, GPU dispatch dimensions and observation egress, not just input byte count. Continuous rate limits and general fair scheduling remain planned; the PR-007 fixture proves the narrower data-plane saturation isolation documented in its example. Essential simulation work has priority over authoring jobs.
 
 ## Provider and SDK behavior
 

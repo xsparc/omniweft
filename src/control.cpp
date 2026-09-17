@@ -2,6 +2,8 @@
 #include "omniweft/control.hpp"
 #include <nlohmann/json.hpp>
 #include <algorithm>
+#include <atomic>
+#include <memory>
 #include <array>
 #include <charconv>
 #include <chrono>
@@ -289,9 +291,9 @@ class PrivatePipes {
 #endif
     return std::string(bytes.data(), static_cast<std::size_t>(count));
   }
-  void descriptor(const Json& value) {
+  void descriptor(const Json& value, std::size_t limit = 513) {
     const std::string bytes = value.dump() + "\n";
-    if (bytes.size() > 513) throw Failure{};
+    if (bytes.size() > limit || limit > 2048) throw Failure{};
     std::size_t offset = 0;
     while (offset < bytes.size()) {
 #ifdef _WIN32
@@ -334,14 +336,14 @@ std::string_view trim_spaces(std::string_view text) {
   while (!text.empty() && text.back() == ' ') text.remove_suffix(1);
   return text;
 }
-Request read_headers(NativeSocket socket, Time deadline) {
+Request read_headers(NativeSocket socket, Time deadline, bool header_only = false) {
   std::string bytes;
   bytes.reserve(max_header_bytes + 2048);
   std::size_t head_end = std::string::npos;
   while ((head_end = bytes.find("\r\n\r\n")) == std::string::npos) {
     if (bytes.size() >= max_header_bytes) reject(413, "BUDGET_EXCEEDED");
     std::array<char, 2048> chunk{};
-    bytes.append(chunk.data(), receive(socket, chunk.data(), chunk.size(), deadline));
+    bytes.append(chunk.data(), receive(socket, chunk.data(), header_only ? 1 : chunk.size(), deadline));
     const auto line_end = bytes.find("\r\n");
     if ((line_end == std::string::npos && bytes.size() > max_request_line_bytes) ||
         (line_end != std::string::npos && line_end + 2 > max_request_line_bytes))
@@ -708,6 +710,196 @@ class Host {
     return snapshot;
   }
 };
+// Shares framing, loopback restrictions, cryptographic tokens and JSON codecs
+// with the legacy host, while keeping the new session/profile opt-in.
+class PolicyHost {
+ public:
+  PolicyHost(const Config& config, const PolicyCallbacks& callbacks, PrivatePipes& pipes, std::uint16_t port)
+    : config_(config), callbacks_(callbacks), pipes_(pipes), port_(port) {}
+  bool renew(Time deadline) {
+    if (Clock::now() >= deadline) return false;
+    Json descriptors = Json::object();
+    {
+      std::lock_guard lock(mutex_);
+      for (std::size_t i=0;i<policy::principal_count;++i) {
+        auto& session=sessions_[i];
+        session.token=random_secret(); session.epoch=random_secret(); session.sequence=1;
+        session.exhausted=false; session.expires=Clock::now()+Milliseconds(config_.session_ttl_ms);
+        descriptors[std::string(policy::grant(i).principal)]={{"schema_version",1},{"protocol_version","0.1"},
+          {"host","127.0.0.1"},{"port",port_},{"token",session.token},{"epoch",session.epoch},
+          {"session_ttl_ms",config_.session_ttl_ms}};
+      }
+    }
+    if (Clock::now() >= deadline) return false;
+    pipes_.descriptor({{"schema_version",2},{"profile","policy.v1"},{"principals",std::move(descriptors)}},2048);
+    return true;
+  }
+  bool host_commands(Time deadline) {
+    while (Clock::now()<deadline) {
+      const auto chunk=pipes_.read();
+      if(!chunk) return true;
+      if(chunk->empty()) {if(!pending_.empty()) throw Failure{}; return false;}
+      for(const char c:*chunk) {
+        if(c=='\n') {
+          if(pending_=="stop") return false;
+          if(pending_!="renew" || renewals_>=64) throw Failure{};
+          ++renewals_;pending_.clear();if(!renew(deadline)) return false;
+        } else {
+          if(pending_.size()>=5 || c<'a' || c>'z') throw Failure{};
+          pending_+=c;
+          if(!std::string_view("renew").starts_with(pending_) &&
+             !std::string_view("stop").starts_with(pending_)) throw Failure{};
+        }
+      }
+    }
+    return false;
+  }
+  void connection(NativeSocket socket, Time deadline) {
+    // Kept outside try: even an error response holds its accepted lease until
+    // the socket operation ends, including timeout, exception and disconnect.
+    std::optional<policy::Lease> lease;
+    try {
+      // Fixture policy ingress stops exactly at the header delimiter. Body
+      // bytes remain in the socket until their principal reservation succeeds.
+      auto request=read_headers(socket,deadline,true);
+      std::size_t principal=policy::principal_count;
+      std::string epoch;
+      {
+        std::lock_guard lock(mutex_);
+        const auto auth=request.headers.find("authorization");
+        if(auth!=request.headers.end() && std::string_view(auth->second).starts_with("Bearer ")) {
+          for(std::size_t i=0;i<policy::principal_count;++i)
+            if(same_secret(std::string_view(auth->second).substr(7),sessions_[i].token)) principal=i;
+        }
+        if(principal==policy::principal_count) reject(401,"NOT_AUTHORIZED");
+        epoch=sessions_[principal].epoch;
+        current(principal,epoch,deadline);
+      }
+      const auto host=request.headers.find("host");
+      if(host==request.headers.end() || host->second!="127.0.0.1:"+std::to_string(port_) ||
+         request.headers.contains("origin")) reject(403,"NOT_AUTHORIZED");
+      const auto protocol=request.headers.find("x-omniweft-protocol");
+      if(protocol==request.headers.end() || protocol->second!="0.1")
+        reject(400,"UNSUPPORTED_VERSION","/protocol_version");
+      const bool capabilities=request.route=="/v0/capabilities";
+      const bool status=request.route=="/v0/policy";
+      const bool runtime=request.route=="/v0/runtime";
+      const bool observe=request.route=="/v0/observe";
+      const bool transaction=request.route=="/v0/transactions";
+      if(!capabilities && !status && !runtime && !observe && !transaction) reject(404,"NOT_FOUND");
+      if(request.method!=(capabilities||status||runtime?"GET":"POST")) reject(405,"UNSUPPORTED_OPERATION");
+      if(capabilities || status) {
+        // These fixed-size control routes do not wait for or allocate a body.
+        if(request.content_length!=0 || !request.initial_body.empty()) reject(400,"INVALID_SCHEMA");
+        Json response;
+        {
+          std::lock_guard lock(mutex_);current(principal,epoch,deadline);
+          const auto usage=callbacks_.ledger->usage();
+          const auto& session=sessions_[principal];
+          response={{"protocol_version","0.1"},{"epoch",session.epoch},{"next_sequence",session.sequence},
+            {"world_id",config_.world_id},{"world_revision",usage.world_revision}};
+          if(capabilities) {
+            response["operations"]={"entity.create","transform.set","entity.delete"};
+            response["limits"]={{"max_header_bytes",max_header_bytes},{"max_body_bytes",max_body_bytes},
+              {"max_response_bytes",max_response_bytes},{"max_operations",commands::max_operations},
+              {"max_slots",config_.max_slots},{"request_timeout_ms",request_timeout.count()},
+              {"session_ttl_ms",config_.session_ttl_ms}};
+            response["admission"]="synchronous";response["durability"]="volatile";response["retry_mode"]="resync_only";
+          } else {
+            const auto& grant=policy::grant(principal);
+            response["policy"]={{"schema_version",1},{"principal",grant.principal},{"read_scope","whole_world"},
+              {"write_bounds_m",{{"lower",grant.lower},{"upper",grant.upper}}},
+              {"memory_model","charged-resource-bytes-v1"},
+              {"limits",{{"max_operations",policy::operation_limit},{"max_body_bytes",policy::body_limit},
+                {"retained_bytes",grant.retained_limit},{"working_bytes",grant.working_limit},
+                {"observation_bytes",grant.observation_limit},{"requests",1},{"global_requests",2}}},
+              {"usage",{{"retained_bytes",usage.retained[principal]},{"working_bytes",usage.working[principal]},
+                {"requests",usage.requests[principal]},{"global_requests",usage.global_requests}}}};
+          }
+        }
+        respond(socket,200,response,deadline);
+        return;
+      }
+      try {lease.emplace(callbacks_.ledger->admit(principal,request.content_length));}
+      catch(const policy::Denied& error) {reject(413,error.code,error.path);}
+      const auto body=read_body(socket,request,deadline);
+      Json response;
+      if(observe || runtime) {
+        if(observe) validate_observe(body,config_.world_id);
+        boundary(deadline,false,[&] {
+          std::lock_guard lock(mutex_);current(principal,epoch,deadline);
+          const auto& session=sessions_[principal];
+          response={{"protocol_version","0.1"},{"epoch",session.epoch},{"next_sequence",session.sequence}};
+          if(observe) response["snapshot"]=snapshot_json(callbacks_.shared.snapshot());
+          else {
+            const auto value=callbacks_.shared.runtime_status();
+            response["runtime"]={{"schema_version",1},{"tick_rate_hz",60},{"max_catch_up_steps",4},
+              {"simulation_tick",value.simulation_tick},{"snapshot_sequence",value.snapshot_sequence},
+              {"overload_count",value.overload_count},{"dropped_ticks",value.dropped_ticks},
+              {"remainder_units",value.remainder_units},{"snapshot",snapshot_json(value.snapshot)},
+              {"presentation",{{"enabled",false},{"ready",false},{"frame_count",0},{"world_revision",0},{"snapshot_sequence",0}}}};
+          }
+        });
+        // The fixed working reservation includes the bounded full fixture
+        // representation. No success headers/body are sent before this limit.
+        if(response.dump().size()>policy::grant(principal).observation_limit)
+          reject(413,"BUDGET_EXCEEDED","/observation");
+      } else {
+        const auto parsed=commands::parse(body);
+        if(!parsed.envelope) {
+          if(parsed.errors.empty()) reject(400,"INVALID_SCHEMA");
+          command_rejection(parsed.errors.front());
+        }
+        const auto& envelope=*parsed.envelope;
+        if(envelope.operations.size()>policy::operation_limit)
+          reject(413,"BUDGET_EXCEEDED","/operations");
+        if(envelope.world_id!=config_.world_id) reject(403,"NOT_AUTHORIZED","/world_id");
+        for(const auto& item:envelope.operations) std::visit([&](const auto& operation) {
+          using T=std::decay_t<decltype(operation)>;
+          if constexpr (!std::is_same_v<T,commands::EntityCreate>) {
+            const auto* target=std::get_if<commands::EntityTarget>(&operation.target);
+            if(target && target->world_id!=config_.world_id) reject(403,"NOT_AUTHORIZED","/operations");
+          }
+        },item);
+        boundary(deadline,true,[&] {
+          std::lock_guard lock(mutex_);current(principal,epoch,deadline);
+          auto& session=sessions_[principal];
+          if(!same_secret(envelope.idempotency.epoch,session.epoch))
+            reject(409,"REQUIRES_RESYNC","/idempotency/epoch");
+          if(session.exhausted || envelope.idempotency.sequence!=session.sequence)
+            reject(409,"REQUIRES_RESYNC","/idempotency/sequence");
+          if(session.sequence==std::numeric_limits<std::uint64_t>::max()) session.exhausted=true;
+          else ++session.sequence;
+          const auto receipt=callbacks_.apply(envelope,*lease);
+          response={{"protocol_version","0.1"},{"epoch",session.epoch},{"next_sequence",session.sequence},
+            {"receipt",receipt_json(receipt)}};
+        });
+      }
+      respond(socket,200,response,deadline);
+    } catch(const Rejection& error) {
+      respond(socket,error.status,{{"protocol_version","0.1"},{"status","rejected"},
+        {"error",{{"code",error.code},{"path",error.path}}}},deadline);
+    }
+  }
+ private:
+  struct Session {std::string token,epoch;std::uint64_t sequence=1;bool exhausted=false;Time expires{};};
+  Config config_;
+  const PolicyCallbacks& callbacks_;
+  PrivatePipes& pipes_;
+  std::uint16_t port_;
+  std::mutex mutex_;
+  std::array<Session,policy::principal_count> sessions_;
+  std::string pending_;
+  unsigned renewals_=0;
+  void current(std::size_t principal,const std::string& epoch,Time deadline) const {
+    if(Clock::now()>=deadline || (callbacks_.shared.should_stop && callbacks_.shared.should_stop())) throw Closed{};
+    if(!same_secret(sessions_[principal].epoch,epoch)) reject(401,"SESSION_EXPIRED");
+    if(Clock::now()>=sessions_[principal].expires) reject(401,"SESSION_EXPIRED");
+  }
+  void boundary(Time deadline,bool authoring,std::function<void()> action) {
+    if(!callbacks_.shared.at_boundary(std::move(action),deadline,authoring)) throw Closed{};
+  }
+};
 }  // namespace
 
 int run(const Config& config, const Callbacks& callbacks) noexcept {
@@ -754,5 +946,60 @@ int run(const Config& config, const Callbacks& callbacks) noexcept {
   }
   std::fputs("CONTROL_FAILED\n", stderr);
   return 4;
+}
+
+int run_policy(const Config& config,const PolicyCallbacks& callbacks) noexcept {
+  try {
+    config_valid(config);
+    if(config.max_slots!=policy::slot_count || !callbacks.ledger || !callbacks.apply ||
+       !callbacks.shared.snapshot || !callbacks.shared.runtime_status || !callbacks.shared.at_boundary) throw Failure{};
+    PrivatePipes pipes;
+    const auto deadline=callbacks.shared.normal_deadline.value_or(Clock::now()+Milliseconds(config.max_runtime_ms));
+    Watchdog watchdog(deadline+shutdown_grace);
+    SocketRuntime runtime;
+    std::uint16_t port=0;Socket listener(create_listener(port));
+    PolicyHost host(config,callbacks,pipes,port);
+    if(!host.renew(deadline)) return 0;
+    std::array<std::atomic<bool>,3> available{true,true,true};
+    std::atomic<bool> failed=false;
+    // Join workers before destroying any state captured by reference, even on exceptions.
+    std::array<std::jthread,3> workers;
+    std::uint32_t count=0;
+    while(Clock::now()<deadline && count<config.max_requests && !failed.load() &&
+          !(callbacks.shared.should_stop && callbacks.shared.should_stop())) {
+      if(!host.host_commands(deadline)) break;
+      std::size_t worker=0;
+      while(worker<workers.size() && !available[worker].load()) ++worker;
+      if(worker==workers.size()) {std::this_thread::sleep_for(Milliseconds(1));continue;}
+      if(!ready(listener.get(),false,std::min(deadline,Clock::now()+Milliseconds(10)))) continue;
+      sockaddr_in peer{};
+#ifdef _WIN32
+      int peer_size=sizeof(peer);
+#else
+      socklen_t peer_size=sizeof(peer);
+#endif
+      const auto accepted=accept(listener.get(),reinterpret_cast<sockaddr*>(&peer),&peer_size);
+      if(accepted==invalid_socket) {if(would_block()||interrupted()) continue;throw Failure{};}
+      auto connection=std::make_shared<Socket>(accepted);
+      ++count;
+      if(peer.sin_family!=AF_INET || peer.sin_addr.s_addr!=htonl(INADDR_LOOPBACK)) continue;
+      nonblocking(connection->get());
+      if(workers[worker].joinable()) workers[worker].join();
+      available[worker].store(false);
+      const auto request_deadline=std::min(deadline,Clock::now()+request_timeout);
+      workers[worker]=std::jthread([&,worker,connection,request_deadline] {
+        try {host.connection(connection->get(),request_deadline);}
+        catch(const Closed&) {}
+        catch(...) {failed.store(true);}
+        available[worker].store(true);
+      });
+    }
+    for(auto& worker:workers) if(worker.joinable()) worker.join();
+    if(failed.load()) throw Failure{};
+    return 0;
+  } catch(const Rejection& error) {
+    if(error.status==3) {std::fputs("CONTROL_PRIVATE_PIPES_REQUIRED\n",stderr);return 3;}
+  } catch(...) {}
+  std::fputs("POLICY_FAILED\n",stderr);return 4;
 }
 }  // namespace ow::control
