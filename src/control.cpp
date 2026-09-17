@@ -190,6 +190,23 @@ void send_all(NativeSocket socket, std::string_view bytes, Time deadline) {
   }
   if (offset != bytes.size()) throw Closed{};
 }
+// Complete a rejected legacy request without racing a separately sent body.
+// Half-close only after the response is queued; discarded bytes never reach
+// parsing/admission. Both work and waiting remain bounded by the original limits.
+void finish_rejection(NativeSocket socket, Time deadline) {
+#ifdef _WIN32
+  if (shutdown(socket, SD_SEND) != 0) return;
+#else
+  if (shutdown(socket, SHUT_WR) != 0) return;
+#endif
+  std::array<char, 4096> discarded{};
+  std::size_t remaining = max_body_bytes;
+  try {
+    while (remaining != 0) {
+      remaining -= receive(socket, discarded.data(), std::min(remaining, discarded.size()), deadline);
+    }
+  } catch (const Closed&) { /* EOF, reset or the original deadline ends discard. */ }
+}
 NativeSocket create_listener(std::uint16_t& port) {
 #ifdef _WIN32
   const auto raw = WSASocketW(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_NO_HANDLE_INHERIT);
@@ -673,6 +690,7 @@ class Host {
     } catch (const Rejection& error) {
       respond(socket, error.status, {{"protocol_version", "0.1"}, {"status", "rejected"},
         {"error", {{"code", error.code}, {"path", error.path}}}}, deadline);
+      finish_rejection(socket, deadline);
     }
   }
  private:
