@@ -302,19 +302,43 @@
       "execution": {
         "authorization": "docs/execution/AUTHORIZATION.md",
         "owner": "Codex coordinator",
-        "branch": "codex/pr-007-capabilities-budgets",
+        "branch": "codex/pr-007-sdk-compatibility",
         "claimed_at": "2026-09-14",
         "plan": "docs/execution/PR-007-PLAN.md",
         "handoff": "docs/execution/PR-007-HANDOFF.md",
-        "review": "Independent architecture, implementation, oracle and Windows/Linux archive integrity/privacy reviews closed with no remaining local blocker. Hosted checks and maintainer certification/review/merge remain pending.",
+        "review": "Original PR independently reviewed and merged with six passing PR checks. Post-merge Windows compatibility failure reproduced and bounded repair independently source-reviewed; Windows/Linux local checks passed. Final evidence audit and all six hosted runtime-head checks passed. Delivery-head required checks remain pending.",
         "implementation_sha": "3055ada3604f7df879454d71f44956437496dd56",
         "implementation_tree": "66a46165fe9b7e4797f4758dfa6a161ef54a684d",
-        "next_action": "Monitor required checks on the current draft PR head, resolve failures within this slice, then await maintainer certification/review and actual squash merge. Do not start the next slice before merge.",
+        "next_action": "Complete current-head required checks on draft PR12, then await maintainer certification/review and actual squash merge. PR-008 remains proposed until repair integration.",
         "evidence": [
           "docs/evidence/PR-007/README.md",
-          "docs/execution/PR-007-HANDOFF.md"
+          "docs/execution/PR-007-HANDOFF.md",
+          "docs/evidence/PR-007-COMPATIBILITY/README.md"
         ],
-        "pr_url": "https://github.com/xsparc/omniweft/pull/11"
+        "pr_url": "https://github.com/xsparc/omniweft/pull/11",
+        "merge_sha": "d7b52696edd3e7cb9c3388972509a05f16dc6466",
+        "merged_at": "2026-09-17T10:57:32Z",
+        "merged_tree": "fe56a4c09194af701614d3b7373da68a75c8537c",
+        "followup_plan": "docs/execution/PR-007-COMPATIBILITY-PLAN.md",
+        "followup_handoff": "docs/execution/PR-007-COMPATIBILITY-HANDOFF.md",
+        "post_merge_checks": {
+          "passed": 5,
+          "failed": 1,
+          "failure": "native-bootstrap (windows-2022): agents.sdk_compatibility",
+          "run": "https://github.com/xsparc/omniweft/actions/runs/35213168811"
+        },
+        "followup_pr_url": "https://github.com/xsparc/omniweft/pull/12",
+        "followup_runtime_sha": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "followup_runtime_tree": "87b9557ad48279eb00dd2db0ae51008e3d90c863",
+        "followup_runtime_hosted_checks": {
+          "candidate_sha": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+          "passed": 6,
+          "runs": [
+            "https://github.com/xsparc/omniweft/actions/runs/35215197326",
+            "https://github.com/xsparc/omniweft/actions/runs/35215197517",
+            "https://github.com/xsparc/omniweft/actions/runs/35215197334"
+          ]
+        }
       }
     },
     {

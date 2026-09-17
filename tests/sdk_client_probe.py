@@ -6,6 +6,7 @@ import copy
 from unittest import mock
 from dataclasses import FrozenInstanceError
 import json
+import http.client
 from pathlib import Path
 import socket
 import sys
@@ -360,6 +361,42 @@ def actual_client(sdk, executable):
         exact(fresh.observe().to_dict(), snapshot(3), "SDK real native recovery state")
 
 
+def retired_split_request(sdk, executable):
+    # The production HTTP client sends headers/body separately. Wait for a real
+    # rejection before sending the body so packet coalescing cannot hide teardown.
+    with sdk.NativeSession(executable) as session:
+        retired = session.client()
+        retired.capabilities()
+        fresh = session.renew()
+        original = http.client.HTTPConnection.send
+        header_seen, body_sent = [], []
+        def split_send(connection, data):
+            original(connection, data)
+            if isinstance(data, bytes) and data.startswith(b"POST ") and data.endswith(b"\r\n\r\n"):
+                require(connection.sock is not None, "split request has an actual socket")
+                peek = connection.sock.recv(1, socket.MSG_PEEK)
+                require(peek == b"H", "retired request response starts before body transmission")
+                header_seen.append(True)
+                # Give an immediate-close implementation time to deliver its FIN.
+                time.sleep(0.05)
+            elif header_seen:
+                body_sent.append(True)
+        try:
+            with mock.patch("http.client.HTTPConnection.send", split_send):
+                retired.create_cube("denied", expected_revision=0)
+        except sdk.ApiError as error:
+            exact((error.status, error.code), (401, "NOT_AUTHORIZED"), "split retired request retains typed rejection")
+        except sdk.OutcomeUnknown:
+            raise Failure("split retired request must retain its known rejection") from None
+        else:
+            raise Failure("split retired request must reject")
+        exact((len(header_seen), len(body_sent)), (1, 1), "split body is transmitted successfully exactly once")
+        exact(fresh.observe().to_dict(), snapshot(0), "split rejected body leaves complete world unchanged")
+        recovered = fresh.create_cube("recovery", expected_revision=0)
+        exact(recovered.created[0].handle().to_dict(), identity(), "split rejection consumes no identity or revision")
+        exact(fresh.observe().to_dict(), snapshot(1), "split rejection permits fresh-client recovery")
+
+
 def natural_runtime(sdk, executable):
     for unused in range(3):
         started = time.monotonic()
@@ -437,6 +474,7 @@ def main():
         hostile_typed_values(sdk)
         overall_deadlines(sdk)
         if not args.client_only:
+            retired_split_request(sdk, args.executable.resolve(strict=True))
             actual_client(sdk, args.executable.resolve(strict=True))
             natural_runtime(sdk, args.executable.resolve(strict=True))
             close_exit_race(sdk, args.executable.resolve(strict=True))

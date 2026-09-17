@@ -6,6 +6,7 @@ import copy
 import json
 import re
 import struct
+import socket
 import sys
 import tempfile
 import time
@@ -364,6 +365,34 @@ def runtime_incomplete(executable, evidence):
                              "incomplete_connection_closed": True, "native_exit_code": code})
 
 
+def rejection_deadline(executable, evidence):
+    with Host(executable, evidence) as host:
+        scenario = Scenario(host, evidence, "rejection-deadline")
+        raw = request_bytes(host.descriptor, "POST", "/v0/transactions", b"{}",
+                            change={"authorization": "Bearer invalid"})
+        head = raw.split(b"\r\n\r\n", 1)[0] + b"\r\n\r\n"
+        with socket.create_connection(("127.0.0.1", host.descriptor["port"]), timeout=3) as peer:
+            peer.settimeout(3)
+            peer.sendall(head)
+            received = bytearray()
+            while True:
+                chunk = peer.recv(1024)
+                if not chunk:
+                    break
+                received += chunk
+                require(len(received) <= 1024, "early rejection response is bounded")
+            from sdk_test_support import parse_response
+            error_response(parse_response(bytes(received)), 401, "NOT_AUTHORIZED", "")
+            # Keep this peer's write side open: the server must stop discard at
+            # its original request deadline and serve a fresh connection.
+            started = time.monotonic()
+            scenario.observe("idle-rejected-peer-recovery")
+            require(time.monotonic() - started < 2.5, "rejected peer cannot extend original request deadline")
+        evidence.retain_json("rejection-deadline.json", {"schema_version": 1,
+                             "http_status": 401, "code": "NOT_AUTHORIZED", "world_revision": 0,
+                             "next_sequence": 1, "recovered_while_rejected_peer_open": True})
+
+
 def sdk_example(executable, evidence):
     with tempfile.TemporaryDirectory(prefix="ow-sdk-example-") as temporary:
         output = Path(temporary) / "result"
@@ -421,6 +450,7 @@ def main():
             expiry(executable, evidence)
             pipeline(executable, evidence)
             runtime_incomplete(executable, evidence)
+            rejection_deadline(executable, evidence)
             sdk_example(executable, evidence)
         evidence.finish("passed")
         print(json.dumps({"status": "passed", "example": "sdk.move_cube", "assertions": len(evidence.manifest["assertions"])}))

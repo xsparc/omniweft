@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "work_item": "PR-007 compatibility follow-up",
+  "candidate_sha": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+  "candidate_tree": "87b9557ad48279eb00dd2db0ae51008e3d90c863",
+  "base_merge_sha": "d7b52696edd3e7cb9c3388972509a05f16dc6466",
+  "proofs": {
+    "windows/sdk-control": {
+      "assertions": 6630,
+      "artifacts": 153,
+      "manifest_sha256": "45711a4ef5afa0d62a2bf021a2207f2327ebac2dd525c07be786f0c02a83534e"
+    },
+    "windows/sdk-agents": {
+      "assertions": 6630,
+      "artifacts": 153,
+      "manifest_sha256": "415cfe438604491cb940e3f66b58527b4500b0290a138bfe70787cd97ca60b1f"
+    },
+    "windows/policy": {
+      "assertions": 1007,
+      "artifacts": 7,
+      "manifest_sha256": "011e678cc3fb5de09a19f681a3b13ccfe8c32ac1fc6aa83dd0847ff0c593d5ad"
+    },
+    "windows/sdk-mutation": {
+      "assertions": 493,
+      "artifacts": 2,
+      "manifest_sha256": "e753a13b7baceb8a340cd8e6f16bcfb7fc05ad75918f9197015b43e7e0869732"
+    },
+    "windows/owner": {
+      "assertions": 275,
+      "artifacts": 3,
+      "manifest_sha256": "a12f731937adb139b0b2e618251c26af602d6501a87fc351d0ad4cf81c15b524"
+    },
+    "linux/sdk-control": {
+      "assertions": 6630,
+      "artifacts": 153,
+      "manifest_sha256": "ba81c6350da3f5276330f6f401b4e42541faf7bc08a3c9c4a907ed4197fa1da6"
+    },
+    "linux/sdk-agents": {
+      "assertions": 6630,
+      "artifacts": 153,
+      "manifest_sha256": "6672da72187edc302926d4c69234d0da368d33af79c6aed44d61f12102766ba4"
+    },
+    "linux/policy": {
+      "assertions": 1007,
+      "artifacts": 7,
+      "manifest_sha256": "ae41c423c6d3088a84570445f4ced0b1747a3b86c9af4f69a1155e9411d3f1b7"
+    },
+    "linux/sdk-mutation": {
+      "assertions": 493,
+      "artifacts": 2,
+      "manifest_sha256": "2fa6a786ae8e2526a72fa747ac2bfb91aff8f46b23a98646d716de4b26a08769"
+    },
+    "linux/owner": {
+      "assertions": 275,
+      "artifacts": 3,
+      "manifest_sha256": "eb053e856474038befcb234be31a5da62cf0c359e224e585a66d2e0456f71d5c"
+    }
+  },
+  "checks": {
+    "Windows": [
+      {
+        "name": "sdk-control",
+        "exit": 0,
+        "seconds": 13.74,
+        "assertions": 6630,
+        "artifacts": 153,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "sdk-agents",
+        "exit": 0,
+        "seconds": 14.73,
+        "assertions": 6630,
+        "artifacts": 153,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "policy",
+        "exit": 0,
+        "seconds": 2.31,
+        "assertions": 1007,
+        "artifacts": 7,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "sdk-mutation",
+        "exit": 0,
+        "seconds": 8.98,
+        "assertions": 493,
+        "artifacts": 2,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "owner",
+        "exit": 0,
+        "seconds": 10.7,
+        "assertions": 275,
+        "artifacts": 3,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      }
+    ],
+    "Linux": [
+      {
+        "name": "toolchain",
+        "command": [
+          "python",
+          "tools/bootstrap.py",
+          "--check"
+        ],
+        "exit": 0,
+        "seconds": 0.82
+      },
+      {
+        "name": "configure",
+        "command": [
+          "cmake",
+          "--preset",
+          "linux-headless",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DPython3_EXECUTABLE=<python>"
+        ],
+        "exit": 0,
+        "seconds": 0.72
+      },
+      {
+        "name": "build",
+        "command": [
+          "cmake",
+          "--build",
+          "--preset",
+          "linux-headless",
+          "--parallel",
+          "2"
+        ],
+        "exit": 0,
+        "seconds": 17.46
+      },
+      {
+        "name": "ctest",
+        "command": [
+          "ctest",
+          "--preset",
+          "linux-headless",
+          "--parallel",
+          "1"
+        ],
+        "exit": 0,
+        "seconds": 60.33
+      },
+      {
+        "name": "sdk-control",
+        "command": [
+          "python",
+          "tests/sdk_oracle.py",
+          "--executable",
+          "build/linux-headless/omniweft_control",
+          "--evidence-dir",
+          "artifacts/sdk-control"
+        ],
+        "exit": 0,
+        "seconds": 12.09,
+        "assertions": 6630,
+        "artifacts": 153,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "sdk-agents",
+        "command": [
+          "python",
+          "tests/sdk_oracle.py",
+          "--executable",
+          "build/linux-headless/omniweft_agents",
+          "--evidence-dir",
+          "artifacts/sdk-agents"
+        ],
+        "exit": 0,
+        "seconds": 12.49,
+        "assertions": 6630,
+        "artifacts": 153,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "policy",
+        "command": [
+          "python",
+          "tests/policy_oracle.py",
+          "--executable",
+          "build/linux-headless/omniweft_policy",
+          "--evidence-dir",
+          "artifacts/policy"
+        ],
+        "exit": 0,
+        "seconds": 1.57,
+        "assertions": 1007,
+        "artifacts": 7,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "sdk-mutation",
+        "command": [
+          "python",
+          "tests/sdk_mutation.py",
+          "--build-dir",
+          "build/linux-headless",
+          "--evidence-dir",
+          "artifacts/sdk-mutation"
+        ],
+        "exit": 0,
+        "seconds": 8.43,
+        "assertions": 493,
+        "artifacts": 2,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "owner",
+        "command": [
+          "python",
+          "tests/agents_owner_test.py",
+          "--build-dir",
+          "build/linux-headless",
+          "--evidence-dir",
+          "artifacts/owner"
+        ],
+        "exit": 0,
+        "seconds": 9.03,
+        "assertions": 275,
+        "artifacts": 3,
+        "candidate": "f511692699edaf867d032ccaf6286e7b6c4c4e4e",
+        "dirty": false
+      },
+      {
+        "name": "planning",
+        "command": [
+          "python",
+          "tools/validate_plan.py"
+        ],
+        "exit": 0,
+        "seconds": 0.11
+      }
+    ]
+  },
+  "baseline_negative": {
+    "baseline_rejected": true,
+    "fixed_failure": "split retired request must retain its known rejection",
+    "baseline_executable_sha256": "4fbf6ebd9af825161c802544d111533f5b2f5110fd1e248361e8f2c6d9e391c6",
+    "baseline_unchanged": true,
+    "test_source_sha256": "9ae7e70b7547cdedb7f18417b3a9bb6ccc669fe0e6d5249176173bb62c627398",
+    "test_candidate_sha": "f511692699edaf867d032ccaf6286e7b6c4c4e4e"
+  },
+  "linux_isolation": {
+    "image_id": "sha256:d016f5344e41836318b877d5ff1c09d95a95052776d60c6a818647035b7796a0",
+    "network_mode": "none",
+    "nano_cpus": 2000000000,
+    "memory_bytes": 3221225472,
+    "memory_swap_bytes": 3221225472,
+    "pids_limit": 256,
+    "cap_drop": [
+      "ALL"
+    ],
+    "security_opt": [
+      "no-new-privileges"
+    ],
+    "mount_count": 0
+  },
+  "linux_source_pack_sha256": "6df8ddb133b63e117fb727108b61a4a026b35d9310ecd7b72824569732ba95f6",
+  "linux_driver_sha256": "ceaa3dd59ca841f603e6c178a5d5d34813558987d93bbf256f666d89407dc9ba",
+  "ctest": {
+    "windows_passed": 18,
+    "linux_passed": 18,
+    "note": "Windows full suite preceded the test-only one-byte peek refinement; both complete affected SDK oracles passed on the final clean candidate. Linux full suite used the final candidate."
+  },
+  "limitations": {
+    "gpu": "not_run; transport-only change",
+    "hosted_followup_checks": "not_run; draft not yet published",
+    "merge": "not_merged"
+  },
+  "privacy": "Original allowlisted manifests and declared fixture artifacts only; no raw process/HTTP logs, credentials, epochs, account/host identifiers or paths, source-pack bytes or executable bytes.",
+  "archive": {
+    "name": "compatibility-f511692.zip",
+    "sha256": "ab8e43c4218cd8d66c49c7a61f6370a7b3fc42eb993ec2f2c2948efff3ea3230",
+    "bytes": 354712,
+    "entries": 648
+  }
+}

@@ -1,6 +1,6 @@
 # PR-007 handoff
 
-State: **draft PR open; locally implemented and reviewed, hosted validation pending, not merged**.
+State: **PR #11 merged; post-merge SDK compatibility repair in progress**.
 Adopted scope: [authorization](AUTHORIZATION.md).
 Branch: codex/pr-007-capabilities-budgets. Base: 270f67b21237c180d8c37906bd03fc31f3be0010.
 Runtime candidate: 3055ada3604f7df879454d71f44956437496dd56.
@@ -35,3 +35,9 @@ Hosted validation was unavailable at local evidence capture. After the maintaine
 The explicit draft request supersedes the previous publication hold for this slice. Existing workflow changes prepare policy oracle/mutation artifacts for eventual Windows/Linux CI; no required checks or permissions have been weakened. Inspect the latest PR head and required checks, resolve any failures, then prepare the bounded PR for maintainer certification/review and squash merge. Never mark this work done from local checks alone.
 
 Root owns this worktree, delivery docs and backlog. The original user checkout was verified clean and unchanged. PR-006 actual merge/tree/six post-merge checks are reconciled in this branch, and its existing archives are unchanged. Preserve this reviewed candidate and proof archives through hosted validation and maintainer integration.
+
+## Actual merge and follow-up, 2026-09-17
+
+The maintainer merged PR #11 at 10:57:32 UTC as d7b52696edd3e7cb9c3388972509a05f16dc6466. Its tree fe56a4c09194af701614d3b7373da68a75c8537c exactly matches reviewed delivery 8105be42e0f122606d806bda5f0678960168d127. All six required PR checks passed. Five post-merge checks passed, but [Windows native validation](https://github.com/xsparc/omniweft/actions/runs/35213168811/job/105175308927) failed agents.sdk_compatibility. The generic child-probe failure was reproduced locally and narrowed to early authentication rejection racing a separately sent request body after credential renewal.
+
+The preceding sections retain the original delivery/evidence checkpoint. Current follow-up state is recorded in the [compatibility handoff](PR-007-COMPATIBILITY-HANDOFF.md). This regression is not waived or hidden by a successful rerun; PR-008 remains proposed while the bounded repair is validated and reviewed.
