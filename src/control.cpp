@@ -855,7 +855,9 @@ class PolicyHost {
               {"simulation_tick",value.simulation_tick},{"snapshot_sequence",value.snapshot_sequence},
               {"overload_count",value.overload_count},{"dropped_ticks",value.dropped_ticks},
               {"remainder_units",value.remainder_units},{"snapshot",snapshot_json(value.snapshot)},
-              {"presentation",{{"enabled",false},{"ready",false},{"frame_count",0},{"world_revision",0},{"snapshot_sequence",0}}}};
+              {"presentation",{{"enabled",value.presentation.enabled},{"ready",value.presentation.ready},
+                {"frame_count",value.presentation.frame_count},{"world_revision",value.presentation.world_revision},
+                {"snapshot_sequence",value.presentation.snapshot_sequence}}}};
           }
         });
         // The fixed working reservation includes the bounded full fixture

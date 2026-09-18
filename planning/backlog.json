@@ -283,7 +283,7 @@
     {
       "id": "PR-007",
       "title": "Capabilities and resource budgets",
-      "status": "in_review",
+      "status": "done",
       "milestone": "M1",
       "depends_on": [
         "PR-005",
@@ -306,10 +306,10 @@
         "claimed_at": "2026-09-14",
         "plan": "docs/execution/PR-007-PLAN.md",
         "handoff": "docs/execution/PR-007-HANDOFF.md",
-        "review": "Original PR independently reviewed and merged with six passing PR checks. Post-merge Windows compatibility failure reproduced and bounded repair independently source-reviewed; Windows/Linux local checks passed. Final evidence audit and all six hosted runtime-head checks passed. Delivery-head required checks remain pending.",
+        "review": "Independent source and final evidence audits passed. Repair PR12 merged with six passing delivery checks and six passing post-merge checks.",
         "implementation_sha": "3055ada3604f7df879454d71f44956437496dd56",
         "implementation_tree": "66a46165fe9b7e4797f4758dfa6a161ef54a684d",
-        "next_action": "Complete current-head required checks on draft PR12, then await maintainer certification/review and actual squash merge. PR-008 remains proposed until repair integration.",
+        "next_action": "Integrated; PR-008 dependencies are complete.",
         "evidence": [
           "docs/evidence/PR-007/README.md",
           "docs/execution/PR-007-HANDOFF.md",
@@ -338,13 +338,27 @@
             "https://github.com/xsparc/omniweft/actions/runs/35215197517",
             "https://github.com/xsparc/omniweft/actions/runs/35215197334"
           ]
+        },
+        "followup_merge_sha": "1c94777a9fac7869cc83e21f01b1ccc034c439a4",
+        "followup_merged_at": "2026-09-17T14:27:16Z",
+        "followup_merged_tree": "2a58baaf3e2c019c848cb0e434d0db802901d095",
+        "followup_delivery_sha": "851f83d47f5978609d29b56f9d44faa4bf4a763e",
+        "followup_post_merge_checks": {
+          "passed": 6,
+          "failed": 0,
+          "candidate_sha": "1c94777a9fac7869cc83e21f01b1ccc034c439a4",
+          "runs": [
+            "https://github.com/xsparc/omniweft/actions/runs/35233666704",
+            "https://github.com/xsparc/omniweft/actions/runs/35233666678",
+            "https://github.com/xsparc/omniweft/actions/runs/35233666645"
+          ]
         }
       }
     },
     {
       "id": "PR-008",
       "title": "Offline AI blocks showcase",
-      "status": "proposed",
+      "status": "in_progress",
       "milestone": "M1",
       "depends_on": [
         "PR-004",
@@ -361,7 +375,18 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/pr-008-ai-blocks",
+        "base_sha": "1c94777a9fac7869cc83e21f01b1ccc034c439a4",
+        "claimed_at": "2026-09-18",
+        "plan": "docs/execution/PR-008-PLAN.md",
+        "handoff": "docs/execution/PR-008-HANDOFF.md",
+        "review": "Independent architecture review in progress; implementation and evidence review required.",
+        "next_action": "Implement the bounded policy-backed room example and independent structural/GPU oracles."
+      }
     },
     {
       "id": "PR-009",

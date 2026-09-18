@@ -1,6 +1,6 @@
 # showcase.ai_blocks
 
-Status: **planned specification; not implemented**. Work item: **PR-008 — Offline AI blocks showcase**.
+Status: **implementation candidate; final validation and review pending**. Work item: **PR-008 — Offline AI blocks showcase**.
 
 Dependencies: PR-004, PR-006, PR-007. Validation lanes: cpu, gpu.
 
@@ -10,15 +10,20 @@ Implement only the named behavior, its public contract, corresponding runnable e
 
 Use a tiny deterministic fixture with seed 7, generated locally or covered by an explicit asset license manifest. Exercise the public command/query interfaces once available, avoiding privileged test-only mutation paths.
 
-## Proposed run command
+## Run the candidate
 
-This command becomes available only when this work item is implemented:
+Build `omniweft_policy` with the pinned tools as described in [platform.bootstrap](platform-bootstrap.md); add `OW_ENABLE_VULKAN=ON` and the pinned graphics dependencies from [render.world_cube](render-world_cube.md) for the GPU lane. The Python example is the scripted agent in a separate process from the native host. It uses the existing east policy grant without widening permissions.
 
 ```sh
-omniweft_examples --example showcase.ai_blocks --gpu --seed 7 --verify --output artifacts/showcase.ai_blocks
+python sdk/python/examples/ai_blocks.py --executable build/linux-headless/omniweft_policy --headless --seed 7 --output artifacts/room
+python tests/showcase_oracle.py --executable build/linux-headless/omniweft_policy --headless --evidence artifacts/room-proof
 ```
 
-Also supply a headless structural verification mode and an interactive inspection mode; neither substitutes for the real-GPU lane.
+On Windows, use the built `omniweft_policy.exe`. For the Vulkan build, replace `--headless` with `--gpu`; add `--interactive` to the example to keep the final scene visible until window close or the bounded host lifetime ends. Every output directory must be fresh. The example performs the scenario; the separate oracle establishes its independent correctness. Headless structural checks and interactive inspection do not substitute for physical-GPU evidence.
+
+The fixture contains a floor, back wall, side wall, table and stool in the existing east region. Three transactions assemble revision 3; one rejected transaction stages a valid table move before a forbidden stool move; a corrected two-operation transaction produces revision 4. Every identity, generation, authoring revision and transform has an independently specified expectation. Five live cubes use 1920 of the existing 2048 retained charged bytes. Idle policy queries must show zero outstanding requests/working bytes.
+
+GPU captures hold revisions 3 and 4. Independent pixel-centre rays check every expected interior object/background pixel, excluding only a one-pixel band derived from expected face boundaries. Fixed tolerances are one UNORM color byte and 1e-5 normalized clip depth; they account for raster conversion precision, not changed geometry. IDs and fixture authoring values are exact. Frame metadata must agree with actual immutable publication and completed graphics/presentation work.
 
 ## Pass criteria
 

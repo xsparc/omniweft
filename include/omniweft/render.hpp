@@ -52,7 +52,12 @@ struct LiveFrame {
   presentation::Packet packet;
   std::uint64_t simulation_tick = 0, snapshot_sequence = 0;
 };
-struct LiveConfig { std::uint32_t max_slots = 8; bool interactive = false; };
+struct LiveConfig {
+  std::uint32_t max_slots = 8;
+  bool interactive = false;
+  // Host-owned capture barriers; no provider-controlled configuration.
+  std::uint64_t initial_revision = 1, final_revision = 3;
+};
 struct LiveCallbacks {
   std::function<LiveFrame()> latest;
   std::function<bool()> should_stop;

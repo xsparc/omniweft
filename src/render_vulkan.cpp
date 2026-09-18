@@ -729,9 +729,9 @@ void Context::execute_live(const LiveConfig& config,const LiveCallbacks& callbac
     const auto current=callbacks.latest();
     const auto revision=current.packet.world_revision;
     const char* phase=nullptr;
-    if(!initial && revision==1) phase="initial";
-    if(initial && !final && revision==3) phase="final";
-    if(!initial && revision>1) fail("MISSED_LIVE_REVISION","The initial live revision was not presented.");
+    if(!initial && revision==config.initial_revision) phase="initial";
+    if(initial && !final && revision==config.final_revision) phase="final";
+    if(!initial && revision>config.initial_revision) fail("MISSED_LIVE_REVISION","The initial live revision was not presented.");
     if(!minimized_ && draw(current.packet,phase?phase:"",phase!=nullptr)) {
       // Publish presentation progress only after actual graphics AND present
       // completion. A queued present alone is not visible-completion evidence.
@@ -739,7 +739,7 @@ void Context::execute_live(const LiveConfig& config,const LiveCallbacks& callbac
       if(phase) {
         auto& capture=result_.frames.back();
         capture.simulation_tick=current.simulation_tick;capture.snapshot_sequence=current.snapshot_sequence;
-        if(revision==1) initial=true;else final=true;
+        if(revision==config.initial_revision) initial=true;else final=true;
       }
       callbacks.presented(current,frame_count_);
     }
@@ -804,7 +804,8 @@ RunResult run_live(const LiveConfig& config,const LiveCallbacks& callbacks) {
     Context context(result);bool initialized=false;
     try {
       if(config.max_slots<1 || config.max_slots>1024 || !callbacks.latest || !callbacks.should_stop ||
-         !callbacks.ready || !callbacks.presented) throw std::invalid_argument("Invalid live renderer configuration.");
+         !callbacks.ready || !callbacks.presented || config.initial_revision==0 ||
+         config.final_revision<=config.initial_revision) throw std::invalid_argument("Invalid live renderer configuration.");
       context.initialize_capacity(static_cast<std::size_t>(config.max_slots)*24,
                                   static_cast<std::size_t>(config.max_slots)*36);
       initialized=true;context.execute_live(config,callbacks);result.status="passed";
