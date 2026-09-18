@@ -101,9 +101,11 @@ class PolicyClient(Client):
 
 
 class PolicySession(NativeSession):
-    def __init__(self, executable, *, session_ttl_ms=30000, max_runtime_ms=60000, max_requests=1024):
+    def __init__(self, executable, *, session_ttl_ms=30000, max_runtime_ms=60000, max_requests=1024,
+                 gpu=False, interactive=False, output=None):
         super().__init__(executable, session_ttl_ms=session_ttl_ms, max_slots=8,
-                         max_runtime_ms=max_runtime_ms, max_requests=max_requests)
+                         max_runtime_ms=max_runtime_ms, max_requests=max_requests,
+                         gpu=gpu, interactive=interactive, output=output)
         self._principals: dict[str, ConnectionInfo] = {}
 
     def __repr__(self) -> str:

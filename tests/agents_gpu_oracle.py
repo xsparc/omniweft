@@ -125,7 +125,7 @@ def inspect_frame(frame, revision, phase, output, evidence, runtime):
     evidence.retain_json("frames/"+phase+".json",{"frame":public,"pixel_assertions":stats})
 
 
-def inspect_lifecycle(report):
+def inspect_lifecycle(report, final_revision=3):
     trace=report["lifecycle_events"]
     require(type(trace) is list and len(trace)<=600*8+16,"bounded live GPU lifecycle trace")
     submitted,queued,graphics,present={},set(),set(),set()
@@ -168,7 +168,7 @@ def inspect_lifecycle(report):
             "final GPU frame follows initial frame and real simulation progress")
     presentation=report["runtime"]["presentation"]
     require(presentation["enabled"] is True and presentation["ready"] is True and
-            type(presentation["world_revision"]) is int and presentation["world_revision"]==3,
+            type(presentation["world_revision"]) is int and presentation["world_revision"]==final_revision,
             "final live telemetry confirms the rendered revision")
     require(type(presentation["frame_count"]) is int and
             frames[1]["frame_id"] <= presentation["frame_count"] <= len(submitted) and

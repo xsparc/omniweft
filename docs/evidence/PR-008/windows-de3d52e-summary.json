@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "work_item": "PR-008",
+  "runtime_sha": "de3d52e8a4937a1eae59c3a41b22f791fdd00149",
+  "runtime_tree": "98579c6e5933b6f0b3b46966dfb8526ed3f23f37",
+  "proofs": [
+    {
+      "name": "windows-cpu",
+      "assertions": 2045,
+      "artifacts": 7,
+      "manifest_sha256": "2ee417d37c225813965c30460e593be9513b95c3c52ece3b69858fb17eafb42a"
+    },
+    {
+      "name": "windows-gpu",
+      "assertions": 3069,
+      "artifacts": 15,
+      "manifest_sha256": "d6f9b79ae0ab6a35f3bd381cd7f5c69c7773bf49ecdc9bf2a41c30475465b2c9"
+    },
+    {
+      "name": "windows-agents-gpu",
+      "assertions": 4359,
+      "artifacts": 52,
+      "manifest_sha256": "c9c0acd20f6d06190b25f0c13f0dd0b91df8566c5f23ed09ab2b3c7d5e2565e8"
+    },
+    {
+      "name": "windows-render-gpu",
+      "assertions": 1961,
+      "artifacts": 32,
+      "manifest_sha256": "5ca40c3b41d5ddebfa5778dffe485c96a17e8707cbff32bca61a655ad28fb630"
+    }
+  ],
+  "windows_ctest": {
+    "passed": 20,
+    "failed": 0,
+    "seconds": 80.85,
+    "note": "Final runtime/test source; full suite before commit, followed by clean-candidate retained CPU/GPU proofs. No code changed between suite and commit."
+  },
+  "linux_local_container": "not_run: engine unavailable",
+  "linux_physical_gpu": "not_run",
+  "hosted_checks": "pending at package capture",
+  "review": "Independent source/oracle review passed; final retained package audit pending",
+  "privacy": "Original reviewed allowlisted manifests and declared artifacts only; no raw logs, credentials/epochs, local paths or executable/PDB bytes.",
+  "archive": {
+    "name": "windows-de3d52e.zip",
+    "bytes": 136850,
+    "entries": 111,
+    "sha256": "a05e26e2c3a9c4176905d7a5eb63a053326f01b78377fa29f0682bafa11bc79f"
+  }
+}

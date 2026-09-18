@@ -75,7 +75,8 @@ target_include_directories(ow_simulation PUBLIC include)
 ow_native_policy(ow_simulation)
 
 add_executable(omniweft_policy src/policy_main.cpp)
-target_link_libraries(omniweft_policy PRIVATE ow_control ow_policy ow_simulation Threads::Threads)
+target_link_libraries(omniweft_policy PRIVATE ow_control ow_policy ow_simulation ow_presentation Threads::Threads)
+target_include_directories(omniweft_policy SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_policy)
 
 add_executable(omniweft_agents src/agents_main.cpp)
@@ -86,6 +87,8 @@ ow_native_policy(omniweft_agents)
 option(OW_ENABLE_VULKAN "Build the optional SDL/Vulkan presentation adapter" OFF)
 if(OW_ENABLE_VULKAN)
   include(cmake/RenderDependencies.cmake)
+  target_link_libraries(omniweft_policy PRIVATE ow_render)
+  target_compile_definitions(omniweft_policy PRIVATE OW_ENABLE_VULKAN=1)
   target_link_libraries(omniweft_agents PRIVATE ow_render)
   target_compile_definitions(omniweft_agents PRIVATE OW_ENABLE_VULKAN=1)
 endif()
@@ -107,6 +110,12 @@ if(BUILD_TESTING)
   target_link_libraries(policy_native_test PRIVATE ow_policy)
   ow_native_policy(policy_native_test)
   add_test(NAME policy.native COMMAND policy_native_test)
+  add_test(NAME showcase.ai_blocks
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/showcase_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_policy>" --headless)
+  add_test(NAME showcase.oracle_selftest
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/showcase_oracle_test.py")
+  set_tests_properties(showcase.ai_blocks showcase.oracle_selftest PROPERTIES TIMEOUT 90)
   add_test(NAME policy.denied_edits
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/policy_oracle.py"
       --executable "$<TARGET_FILE:omniweft_policy>")

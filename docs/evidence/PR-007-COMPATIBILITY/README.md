@@ -3,7 +3,7 @@
 Runtime candidate: f511692699edaf867d032ccaf6286e7b6c4c4e4e.
 Tree: 87b9557ad48279eb00dd2db0ae51008e3d90c863.
 Base: d7b52696edd3e7cb9c3388972509a05f16dc6466, actual PR #11 merge.
-Delivery: [draft PR #12](https://github.com/xsparc/omniweft/pull/12); not merged.
+Delivery: [PR #12](https://github.com/xsparc/omniweft/pull/12) merged; see verified integration below.
 
 The [archive](compatibility-f511692.zip) preserves ten original clean-candidate manifests and exactly their 636 declared artifacts, plus the baseline-negative record and a supplemental validation summary. It contains 648 entries and 354,712 bytes; SHA-256 ab8e43c4218cd8d66c49c7a61f6370a7b3fc42eb993ec2f2c2948efff3ea3230. The [external summary](compatibility-f511692-summary.json) includes commands, results, toolchain/source hashes, actual bounded container settings and limitations.
 
@@ -26,3 +26,7 @@ Independent source review closed after correcting the new test's packet-fragment
 ## Hosted runtime validation
 
 All six hosted checks passed on runtime f511692699edaf867d032ccaf6286e7b6c4c4e4e: [Windows/Linux native](https://github.com/xsparc/omniweft/actions/runs/35215197326), [optional renderer](https://github.com/xsparc/omniweft/actions/runs/35215197517) and [planning](https://github.com/xsparc/omniweft/actions/runs/35215197334). These later results do not relabel the archive's earlier local-capture status. Any subsequent documentation/evidence delivery commit requires its own current-head checks before integration.
+
+## Verified integration
+
+PR #12 was squash merged as 1c94777a9fac7869cc83e21f01b1ccc034c439a4 on 2026-09-17. Its tree 2a58baaf3e2c019c848cb0e434d0db802901d095 exactly matches reviewed delivery 851f83d47f5978609d29b56f9d44faa4bf4a763e. All six delivery checks passed. All six post-merge checks also passed: [native](https://github.com/xsparc/omniweft/actions/runs/35233666704), [renderer](https://github.com/xsparc/omniweft/actions/runs/35233666678), [planning](https://github.com/xsparc/omniweft/actions/runs/35233666645). The compatibility repair is integrated; PR-008 is now eligible. Historical evidence remains bound to its original runtime candidate.
