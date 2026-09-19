@@ -420,7 +420,7 @@
     {
       "id": "PR-009",
       "title": "Hierarchy and reparenting",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M2",
       "depends_on": [
         "PR-003"
@@ -443,8 +443,15 @@
         "claimed_at": "2026-09-19",
         "plan": "docs/execution/PR-009-PLAN.md",
         "handoff": "docs/execution/PR-009-HANDOFF.md",
-        "review": "Independent architecture/source/oracle review closed; final retained archive audit pending.",
-        "next_action": "Retain clean-candidate evidence and publish the authorized draft; verify actual hosted checks."
+        "review": "Independent architecture/source/oracle/archive audits passed; current-head hosted checks and maintainer integration pending.",
+        "next_action": "Monitor current PR head, resolve concrete failures, then await maintainer review/certification and actual merge.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/15",
+        "implementation_sha": "9630e3bf8dd934d7b91b6f06d0e458272d5d6e1c",
+        "implementation_tree": "64ac352e998819c76ae968d320089f73a5b97acd",
+        "evidence": [
+          "docs/evidence/PR-009/README.md",
+          "docs/execution/PR-009-HANDOFF.md"
+        ]
       }
     },
     {
