@@ -102,6 +102,9 @@
           },
           {
             "$ref": "#/$defs/delete"
+          },
+          {
+            "$ref": "#/$defs/reparent"
           }
         ]
       }
@@ -258,6 +261,51 @@
         },
         "child_policy": {
           "const": "reject_if_children"
+        }
+      }
+    },
+    "reparent": {
+      "description": "Native-only hierarchy operation. Existing control and policy profiles reject it before owner scheduling or sequence consumption.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "target",
+        "parent",
+        "mode"
+      ],
+      "properties": {
+        "type": {
+          "const": "entity.reparent"
+        },
+        "target": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/temporaryTarget"
+            },
+            {
+              "$ref": "#/$defs/durableTarget"
+            }
+          ]
+        },
+        "parent": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/temporaryTarget"
+            },
+            {
+              "$ref": "#/$defs/durableTarget"
+            }
+          ]
+        },
+        "mode": {
+          "enum": [
+            "preserve_world",
+            "preserve_local"
+          ]
         }
       }
     }

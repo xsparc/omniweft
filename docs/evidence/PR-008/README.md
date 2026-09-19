@@ -1,7 +1,7 @@
 # PR-008 room showcase evidence
 
 Runtime: de3d52e8a4937a1eae59c3a41b22f791fdd00149; tree 98579c6e5933b6f0b3b46966dfb8526ed3f23f37.
-Delivery: [draft PR #13](https://github.com/xsparc/omniweft/pull/13); not merged.
+Delivery: [PR #13](https://github.com/xsparc/omniweft/pull/13) merged; see verified integration below.
 
 The [Windows archive](windows-de3d52e.zip) contains four unchanged passing manifests, their 106 declared artifacts, and one supplemental validation summary: 111 entries, 136850 bytes, SHA-256 a05e26e2c3a9c4176905d7a5eb63a053326f01b78377fa29f0682bafa11bc79f. The [external summary](windows-de3d52e-summary.json) adds the archive identity. Original work-item labels are preserved for regression proofs.
 
@@ -23,3 +23,7 @@ Only allowlisted fixture data, generic tool/device versions, source/artifact has
 ## Hosted runtime checks
 
 All six checks passed on runtime de3d52e8a4937a1eae59c3a41b22f791fdd00149: [Windows/Linux native](https://github.com/xsparc/omniweft/actions/runs/35339087519), [optional renderer builds](https://github.com/xsparc/omniweft/actions/runs/35339087374), and [planning](https://github.com/xsparc/omniweft/actions/runs/35339087375). These are hosted build/test results, not Linux physical-GPU evidence. The subsequent documentation/evidence delivery commit still requires its own current-head checks before integration.
+
+## Verified integration
+
+PR #13 merged as 27552713dc95a776a21c7f5425c4cf672bc169fa on 2026-09-18. Its tree ccecd4efecc7d8aeccfa0db46ef4c6859b1bf3fb matches reviewed delivery cfb34cf1f1b87903becf6c34eb8836e2772b1322. All six delivery checks and all six required post-merge checks passed: [native](https://github.com/xsparc/omniweft/actions/runs/35340932841), [renderer](https://github.com/xsparc/omniweft/actions/runs/35340932816), [planning](https://github.com/xsparc/omniweft/actions/runs/35340932786). Original evidence remains bound to its runtime candidate.

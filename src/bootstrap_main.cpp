@@ -158,7 +158,8 @@ int main(int argc, char* argv[]) {
         std::string_view(argv[index + 1]) == "protocol.reject_invalid")
       return run_protocol_example(argc, argv);
     if (std::string_view(argv[index]) == "--example" &&
-        std::string_view(argv[index + 1]) == "objects.atomic")
+        (std::string_view(argv[index + 1]) == "objects.atomic" ||
+         std::string_view(argv[index + 1]) == "objects.hierarchy"))
       return run_objects_example(argc, argv);
     if (std::string_view(argv[index]) == "--example" &&
         std::string_view(argv[index + 1]) == "render.world_cube")

@@ -63,7 +63,13 @@ struct EntityDelete {
   std::string child_policy = "reject_if_children";
   bool operator==(const EntityDelete&) const = default;
 };
-using Operation = std::variant<EntityCreate, TransformSet, EntityDelete>;
+struct EntityReparent {
+  Target target;
+  std::optional<Target> parent;
+  std::string mode = "preserve_world";
+  bool operator==(const EntityReparent&) const = default;
+};
+using Operation = std::variant<EntityCreate, TransformSet, EntityDelete, EntityReparent>;
 struct Envelope {
   std::string protocol_version = "0.1";
   std::string world_id;

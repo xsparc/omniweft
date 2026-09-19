@@ -131,6 +131,26 @@ if(BUILD_TESTING)
       --executable "$<TARGET_FILE:omniweft_examples>")
   set_tests_properties(protocol.native protocol.reject_invalid PROPERTIES TIMEOUT 60)
 
+  add_executable(hierarchy_legacy_fixture tests/hierarchy_host_fixture.cpp)
+  target_link_libraries(hierarchy_legacy_fixture PRIVATE ow_control)
+  ow_native_policy(hierarchy_legacy_fixture)
+  add_executable(hierarchy_policy_fixture tests/hierarchy_host_fixture.cpp)
+  target_link_libraries(hierarchy_policy_fixture PRIVATE ow_control)
+  target_compile_definitions(hierarchy_policy_fixture PRIVATE OW_TEST_POLICY=1)
+  ow_native_policy(hierarchy_policy_fixture)
+  add_executable(hierarchy_native_test tests/hierarchy_native_test.cpp)
+  target_link_libraries(hierarchy_native_test PRIVATE ow_transactions ow_presentation ow_policy)
+  ow_native_policy(hierarchy_native_test)
+  add_test(NAME objects.hierarchy_native COMMAND hierarchy_native_test)
+  add_test(NAME objects.hierarchy
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/hierarchy_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_examples>" --control "$<TARGET_FILE:omniweft_control>"
+      --agents "$<TARGET_FILE:omniweft_agents>" --policy "$<TARGET_FILE:omniweft_policy>"
+      --hierarchy-legacy "$<TARGET_FILE:hierarchy_legacy_fixture>" --hierarchy-policy "$<TARGET_FILE:hierarchy_policy_fixture>")
+  add_test(NAME objects.hierarchy_oracle_selftest
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/hierarchy_oracle_test.py")
+  set_tests_properties(objects.hierarchy_native objects.hierarchy objects.hierarchy_oracle_selftest PROPERTIES TIMEOUT 120)
+
   add_executable(objects_native_test tests/objects_native_test.cpp)
   target_link_libraries(objects_native_test PRIVATE ow_transactions)
   ow_native_policy(objects_native_test)

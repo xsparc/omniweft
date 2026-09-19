@@ -50,6 +50,7 @@ Snapshot World::snapshot() const { return state_; }
 
 std::vector<std::uint8_t> World::canonical_bytes() const {
   std::vector<std::uint8_t> bytes{'O', 'W', 'O', 'B', 'J', '0', '0', '1'};
+  if (state_.format_version == 2) bytes.back() = '2';
   text(bytes, state_.world_id);
   integer(bytes, state_.seed, 4);
   integer(bytes, state_.max_slots, 4);
@@ -67,6 +68,17 @@ std::vector<std::uint8_t> World::canonical_bytes() const {
       numbers(bytes, slot.entity->transform.position_m);
       numbers(bytes, slot.entity->transform.rotation_xyzw);
       numbers(bytes, slot.entity->transform.scale);
+      if (state_.format_version == 2) {
+        bytes.push_back(static_cast<std::uint8_t>(slot.entity->parent ? 1 : 0));
+        if (slot.entity->parent) {
+          const auto& parent = *slot.entity->parent;
+          bytes.insert(bytes.end(), parent.entity_uuid.begin(), parent.entity_uuid.end());
+          integer(bytes, parent.generation, 8);
+          numbers(bytes, slot.entity->local_transform.position_m);
+          numbers(bytes, slot.entity->local_transform.rotation_xyzw);
+          numbers(bytes, slot.entity->local_transform.scale);
+        }
+      }
     }
   }
   return bytes;

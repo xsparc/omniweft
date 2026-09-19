@@ -8,6 +8,10 @@ Omniweft treats a virtual world as structured data that people, game systems, an
 
 PR-007 scoped capabilities and resource budgets are merged in [PR #11](https://github.com/xsparc/omniweft/pull/11), with the post-merge Windows SDK compatibility correction merged and verified in [PR #12](docs/execution/PR-007-COMPATIBILITY-HANDOFF.md). See [policy.denied_edits](examples/policy-denied_edits.md) and its [handoff](docs/execution/PR-007-HANDOFF.md).
 
+PR-008 adds the verified [offline room showcase](examples/showcase-ai_blocks.md), integrated in PR #13 with Windows physical-GPU evidence and passing Windows/Linux hosted checks. See [its handoff](docs/execution/PR-008-HANDOFF.md).
+
+PR-009 is an implemented candidate for [native hierarchy and reparenting](examples/objects-hierarchy.md); its [handoff](docs/execution/PR-009-HANDOFF.md) tracks verification and pending maintainer integration. Remote SDK hierarchy remains unsupported.
+
 ## Start here
 
 | Document | Purpose |

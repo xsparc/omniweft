@@ -202,6 +202,17 @@ Envelope convert(const Json& value) {
       transform.rotation_xyzw = vector_value<4>(operation["rotation_xyzw"], child(path, "rotation_xyzw"));
       transform.scale = vector_value<3>(operation["scale"], child(path, "scale"));
       envelope.operations.emplace_back(std::move(transform));
+    } else if (type == "entity.reparent") {
+      fields(operation, path, {"type", "target", "parent", "mode"});
+      if (!operation["mode"].is_string() ||
+          (operation["mode"] != "preserve_world" && operation["mode"] != "preserve_local"))
+        reject("INVALID_SCHEMA", child(path, "mode"), "Expected preserve_world or preserve_local.");
+      EntityReparent reparent;
+      reparent.target = target_value(operation["target"], child(path, "target"));
+      if (!operation["parent"].is_null())
+        reparent.parent = target_value(operation["parent"], child(path, "parent"));
+      reparent.mode = operation["mode"].get<std::string>();
+      envelope.operations.emplace_back(std::move(reparent));
     } else if (type == "entity.delete") {
       fields(operation, path, {"type", "target", "child_policy"});
       if (!operation["child_policy"].is_string() || operation["child_policy"] != "reject_if_children")
@@ -261,9 +272,12 @@ SerializeResult serialize(const Envelope& envelope) {
           const auto target = target_json(operation.target);
           value["operations"].push_back({{"type", "transform.set"}, {"target", target},
             {"position_m", operation.position_m}, {"rotation_xyzw", operation.rotation_xyzw}, {"scale", operation.scale}});
-        } else {
+        } else if constexpr (std::is_same_v<Type, EntityDelete>) {
           value["operations"].push_back({{"type", "entity.delete"}, {"target", target_json(operation.target)},
             {"child_policy", operation.child_policy}});
+        } else {
+          value["operations"].push_back({{"type", "entity.reparent"}, {"target", target_json(operation.target)},
+            {"parent", operation.parent ? target_json(*operation.parent) : Json(nullptr)}, {"mode", operation.mode}});
         }
       }, envelope.operations[index]);
     }

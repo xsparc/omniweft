@@ -31,6 +31,9 @@ std::size_t field_bytes(const commands::Envelope& envelope) {
   if (envelope.operations.size() > operation_limit ||
       envelope.operations.size() > envelope.budget.max_operations)
     reject("BUDGET_EXCEEDED", "/operations", "Operation allowance exceeded.");
+  for (const auto& operation : envelope.operations)
+    if (std::holds_alternative<commands::EntityReparent>(operation))
+      reject("UNSUPPORTED_OPERATION", "/operations", "Hierarchy is not admitted by this policy.");
   add(envelope.protocol_version); add(envelope.world_id); add(envelope.transaction_id);
   add(envelope.idempotency.epoch); add(envelope.apply_at.mode);
   for (const auto& item : envelope.operations) {
@@ -94,6 +97,9 @@ void Guard::begin(const world::World& world, const world::Snapshot& snapshot,
     reject("NOT_AUTHORIZED", "/policy", "A live unused admission is required.");
   begun_ = true; lease_.claimed_ = true;
   const auto bytes = field_bytes(envelope);
+  if (snapshot.format_version != 1 || std::any_of(snapshot.slots.begin(), snapshot.slots.end(),
+      [](const world::Slot& slot) { return slot.entity && slot.entity->parent; }))
+    reject("UNSUPPORTED_OPERATION", "/policy", "Hierarchy worlds require a hierarchy-aware policy.");
   if (bytes > lease_.bytes_)
     reject("BUDGET_EXCEEDED", "/memory/working", "Typed fields exceed the reserved body allowance.");
   lock_ = std::unique_lock(lease_.ledger_->mutex_);
