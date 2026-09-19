@@ -15,10 +15,17 @@ struct Transform {
   std::array<double, 3> scale{1.0, 1.0, 1.0};
   bool operator==(const Transform&) const = default;
 };
+struct ParentIdentity {
+  std::string entity_uuid;
+  std::uint64_t generation = 0;
+  bool operator==(const ParentIdentity&) const = default;
+};
 struct Entity {
   std::string prefab;
   std::uint64_t authoring_revision = 0;
-  Transform transform;
+  Transform transform;  // Cached world-space TRS, including for parented entities.
+  std::optional<ParentIdentity> parent;
+  Transform local_transform;  // Authored local TRS only while parent is present.
   bool operator==(const Entity&) const = default;
 };
 struct Slot {

@@ -22,6 +22,7 @@ constexpr std::string_view usage =
     "[--verify] --output <new-artifact-directory> [--max-slots <1..1024>] "
     "[--input <json-file>]...\n";
 struct Options {
+  bool hierarchy = false;
   bool headless = false;
   bool verify = false;
   std::uint32_t max_slots = 1024;
@@ -47,8 +48,10 @@ Options options_from(int argc, char* argv[]) {
     };
     if (arg == "--example" && !example) {
       example = true;
-      if (value() != "objects.atomic")
-        throw std::invalid_argument("expected --example objects.atomic");
+      const auto selected = value();
+      options.hierarchy = selected == "objects.hierarchy";
+      if (selected != "objects.atomic" && !options.hierarchy)
+        throw std::invalid_argument("expected objects.atomic or objects.hierarchy");
     } else if (arg == "--headless" && !options.headless) {
       options.headless = true;
     } else if (arg == "--verify" && !options.verify) {
@@ -125,6 +128,15 @@ Json snapshot_json(const world::Snapshot& snapshot) {
       entity = {{"prefab", value.prefab}, {"authoring_revision", value.authoring_revision},
         {"transform", {{"position_m", value.transform.position_m},
           {"rotation_xyzw", value.transform.rotation_xyzw}, {"scale", value.transform.scale}}}};
+      if (snapshot.format_version == 2) {
+        entity["parent"] = nullptr;
+        entity["local_transform"] = nullptr;
+        if (value.parent) {
+          entity["parent"] = {{"entity_uuid", value.parent->entity_uuid}, {"generation", value.parent->generation}};
+          entity["local_transform"] = {{"position_m", value.local_transform.position_m},
+            {"rotation_xyzw", value.local_transform.rotation_xyzw}, {"scale", value.local_transform.scale}};
+        }
+      }
     }
     slots.push_back({{"entity_uuid", slot.entity_uuid}, {"generation", slot.generation},
       {"retired", slot.retired}, {"entity", std::move(entity)}});
@@ -192,6 +204,37 @@ commands::Envelope builtin_envelope(std::size_t index) {
   envelope.budget = {static_cast<std::uint64_t>(envelope.operations.size()), 0};
   return envelope;
 }
+commands::Envelope hierarchy_envelope(std::size_t index) {
+  auto envelope = builtin_envelope(0);
+  envelope.transaction_id.back() = static_cast<char>('1' + index);
+  envelope.idempotency.sequence = index + 1;
+  constexpr std::uint64_t revisions[]{0,1,2,2,3};
+  envelope.expected_world_revision = revisions[index];
+  const commands::EntityTarget c{"workshop", "00000007-0000-4000-8000-000000000002", 1};
+  const commands::EntityTarget q{"workshop", "00000007-0000-4000-8000-000000000003", 1};
+  if (index == 0) envelope.operations = {
+    commands::EntityCreate{"P", "builtin.unit_cube"},
+    commands::TransformSet{commands::TemporaryTarget{"P"}, {10,0,0}, {0,0,1,0}, {2,2,2}},
+    commands::EntityCreate{"C", "builtin.unit_cube"},
+    commands::TransformSet{commands::TemporaryTarget{"C"}, {1,0,0}},
+    commands::EntityReparent{commands::TemporaryTarget{"C"}, commands::TemporaryTarget{"P"}, "preserve_local"}};
+  else if (index == 1) envelope.operations = {
+    commands::EntityCreate{"Q", "builtin.unit_cube"},
+    commands::TransformSet{commands::TemporaryTarget{"Q"}, {-4,0,0}},
+    commands::EntityReparent{c, commands::TemporaryTarget{"Q"}, "preserve_world"}};
+  else if (index == 2) envelope.operations = {commands::EntityReparent{q, c, "preserve_local"}};
+  else if (index == 3) envelope.operations = {commands::TransformSet{q, {-2,0,0}}};
+  else envelope.operations = {commands::EntityReparent{c, std::nullopt, "preserve_local"}};
+  envelope.budget.max_operations = envelope.operations.size();
+  return envelope;
+}
+bool hierarchy_verified(std::size_t index, const transactions::Receipt& receipt) {
+  constexpr std::uint64_t revisions[]{1,2,2,3,4};
+  return receipt.world_revision == revisions[index] &&
+    (index == 2 ? receipt.status == "rejected" && receipt.errors.size() == 1 &&
+      receipt.errors[0].code == "INVALID_SCHEMA" && receipt.created.empty() :
+      receipt.status == "committed" && receipt.errors.empty());
+}
 bool builtin_verified(std::size_t index, const transactions::Receipt& receipt) {
   if (index != 1)
     return receipt.status == "committed" && receipt.errors.empty() &&
@@ -215,7 +258,7 @@ int run_objects_example(int argc, char* argv[]) {
     return 3;
   }
   const bool builtin = options.inputs.empty();
-  const std::size_t count = builtin ? 3 : options.inputs.size();
+  const std::size_t count = builtin ? (options.hierarchy ? 5U : 3U) : options.inputs.size();
   Json results = Json::array();
   try {
     world::World target_world("workshop", 7, options.max_slots);
@@ -224,7 +267,7 @@ int run_objects_example(int argc, char* argv[]) {
       const auto before_bytes = target_world.canonical_bytes();
       transactions::Receipt receipt;
       if (builtin) {
-        receipt = transactions::Coordinator::apply_at_boundary(target_world, builtin_envelope(index));
+        receipt = transactions::Coordinator::apply_at_boundary(target_world, options.hierarchy ? hierarchy_envelope(index) : builtin_envelope(index));
       } else {
         std::string bytes;
         try {
@@ -240,7 +283,7 @@ int run_objects_example(int argc, char* argv[]) {
       }
       const auto after = target_world.snapshot();
       const auto after_bytes = target_world.canonical_bytes();
-      if (options.verify && ((builtin && !builtin_verified(index, receipt)) ||
+      if (options.verify && ((builtin && !(options.hierarchy ? hierarchy_verified(index, receipt) : builtin_verified(index, receipt))) ||
           after_bytes != target_world.canonical_bytes())) {
         std::cerr << "verification_failed: fixture receipts or repeated canonical encoding differ\n";
         return 4;
@@ -253,7 +296,7 @@ int run_objects_example(int argc, char* argv[]) {
     std::cerr << "runtime_error: " << error.what() << '\n';
     return 6;
   }
-  const Json report = {{"schema_version", 1}, {"example", "objects.atomic"}, {"seed", 7},
+  const Json report = {{"schema_version", 1}, {"example", options.hierarchy ? "objects.hierarchy" : "objects.atomic"}, {"seed", 7},
     {"verified", options.verify}, {"results", std::move(results)}};
   try {
     write_report(options.output, report);
@@ -261,6 +304,6 @@ int run_objects_example(int argc, char* argv[]) {
     std::cerr << "output_error: " << error.what() << "; use a writable, fresh --output directory\n";
     return 5;
   }
-  std::cout << "objects.atomic: volatile authoring receipts and complete state written\n";
+  std::cout << (options.hierarchy ? "objects.hierarchy" : "objects.atomic") << ": volatile authoring receipts and complete state written\n";
   return 0;
 }

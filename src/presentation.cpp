@@ -58,7 +58,7 @@ Vec3 transformed(Vec3 local, const world::Transform& transform) {
 }
 }
 Packet make_packet(const world::Snapshot& snapshot) {
-  require(snapshot.format_version == 1 && identifier(snapshot.world_id));
+  require((snapshot.format_version == 1 || snapshot.format_version == 2) && identifier(snapshot.world_id));
   require(snapshot.max_slots > 0 && snapshot.max_slots <= 1024 &&
     snapshot.slots.size() <= snapshot.max_slots);
   Packet packet;

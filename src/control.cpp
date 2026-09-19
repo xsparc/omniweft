@@ -516,6 +516,11 @@ std::string safe_path(std::string_view source) {
   reject(400, "INVALID_SCHEMA", safe_path(error.path));
 }
 Json snapshot_json(const world::Snapshot& snapshot) {
+  // Public native callbacks may supply a hierarchy world, which these remote
+  // profiles cannot represent. Never emit a lossy format2 observation.
+  if (snapshot.format_version != 1 || std::any_of(snapshot.slots.begin(), snapshot.slots.end(),
+      [](const world::Slot& slot) { return slot.entity && slot.entity->parent; }))
+    reject(405, "UNSUPPORTED_OPERATION", "/snapshot");
   Json slots = Json::array();
   for (const auto& slot : snapshot.slots) {
     Json entity = nullptr;
@@ -654,6 +659,9 @@ class Host {
           command_rejection(parsed.errors.front());
         }
         const auto& envelope = *parsed.envelope;
+        for (const auto& operation : envelope.operations)
+          if (std::holds_alternative<commands::EntityReparent>(operation))
+            reject(405, "UNSUPPORTED_OPERATION", "/operations");
         if (envelope.world_id != config_.world_id) reject(403, "NOT_AUTHORIZED", "/world_id");
         for (std::size_t index = 0; index < envelope.operations.size(); ++index) {
           std::visit([&](const auto& operation) {
@@ -873,6 +881,9 @@ class PolicyHost {
         const auto& envelope=*parsed.envelope;
         if(envelope.operations.size()>policy::operation_limit)
           reject(413,"BUDGET_EXCEEDED","/operations");
+        for (const auto& operation : envelope.operations)
+          if (std::holds_alternative<commands::EntityReparent>(operation))
+            reject(405,"UNSUPPORTED_OPERATION","/operations");
         if(envelope.world_id!=config_.world_id) reject(403,"NOT_AUTHORIZED","/world_id");
         for(const auto& item:envelope.operations) std::visit([&](const auto& operation) {
           using T=std::decay_t<decltype(operation)>;

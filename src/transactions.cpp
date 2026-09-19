@@ -85,6 +85,123 @@ world::Slot& resolve(world::Snapshot& staged, const commands::Target& target, co
            "Entity handle is deleted, retired or has a stale generation.", index);
   return *found;
 }
+// The graph is private committed state; every traversal is iterative and bounded by slots.
+bool child_of(const world::Slot& child, const world::Slot& parent) {
+  return child.entity && child.entity->parent &&
+    child.entity->parent->entity_uuid == parent.entity_uuid &&
+    child.entity->parent->generation == parent.generation;
+}
+bool has_children(const world::Snapshot& state, const world::Slot& parent) {
+  return std::any_of(state.slots.begin(), state.slots.end(),
+    [&](const auto& child) { return child_of(child, parent); });
+}
+world::Slot* parent_of(world::Snapshot& state, const world::Slot& child) {
+  if (!child.entity->parent) return nullptr;
+  const auto found = std::find_if(state.slots.begin(), state.slots.end(),
+    [&](const auto& parent) { return parent.entity && !parent.retired && child_of(child, parent); });
+  if (found == state.slots.end())
+    reject("STALE_HANDLE", "/parent", "Parent generation is no longer live.");
+  return &*found;
+}
+void parent_scale(const world::Transform& value, const std::string& path, std::size_t index) {
+  if (!(value.scale[0] > 0) || value.scale[0] != value.scale[1] || value.scale[0] != value.scale[2])
+    reject("INVALID_SCHEMA", path, "Parents require positive uniform world scale.", index);
+}
+using Vec3 = std::array<double, 3>;
+using Quat = std::array<double, 4>;
+Quat unit(Quat q) {
+  double norm = 0;
+  for (const double v : q) norm += v*v;
+  const double length = std::sqrt(norm);
+  for (double& v : q) v /= length;
+  return q;
+}
+Quat product(const Quat& a, const Quat& b) {
+  return unit({a[3]*b[0]+a[0]*b[3]+a[1]*b[2]-a[2]*b[1],
+    a[3]*b[1]-a[0]*b[2]+a[1]*b[3]+a[2]*b[0],
+    a[3]*b[2]+a[0]*b[1]-a[1]*b[0]+a[2]*b[3],
+    a[3]*b[3]-a[0]*b[0]-a[1]*b[1]-a[2]*b[2]});
+}
+Vec3 rotate(const Quat& q, const Vec3& v) {
+  const double x=q[0], y=q[1], z=q[2], w=q[3];
+  return {(1-2*(y*y+z*z))*v[0]+2*(x*y-z*w)*v[1]+2*(x*z+y*w)*v[2],
+    2*(x*y+z*w)*v[0]+(1-2*(x*x+z*z))*v[1]+2*(y*z-x*w)*v[2],
+    2*(x*z-y*w)*v[0]+2*(y*z+x*w)*v[1]+(1-2*(x*x+y*y))*v[2]};
+}
+world::Transform checked(world::Transform value, const std::string& path, std::size_t index) {
+  const auto finite = [](const auto& items) {
+    return std::all_of(items.begin(), items.end(), [](double v) { return std::isfinite(v); });
+  };
+  if (!finite(value.position_m) || !finite(value.rotation_xyzw) || !finite(value.scale) ||
+      std::any_of(value.scale.begin(), value.scale.end(), [](double v) { return v == 0; }))
+    reject("INVALID_SCHEMA", path, "Derived hierarchy transform must be finite with nonzero scale.", index);
+  normalize_zero(value.position_m); normalize_zero(value.rotation_xyzw); normalize_zero(value.scale);
+  return value;
+}
+world::Transform compose(const world::Transform& parent, const world::Transform& local,
+                          const std::string& path, std::size_t index) {
+  parent_scale(parent, path, index);
+  auto displacement = local.position_m;
+  for (double& v : displacement) v *= parent.scale[0];
+  auto position = rotate(unit(parent.rotation_xyzw), displacement);
+  auto scale = local.scale;
+  for (std::size_t i=0; i<3; ++i) {
+    position[i] += parent.position_m[i]; scale[i] *= parent.scale[0];
+  }
+  return checked({position, product(unit(parent.rotation_xyzw), unit(local.rotation_xyzw)), scale}, path, index);
+}
+world::Transform relative(const world::Transform& parent, const world::Transform& value,
+                           const std::string& path, std::size_t index) {
+  parent_scale(parent, path, index);
+  auto inverse = unit(parent.rotation_xyzw);
+  for (std::size_t i=0; i<3; ++i) inverse[i] = -inverse[i];
+  auto displacement = value.position_m;
+  for (std::size_t i=0; i<3; ++i) displacement[i] -= parent.position_m[i];
+  auto position = rotate(inverse, displacement);
+  auto scale = value.scale;
+  for (std::size_t i=0; i<3; ++i) { position[i] /= parent.scale[0]; scale[i] /= parent.scale[0]; }
+  return checked({position, product(inverse, unit(value.rotation_xyzw)), scale}, path, index);
+}
+void subtree(world::Snapshot& state, world::Slot& root, std::uint64_t revision,
+             const std::string& path, std::size_t index) {
+  std::vector<world::Slot*> queue{&root};
+  for (std::size_t at=0; at<queue.size(); ++at) {
+    auto& parent = *queue[at];
+    parent.entity->authoring_revision = revision;
+    for (auto& child : state.slots) {
+      if (!child_of(child, parent)) continue;
+      if (queue.size() >= state.slots.size())
+        reject("INVALID_SCHEMA", path, "Hierarchy must be acyclic.", index);
+      child.entity->transform = compose(parent.entity->transform, child.entity->local_transform, path, index);
+      queue.push_back(&child);
+    }
+  }
+}
+void reparent(world::Snapshot& state, world::Slot& slot, world::Slot* parent,
+              const std::string& mode, const std::string& path, std::size_t index) {
+  auto* ancestor = parent;
+  for (std::size_t count=0; ancestor; ++count) {
+    if (ancestor == &slot || count >= state.slots.size())
+      reject("INVALID_SCHEMA", path + "/parent", "Reparenting must not create a cycle.", index);
+    ancestor = parent_of(state, *ancestor);
+  }
+  auto& entity = *slot.entity;
+  const auto local = entity.parent ? entity.local_transform : entity.transform;
+  if (parent) {
+    parent_scale(parent->entity->transform, path + "/parent", index);
+    if (mode == "preserve_world")
+      entity.local_transform = relative(parent->entity->transform, entity.transform, path, index);
+    else {
+      entity.local_transform = local;
+      entity.transform = compose(parent->entity->transform, local, path, index);
+    }
+    entity.parent = world::ParentIdentity{parent->entity_uuid, parent->generation};
+  } else {
+    if (mode == "preserve_local") entity.transform = local;
+    entity.parent.reset();
+    entity.local_transform = {};
+  }
+}
 }  // namespace
 
 Receipt Coordinator::apply_at_boundary(world::World& target_world, const commands::Envelope& envelope, StagingGuard* guard) {
@@ -141,7 +258,7 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
             slot = std::prev(staged.slots.end());
           }
           else if (guard) guard->create(static_cast<std::size_t>(slot - staged.slots.begin()), index);
-          slot->entity = world::Entity{operation.prefab, next_revision, {}};
+          slot->entity = world::Entity{operation.prefab, next_revision, {}, std::nullopt, {}};
           names.emplace(operation.temporary_id, commands::EntityTarget{
             staged.world_id, slot->entity_uuid, slot->generation});
           created.push_back({operation.temporary_id, staged.world_id, slot->entity_uuid, slot->generation});
@@ -150,10 +267,20 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
           auto& slot = resolve(staged, operation.target, names, path + "/target", index);
           if (guard) guard->transform(static_cast<std::size_t>(&slot - staged.slots.data()),
                                       slot.entity->transform, replacement, index);
+          if (has_children(staged, slot)) parent_scale(replacement, path + "/scale", index);
+          if (auto* parent = parent_of(staged, slot))
+            slot.entity->local_transform = relative(parent->entity->transform, replacement, path, index);
           slot.entity->transform = replacement;
-          slot.entity->authoring_revision = next_revision;
+          subtree(staged, slot, next_revision, path, index);
+        } else if constexpr (std::is_same_v<Type, commands::EntityReparent>) {
+          auto& slot = resolve(staged, operation.target, names, path + "/target", index);
+          auto* parent = operation.parent ? &resolve(staged, *operation.parent, names, path + "/parent", index) : nullptr;
+          reparent(staged, slot, parent, operation.mode, path, index);
+          subtree(staged, slot, next_revision, path, index);
         } else {
           auto& slot = resolve(staged, operation.target, names, path + "/target", index);
+          if (has_children(staged, slot))
+            reject("INVALID_SCHEMA", path + "/child_policy", "Detach or delete children before deleting their parent.", index);
           if (guard) guard->erase(static_cast<std::size_t>(&slot - staged.slots.data()),
                                   slot.entity->transform, index);
           slot.entity.reset();
@@ -164,6 +291,8 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
         }
       }, envelope.operations[index]);
     }
+    staged.format_version = std::any_of(staged.slots.begin(), staged.slots.end(),
+      [](const auto& slot) { return slot.entity && slot.entity->parent; }) ? 2U : 1U;
     if (guard) guard->finish(staged);
   } catch (const Error& error) {
     // Rejection discards every staged write and provisional identity binding.

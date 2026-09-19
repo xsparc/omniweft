@@ -1,6 +1,6 @@
 # PR-008 handoff
 
-State: in review; [draft PR #13](https://github.com/xsparc/omniweft/pull/13) open, not merged. Owner: Codex coordinator.
+State: done; [PR #13](https://github.com/xsparc/omniweft/pull/13) merged with required checks passed. Owner: Codex coordinator.
 Branch: codex/pr-008-ai-blocks. Base: 1c94777a9fac7869cc83e21f01b1ccc034c439a4.
 Runtime: de3d52e8a4937a1eae59c3a41b22f791fdd00149; tree 98579c6e5933b6f0b3b46966dfb8526ed3f23f37.
 Scope: [slice plan](PR-008-PLAN.md), [authorization](AUTHORIZATION.md).
@@ -15,4 +15,8 @@ Next: inspect all required checks on the actual current draft head and resolve c
 
 ## Hosted runtime checks
 
-All six checks passed on runtime de3d52e8a4937a1eae59c3a41b22f791fdd00149: [Windows/Linux native](https://github.com/xsparc/omniweft/actions/runs/35339087519), [optional renderer builds](https://github.com/xsparc/omniweft/actions/runs/35339087374), and [planning](https://github.com/xsparc/omniweft/actions/runs/35339087375). These are hosted build/test results, not Linux physical-GPU evidence. The subsequent documentation/evidence delivery commit still requires its own current-head checks before integration.
+All six checks passed on runtime de3d52e8a4937a1eae59c3a41b22f791fdd00149: [Windows/Linux native](https://github.com/xsparc/omniweft/actions/runs/35339087519), [optional renderer builds](https://github.com/xsparc/omniweft/actions/runs/35339087374), and [planning](https://github.com/xsparc/omniweft/actions/runs/35339087375). These are hosted build/test results, not Linux physical-GPU evidence. The subsequent delivery commit and actual merge both passed all six required checks, as recorded below.
+
+## Verified integration
+
+PR #13 merged as 27552713dc95a776a21c7f5425c4cf672bc169fa on 2026-09-18. Its tree ccecd4efecc7d8aeccfa0db46ef4c6859b1bf3fb matches reviewed delivery cfb34cf1f1b87903becf6c34eb8836e2772b1322. All six delivery checks and all six required post-merge checks passed: [native](https://github.com/xsparc/omniweft/actions/runs/35340932841), [renderer](https://github.com/xsparc/omniweft/actions/runs/35340932816), [planning](https://github.com/xsparc/omniweft/actions/runs/35340932786). Original evidence remains bound to its runtime candidate.
