@@ -159,7 +159,7 @@ int main() {
     const auto serialized=serialize(typed);
     require(serialized.json.has_value() && parse(*serialized.json).envelope==typed,"native reparent round trip");
     const auto valid=*serialized.json;
-    for (const std::string parent : {std::string("false"),std::string("{}"),std::string("{\"temporary_id\":\"P\",\"generation\":1}")}) {
+    for (const std::string& parent : {std::string("false"),std::string("{}"),std::string("{\"temporary_id\":\"P\",\"generation\":1}")}) {
       auto raw=valid; const auto start=raw.find("\"parent\":null");
       require(start!=std::string::npos,"literal parent wire field");
       raw.replace(start,13,"\"parent\":"+parent);
