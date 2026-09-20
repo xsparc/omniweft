@@ -470,7 +470,7 @@
     {
       "id": "PR-010",
       "title": "Bounded semantic and spatial queries",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M2",
       "depends_on": [
         "PR-007",
@@ -494,8 +494,15 @@
         "claimed_at": "2026-09-20",
         "plan": "docs/execution/PR-010-PLAN.md",
         "handoff": "docs/execution/PR-010-HANDOFF.md",
-        "review": "Independent architecture, source and oracle review complete; final schema finding resolved. Retained archive audit pending.",
-        "next_action": "Commit runtime candidate, retain clean-candidate CPU proof, audit archive, publish draft and verify hosted checks."
+        "review": "Independent architecture/source/oracle/archive reviews passed; all findings resolved.",
+        "next_action": "Inspect latest-head hosted Windows/Linux checks, then await actual maintainer review/certification and merge.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/16",
+        "implementation_sha": "3b32f812232608af0203d579a9cb89ce9f71173c",
+        "implementation_tree": "9fe30bc84a4d24a4304f805f487edbde7aa6bbe3",
+        "evidence": [
+          "docs/evidence/PR-010/README.md",
+          "docs/execution/PR-010-HANDOFF.md"
+        ]
       }
     },
     {
