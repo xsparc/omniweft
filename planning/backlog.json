@@ -420,7 +420,7 @@
     {
       "id": "PR-009",
       "title": "Hierarchy and reparenting",
-      "status": "in_review",
+      "status": "done",
       "milestone": "M2",
       "depends_on": [
         "PR-003"
@@ -443,21 +443,34 @@
         "claimed_at": "2026-09-19",
         "plan": "docs/execution/PR-009-PLAN.md",
         "handoff": "docs/execution/PR-009-HANDOFF.md",
-        "review": "Independent architecture/source/oracle/archive audits passed; current-head hosted checks and maintainer integration pending.",
-        "next_action": "Monitor current PR head, resolve concrete failures, then await maintainer review/certification and actual merge.",
+        "review": "Independent source/oracle/archive reviews passed; maintainer merge and all six required post-merge checks verified.",
+        "next_action": "Integrated; continue PR-010.",
         "pr_url": "https://github.com/xsparc/omniweft/pull/15",
         "implementation_sha": "9630e3bf8dd934d7b91b6f06d0e458272d5d6e1c",
         "implementation_tree": "64ac352e998819c76ae968d320089f73a5b97acd",
         "evidence": [
           "docs/evidence/PR-009/README.md",
           "docs/execution/PR-009-HANDOFF.md"
-        ]
+        ],
+        "merge_sha": "4996aca01f7bfa76cacc50eb75aa6ffe0f042b3a",
+        "merged_tree": "baabb21c90cdf3b9948a13e9001813d454dcd1a8",
+        "merged_at": "2026-09-19T12:09:48Z",
+        "delivery_sha": "f2b9d616584255c365e9eb1d375732ac6776392f",
+        "post_merge_checks": {
+          "passed": 6,
+          "failed": 0,
+          "runs": [
+            "https://github.com/xsparc/omniweft/actions/runs/35442078880",
+            "https://github.com/xsparc/omniweft/actions/runs/35442078864",
+            "https://github.com/xsparc/omniweft/actions/runs/35442078906"
+          ]
+        }
       }
     },
     {
       "id": "PR-010",
       "title": "Bounded semantic and spatial queries",
-      "status": "proposed",
+      "status": "in_progress",
       "milestone": "M2",
       "depends_on": [
         "PR-007",
@@ -472,7 +485,18 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/pr-010-bounded-queries",
+        "base_sha": "4996aca01f7bfa76cacc50eb75aa6ffe0f042b3a",
+        "claimed_at": "2026-09-20",
+        "plan": "docs/execution/PR-010-PLAN.md",
+        "handoff": "docs/execution/PR-010-HANDOFF.md",
+        "review": "Independent architecture, source and oracle review complete; final schema finding resolved. Retained archive audit pending.",
+        "next_action": "Commit runtime candidate, retain clean-candidate CPU proof, audit archive, publish draft and verify hosted checks."
+      }
     },
     {
       "id": "PR-011",

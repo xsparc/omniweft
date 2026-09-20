@@ -41,6 +41,12 @@ target_link_libraries(ow_transactions PUBLIC ow_world ow_commands)
 target_include_directories(ow_transactions PUBLIC include)
 ow_native_policy(ow_transactions)
 
+add_library(ow_observe STATIC src/observe.cpp)
+target_link_libraries(ow_observe PUBLIC ow_world)
+target_include_directories(ow_observe PUBLIC include)
+target_include_directories(ow_observe SYSTEM PRIVATE third_party)
+ow_native_policy(ow_observe)
+
 add_library(ow_policy STATIC src/policy.cpp)
 target_link_libraries(ow_policy PUBLIC ow_transactions)
 target_include_directories(ow_policy PUBLIC include)
@@ -51,8 +57,8 @@ target_link_libraries(ow_presentation PUBLIC ow_world)
 target_include_directories(ow_presentation PUBLIC include)
 ow_native_policy(ow_presentation)
 
-add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp)
-target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation)
+add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp src/observe_example.cpp)
+target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation ow_observe)
 target_include_directories(omniweft_examples SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_examples)
 
@@ -130,6 +136,28 @@ if(BUILD_TESTING)
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/protocol_oracle.py"
       --executable "$<TARGET_FILE:omniweft_examples>")
   set_tests_properties(protocol.native protocol.reject_invalid PROPERTIES TIMEOUT 60)
+
+  add_executable(observe_legacy_fixture tests/hierarchy_host_fixture.cpp)
+  target_link_libraries(observe_legacy_fixture PRIVATE ow_control)
+  target_compile_definitions(observe_legacy_fixture PRIVATE OW_TEST_TAGS=1)
+  ow_native_policy(observe_legacy_fixture)
+  add_executable(observe_policy_fixture tests/hierarchy_host_fixture.cpp)
+  target_link_libraries(observe_policy_fixture PRIVATE ow_control)
+  target_compile_definitions(observe_policy_fixture PRIVATE OW_TEST_TAGS=1 OW_TEST_POLICY=1)
+  ow_native_policy(observe_policy_fixture)
+  add_executable(observe_native_test tests/observe_native_test.cpp)
+  target_link_libraries(observe_native_test PRIVATE ow_observe ow_policy)
+  target_include_directories(observe_native_test SYSTEM PRIVATE third_party)
+  ow_native_policy(observe_native_test)
+  add_test(NAME observe.native COMMAND observe_native_test)
+  add_test(NAME observe.semantic_query
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/observe_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_examples>" --control "$<TARGET_FILE:omniweft_control>"
+      --agents "$<TARGET_FILE:omniweft_agents>" --policy "$<TARGET_FILE:omniweft_policy>"
+      --tag-legacy "$<TARGET_FILE:observe_legacy_fixture>" --tag-policy "$<TARGET_FILE:observe_policy_fixture>")
+  add_test(NAME observe.oracle_selftest
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/observe_oracle_test.py")
+  set_tests_properties(observe.native observe.semantic_query observe.oracle_selftest PROPERTIES TIMEOUT 120)
 
   add_executable(hierarchy_legacy_fixture tests/hierarchy_host_fixture.cpp)
   target_link_libraries(hierarchy_legacy_fixture PRIVATE ow_control)

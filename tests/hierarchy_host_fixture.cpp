@@ -10,6 +10,9 @@ int main() {
   e.operations={ow::commands::EntityCreate{"P","builtin.unit_cube"},
     ow::commands::EntityCreate{"C","builtin.unit_cube"},
     ow::commands::EntityReparent{ow::commands::TemporaryTarget{"C"},ow::commands::TemporaryTarget{"P"},"preserve_world"}};
+#ifdef OW_TEST_TAGS
+  e.operations.back()=ow::commands::EntityTagsSet{ow::commands::TemporaryTarget{"C"},{"red"}};
+#endif
   if (ow::transactions::Coordinator::apply_at_boundary(world,e).status!="committed") return 2;
   ow::control::Config config; config.max_slots=8;
   ow::control::Callbacks callbacks;

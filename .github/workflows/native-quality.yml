@@ -101,6 +101,12 @@ jobs:
           build="build/${{ runner.os == 'Windows' && 'windows-headless' || 'linux-headless' }}"
           suffix="${{ runner.os == 'Windows' && '.exe' || '' }}"
           python tests/hierarchy_oracle.py --executable "$build/omniweft_examples$suffix" --control "$build/omniweft_control$suffix" --agents "$build/omniweft_agents$suffix" --policy "$build/omniweft_policy$suffix" --hierarchy-legacy "$build/hierarchy_legacy_fixture$suffix" --hierarchy-policy "$build/hierarchy_policy_fixture$suffix" --native-test "$build/hierarchy_native_test$suffix" --evidence artifacts/hierarchy
+      - name: Record bounded native query and tag rejection evidence
+        shell: bash
+        run: |
+          build="build/${{ runner.os == 'Windows' && 'windows-headless' || 'linux-headless' }}"
+          suffix="${{ runner.os == 'Windows' && '.exe' || '' }}"
+          python tests/observe_oracle.py --executable "$build/omniweft_examples$suffix" --control "$build/omniweft_control$suffix" --agents "$build/omniweft_agents$suffix" --policy "$build/omniweft_policy$suffix" --tag-legacy "$build/observe_legacy_fixture$suffix" --tag-policy "$build/observe_policy_fixture$suffix" --native-test "$build/observe_native_test$suffix" --evidence artifacts/observe
       - name: Summarize retained evidence
         shell: bash
         run: |
@@ -115,7 +121,7 @@ jobs:
               summary["result"] = manifest["artifacts"]["result"]
               summary["executable"] = manifest["artifacts"]["executable"]
               print(json.dumps({"evidence": name, **summary}, sort_keys=True))
-          for name in ("sdk", "sdk-mutation", "agents", "agents-mutation", "agents-failure", "agents-owner", "policy", "policy-mutation", "hierarchy"):
+          for name in ("sdk", "sdk-mutation", "agents", "agents-mutation", "agents-failure", "agents-owner", "policy", "policy-mutation", "hierarchy", "observe"):
               manifest = json.loads((Path("artifacts") / name / "manifest.json").read_text(encoding="utf-8"))
               print(json.dumps({"evidence": name, "work_item": manifest["work_item"],
                                 "candidate_sha": manifest["candidate_sha"], "dirty": manifest["dirty"],
@@ -142,6 +148,7 @@ jobs:
             artifacts/policy/
             artifacts/policy-mutation/
             artifacts/hierarchy/
+            artifacts/observe/
             build/*/Testing/Temporary/LastTest.log
           if-no-files-found: error
           retention-days: 7

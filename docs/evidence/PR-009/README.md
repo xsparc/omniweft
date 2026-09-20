@@ -1,6 +1,6 @@
 # PR-009 hierarchy evidence
 
-Corrected runtime candidate: `9630e3bf8dd934d7b91b6f06d0e458272d5d6e1c`; tree `64ac352e998819c76ae968d320089f73a5b97acd`. Draft: [PR #15](https://github.com/xsparc/omniweft/pull/15). Source contract and verification history: [handoff](../../execution/PR-009-HANDOFF.md).
+Corrected runtime candidate: `9630e3bf8dd934d7b91b6f06d0e458272d5d6e1c`; tree `64ac352e998819c76ae968d320089f73a5b97acd`. Merged: [PR #15](https://github.com/xsparc/omniweft/pull/15). Source contract and verification history: [handoff](../../execution/PR-009-HANDOFF.md).
 
 ## Retained Windows CPU proof
 
@@ -25,3 +25,7 @@ Use a fresh evidence directory. `ctest` also runs the native suite, complete fix
 ## Limits
 
 Local Windows verified all 23 CTests across the full run and affected-test reruns described in the handoff. Local Linux is not_run; hosted Windows/Linux results are separate. This is a CPU-only feature: packet checks do not establish GPU or physics support. Native hierarchy is unsupported over the current SDK/policy profiles. No save parser, persistence or migration is implemented. Runtime uint64 exhaustion is not tested. Actual maintainer merge remains required for completion.
+
+## Verified integration
+
+PR #15 merged as 4996aca01f7bfa76cacc50eb75aa6ffe0f042b3a, tree baabb21c90cdf3b9948a13e9001813d454dcd1a8, matching reviewed delivery f2b9d616584255c365e9eb1d375732ac6776392f. All six delivery and all six required post-merge checks passed: [native](https://github.com/xsparc/omniweft/actions/runs/35442078880), [renderer](https://github.com/xsparc/omniweft/actions/runs/35442078864), [planning](https://github.com/xsparc/omniweft/actions/runs/35442078906). Evidence remains bound to corrected runtime9630e3b. PR-009 is done; PR-010 is now eligible.

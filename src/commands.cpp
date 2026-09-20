@@ -202,6 +202,20 @@ Envelope convert(const Json& value) {
       transform.rotation_xyzw = vector_value<4>(operation["rotation_xyzw"], child(path, "rotation_xyzw"));
       transform.scale = vector_value<3>(operation["scale"], child(path, "scale"));
       envelope.operations.emplace_back(std::move(transform));
+    } else if (type == "entity.tags.set") {
+      fields(operation, path, {"type", "target", "tags"});
+      const auto& labels = operation["tags"];
+      if (!labels.is_array() || labels.size() > 8)
+        reject("INVALID_SCHEMA", child(path, "tags"), "Expected at most eight unique bounded tags.");
+      EntityTagsSet tags;
+      tags.target = target_value(operation["target"], child(path, "target"));
+      for (const auto& label : labels) {
+        const auto tag_value = identifier(label, child(path, "tags"), 32);
+        if (std::find(tags.tags.begin(), tags.tags.end(), tag_value) != tags.tags.end())
+          reject("INVALID_SCHEMA", child(path, "tags"), "Tags must be unique.");
+        tags.tags.push_back(tag_value);
+      }
+      envelope.operations.emplace_back(std::move(tags));
     } else if (type == "entity.reparent") {
       fields(operation, path, {"type", "target", "parent", "mode"});
       if (!operation["mode"].is_string() ||
@@ -275,9 +289,17 @@ SerializeResult serialize(const Envelope& envelope) {
         } else if constexpr (std::is_same_v<Type, EntityDelete>) {
           value["operations"].push_back({{"type", "entity.delete"}, {"target", target_json(operation.target)},
             {"child_policy", operation.child_policy}});
-        } else {
+        } else if constexpr (std::is_same_v<Type, EntityReparent>) {
           value["operations"].push_back({{"type", "entity.reparent"}, {"target", target_json(operation.target)},
             {"parent", operation.parent ? target_json(*operation.parent) : Json(nullptr)}, {"mode", operation.mode}});
+        } else {
+          if (operation.tags.size() > 8)
+            reject("INVALID_SCHEMA", child(path, "tags"), "Expected at most eight unique bounded tags.");
+          for (const auto& tag : operation.tags)
+            if (tag.size() > 32)
+              reject("INVALID_SCHEMA", child(path, "tags"), "Tag length exceeds the native bound.");
+          value["operations"].push_back({{"type", "entity.tags.set"}, {"target", target_json(operation.target)},
+                                        {"tags", operation.tags}});
         }
       }, envelope.operations[index]);
     }

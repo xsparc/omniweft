@@ -10,7 +10,9 @@ PR-007 scoped capabilities and resource budgets are merged in [PR #11](https://g
 
 PR-008 adds the verified [offline room showcase](examples/showcase-ai_blocks.md), integrated in PR #13 with Windows physical-GPU evidence and passing Windows/Linux hosted checks. See [its handoff](docs/execution/PR-008-HANDOFF.md).
 
-PR-009 is an implemented candidate for [native hierarchy and reparenting](examples/objects-hierarchy.md); its [handoff](docs/execution/PR-009-HANDOFF.md) tracks verification and pending maintainer integration. Remote SDK hierarchy remains unsupported.
+PR-009 is merged with verified Windows/Linux checks for [native hierarchy and reparenting](examples/objects-hierarchy.md); its [handoff](docs/execution/PR-009-HANDOFF.md) records matching merge-tree and post-merge verification. Remote SDK hierarchy remains unsupported.
+
+PR-010 adds bounded [native tag/AABB queries](examples/observe-semantic_query.md) under review. Its [handoff](docs/execution/PR-010-HANDOFF.md) records verification and delivery status; remote SDK query support remains deferred.
 
 ## Start here
 
