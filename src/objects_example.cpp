@@ -128,7 +128,8 @@ Json snapshot_json(const world::Snapshot& snapshot) {
       entity = {{"prefab", value.prefab}, {"authoring_revision", value.authoring_revision},
         {"transform", {{"position_m", value.transform.position_m},
           {"rotation_xyzw", value.transform.rotation_xyzw}, {"scale", value.transform.scale}}}};
-      if (snapshot.format_version == 2) {
+      if (snapshot.format_version >= 2) {
+        if (snapshot.format_version == 3) entity["tags"] = value.tags;
         entity["parent"] = nullptr;
         entity["local_transform"] = nullptr;
         if (value.parent) {

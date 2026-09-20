@@ -26,6 +26,7 @@ struct Entity {
   Transform transform;  // Cached world-space TRS, including for parented entities.
   std::optional<ParentIdentity> parent;
   Transform local_transform;  // Authored local TRS only while parent is present.
+  std::vector<std::string> tags;  // Sorted bounded semantic labels; never authority.
   bool operator==(const Entity&) const = default;
 };
 struct Slot {

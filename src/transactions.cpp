@@ -258,7 +258,7 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
             slot = std::prev(staged.slots.end());
           }
           else if (guard) guard->create(static_cast<std::size_t>(slot - staged.slots.begin()), index);
-          slot->entity = world::Entity{operation.prefab, next_revision, {}, std::nullopt, {}};
+          slot->entity = world::Entity{operation.prefab, next_revision, {}, std::nullopt, {}, {}};
           names.emplace(operation.temporary_id, commands::EntityTarget{
             staged.world_id, slot->entity_uuid, slot->generation});
           created.push_back({operation.temporary_id, staged.world_id, slot->entity_uuid, slot->generation});
@@ -272,6 +272,11 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
             slot.entity->local_transform = relative(parent->entity->transform, replacement, path, index);
           slot.entity->transform = replacement;
           subtree(staged, slot, next_revision, path, index);
+        } else if constexpr (std::is_same_v<Type, commands::EntityTagsSet>) {
+          auto& slot = resolve(staged, operation.target, names, path + "/target", index);
+          slot.entity->tags = operation.tags;
+          std::sort(slot.entity->tags.begin(), slot.entity->tags.end());
+          slot.entity->authoring_revision = next_revision;
         } else if constexpr (std::is_same_v<Type, commands::EntityReparent>) {
           auto& slot = resolve(staged, operation.target, names, path + "/target", index);
           auto* parent = operation.parent ? &resolve(staged, *operation.parent, names, path + "/parent", index) : nullptr;
@@ -293,6 +298,8 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
     }
     staged.format_version = std::any_of(staged.slots.begin(), staged.slots.end(),
       [](const auto& slot) { return slot.entity && slot.entity->parent; }) ? 2U : 1U;
+    if (std::any_of(staged.slots.begin(), staged.slots.end(),
+        [](const auto& slot) { return slot.entity && !slot.entity->tags.empty(); })) staged.format_version = 3;
     if (guard) guard->finish(staged);
   } catch (const Error& error) {
     // Rejection discards every staged write and provisional identity binding.

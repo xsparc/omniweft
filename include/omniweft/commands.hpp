@@ -69,7 +69,12 @@ struct EntityReparent {
   std::string mode = "preserve_world";
   bool operator==(const EntityReparent&) const = default;
 };
-using Operation = std::variant<EntityCreate, TransformSet, EntityDelete, EntityReparent>;
+struct EntityTagsSet {
+  Target target;
+  std::vector<std::string> tags;
+  bool operator==(const EntityTagsSet&) const = default;
+};
+using Operation = std::variant<EntityCreate, TransformSet, EntityDelete, EntityReparent, EntityTagsSet>;
 struct Envelope {
   std::string protocol_version = "0.1";
   std::string world_id;

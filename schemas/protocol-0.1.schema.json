@@ -105,6 +105,9 @@
           },
           {
             "$ref": "#/$defs/reparent"
+          },
+          {
+            "$ref": "#/$defs/tagsSet"
           }
         ]
       }
@@ -306,6 +309,40 @@
             "preserve_world",
             "preserve_local"
           ]
+        }
+      }
+    },
+    "tagsSet": {
+      "description": "Native-only bounded semantic metadata; tags do not grant authority. Existing remote/policy profiles reject this operation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "target",
+        "tags"
+      ],
+      "properties": {
+        "type": {
+          "const": "entity.tags.set"
+        },
+        "target": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/temporaryTarget"
+            },
+            {
+              "$ref": "#/$defs/durableTarget"
+            }
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,31}(?![\\s\\S])"
+          }
         }
       }
     }
