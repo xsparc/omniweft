@@ -33,6 +33,9 @@ struct Options {
 Options options_from(int argc,char* argv[]) {
   if(argc>19 || argc%2==0) throw std::invalid_argument("INVALID_CLI");
   Options result;result.control.max_slots=8;
+#ifdef OW_CONTENTION_PROFILE
+  result.control.retained_retries=true;
+#endif
   std::unordered_set<std::string_view> seen;
   for(int index=1;index<argc;index+=2) {
     const std::string_view key(argv[index]),value(argv[index+1]);

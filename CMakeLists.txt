@@ -41,6 +41,11 @@ target_link_libraries(ow_transactions PUBLIC ow_world ow_commands)
 target_include_directories(ow_transactions PUBLIC include)
 ow_native_policy(ow_transactions)
 
+add_library(ow_retry STATIC src/retry.cpp)
+target_link_libraries(ow_retry PUBLIC ow_transactions)
+target_include_directories(ow_retry PUBLIC include)
+ow_native_policy(ow_retry)
+
 add_library(ow_observe STATIC src/observe.cpp)
 target_link_libraries(ow_observe PUBLIC ow_world)
 target_include_directories(ow_observe PUBLIC include)
@@ -57,14 +62,15 @@ target_link_libraries(ow_presentation PUBLIC ow_world)
 target_include_directories(ow_presentation PUBLIC include)
 ow_native_policy(ow_presentation)
 
-add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp src/observe_example.cpp)
-target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation ow_observe)
+add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp src/observe_example.cpp src/contention_example.cpp)
+target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation ow_observe ow_retry ow_policy)
 target_include_directories(omniweft_examples SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_examples)
 
 find_package(Threads REQUIRED)
+target_link_libraries(omniweft_examples PRIVATE Threads::Threads)
 add_library(ow_control STATIC src/control.cpp)
-target_link_libraries(ow_control PUBLIC ow_commands ow_policy PRIVATE Threads::Threads)
+target_link_libraries(ow_control PUBLIC ow_commands ow_policy ow_retry PRIVATE Threads::Threads)
 target_include_directories(ow_control PUBLIC include)
 target_include_directories(ow_control SYSTEM PRIVATE third_party)
 if(WIN32)
@@ -84,6 +90,12 @@ add_executable(omniweft_policy src/policy_main.cpp)
 target_link_libraries(omniweft_policy PRIVATE ow_control ow_policy ow_simulation ow_presentation Threads::Threads)
 target_include_directories(omniweft_policy SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_policy)
+
+add_executable(omniweft_contention src/policy_main.cpp)
+target_link_libraries(omniweft_contention PRIVATE ow_control ow_policy ow_simulation ow_presentation Threads::Threads)
+target_include_directories(omniweft_contention SYSTEM PRIVATE third_party)
+target_compile_definitions(omniweft_contention PRIVATE OW_CONTENTION_PROFILE=1)
+ow_native_policy(omniweft_contention)
 
 add_executable(omniweft_agents src/agents_main.cpp)
 target_link_libraries(omniweft_agents PRIVATE ow_control ow_transactions ow_presentation ow_simulation Threads::Threads)
@@ -136,6 +148,21 @@ if(BUILD_TESTING)
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/protocol_oracle.py"
       --executable "$<TARGET_FILE:omniweft_examples>")
   set_tests_properties(protocol.native protocol.reject_invalid PROPERTIES TIMEOUT 60)
+
+  add_executable(retry_native_test tests/retry_native_test.cpp)
+  target_link_libraries(retry_native_test PRIVATE ow_retry Threads::Threads)
+  ow_native_policy(retry_native_test)
+  add_test(NAME agents.retry_native COMMAND retry_native_test)
+  set_tests_properties(agents.retry_native PROPERTIES TIMEOUT 30)
+  add_test(NAME agents.contention
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/contention_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_examples>" --host "$<TARGET_FILE:omniweft_contention>")
+  add_test(NAME agents.contention_oracle_selftest
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/contention_oracle_test.py")
+  add_test(NAME agents.retry_sdk
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/retry_sdk_test.py")
+  set_tests_properties(agents.contention agents.contention_oracle_selftest agents.retry_sdk PROPERTIES TIMEOUT 120)
+
 
   add_executable(observe_legacy_fixture tests/hierarchy_host_fixture.cpp)
   target_link_libraries(observe_legacy_fixture PRIVATE ow_control)

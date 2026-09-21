@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 #include "observe_example.hpp"
+#include "contention_example.hpp"
 #if !defined(_M_X64) && !defined(__x86_64__)
 #error "Omniweft bootstrap requires an x86_64 compiler target; select x64 build tools."
 #endif
@@ -155,6 +156,9 @@ void save_result(const Options& options, const BootstrapSession& session) {
 
 int main(int argc, char* argv[]) {
   for (int index = 1; index + 1 < argc; ++index) {
+    if (std::string_view(argv[index]) == "--example" &&
+        std::string_view(argv[index + 1]) == "agents.contention")
+      return run_contention_example(argc, argv);
     if (std::string_view(argv[index]) == "--example" &&
         std::string_view(argv[index + 1]) == "observe.semantic_query")
       return run_observe_example(argc, argv);

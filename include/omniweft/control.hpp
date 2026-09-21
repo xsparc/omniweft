@@ -19,6 +19,7 @@ struct Config {
   std::uint32_t session_ttl_ms = 30000;
   std::uint32_t max_runtime_ms = 60000;
   std::uint32_t max_requests = 1024;
+  bool retained_retries = false; // Explicit policy.retry.v1 host opt-in only.
 };
 struct PresentationStatus {
   bool enabled = false, ready = false;

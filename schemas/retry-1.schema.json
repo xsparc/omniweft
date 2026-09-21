@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/xsparc/omniweft/blob/main/schemas/retry-1.schema.json",
+  "title": "Omniweft opt-in policy.retry.v1 control extension",
+  "description": "Volatile canonical-envelope receipt reuse. Authentication, active epochs, live policy leases, high-water marks, fixed TTL and semantic checks are enforced by the native host. Existing policy grants and transaction/observation shapes are unchanged.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/PrivateDescriptor"
+    },
+    {
+      "$ref": "#/$defs/Capabilities"
+    },
+    {
+      "$ref": "#/$defs/AdmissionError"
+    }
+  ],
+  "$defs": {
+    "PrivateDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "profile",
+        "principals"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 2
+        },
+        "profile": {
+          "const": "policy.retry.v1"
+        },
+        "principals": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "west",
+            "east"
+          ],
+          "properties": {
+            "west": {
+              "$ref": "control-0.1.schema.json#/$defs/PrivateDescriptor"
+            },
+            "east": {
+              "$ref": "control-0.1.schema.json#/$defs/PrivateDescriptor"
+            }
+          }
+        }
+      }
+    },
+    "Capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "epoch",
+        "next_sequence",
+        "world_id",
+        "world_revision",
+        "operations",
+        "limits",
+        "admission",
+        "durability",
+        "retry_mode",
+        "retry_limits"
+      ],
+      "properties": {
+        "protocol_version": {
+          "const": "0.1"
+        },
+        "epoch": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "next_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "world_id": {
+          "const": "workshop"
+        },
+        "world_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "operations": {
+          "const": [
+            "entity.create",
+            "transform.set",
+            "entity.delete"
+          ]
+        },
+        "limits": {
+          "$ref": "control-0.1.schema.json#/$defs/Limits"
+        },
+        "admission": {
+          "const": "synchronous"
+        },
+        "durability": {
+          "const": "volatile"
+        },
+        "retry_mode": {
+          "const": "retained_receipts_v1"
+        },
+        "retry_limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "receipts_per_principal",
+            "canonical_payload_bytes",
+            "receipt_field_bytes",
+            "receipt_ttl_ms",
+            "principal_count"
+          ],
+          "properties": {
+            "receipts_per_principal": {
+              "type": "integer",
+              "const": 4
+            },
+            "canonical_payload_bytes": {
+              "type": "integer",
+              "const": 16384
+            },
+            "receipt_field_bytes": {
+              "type": "integer",
+              "const": 8192
+            },
+            "receipt_ttl_ms": {
+              "type": "integer",
+              "const": 2000
+            },
+            "principal_count": {
+              "type": "integer",
+              "const": 2
+            }
+          }
+        }
+      }
+    },
+    "AdmissionError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_version",
+        "status",
+        "error"
+      ],
+      "properties": {
+        "protocol_version": {
+          "const": "0.1"
+        },
+        "status": {
+          "const": "rejected"
+        },
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "path"
+          ],
+          "properties": {
+            "code": {
+              "enum": [
+                "NOT_AUTHORIZED",
+                "SESSION_EXPIRED",
+                "INVALID_SCHEMA",
+                "UNSUPPORTED_VERSION",
+                "BUDGET_EXCEEDED",
+                "REQUIRES_RESYNC",
+                "NOT_FOUND",
+                "UNSUPPORTED_OPERATION",
+                "IDEMPOTENCY_MISMATCH"
+              ]
+            },
+            "path": {
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -16,3 +16,6 @@ __all__ = ["ApiError", "Capabilities", "Client", "ConnectionInfo", "CreateCube",
 
 from .policy import PolicyClient, PolicyLimits, PolicySession, PolicyStatus, PolicyUsage
 __all__ += ["PolicyClient", "PolicyLimits", "PolicySession", "PolicyStatus", "PolicyUsage"]
+
+from .retry import PreparedTransaction, RetryCapabilities, RetryLimits, RetryPolicyClient, RetryPolicySession
+__all__ += ["PreparedTransaction", "RetryCapabilities", "RetryLimits", "RetryPolicyClient", "RetryPolicySession"]

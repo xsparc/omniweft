@@ -1,6 +1,6 @@
 # observe.semantic_query
 
-Status: **native implementation under review; not merged**. Work item: **PR-010 — Bounded semantic and spatial queries**.
+Status: **merged; Windows/Linux CPU evidence verified**. Work item: **PR-010 — Bounded semantic and spatial queries**.
 
 Dependencies: PR-007, PR-009. Validation lanes: cpu.
 
