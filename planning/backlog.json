@@ -521,7 +521,7 @@
     {
       "id": "PR-011",
       "title": "Concurrency and idempotent retries",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M2",
       "depends_on": [
         "PR-007",
@@ -545,8 +545,28 @@
         "claimed_at": "2026-09-21",
         "plan": "docs/execution/PR-011-PLAN.md",
         "handoff": "docs/execution/PR-011-HANDOFF.md",
-        "review": "Independent architecture/source/oracle/schema/CI review closed; all findings resolved; retained archive audit pending.",
-        "next_action": "Commit locally verified runtime, retain and independently audit exact-candidate evidence, then publish authorized draft and verify hosted checks."
+        "review": "Independent architecture/source/oracle/schema/CI review closed; final archive audit passed 1582 static checks with all findings resolved.",
+        "next_action": "Implementation/evidence complete. Await maintainer review/certification and manual merge with all latest-head checks passing, then verify matching merge tree and required post-merge jobs before PR-012.",
+        "implementation_sha": "ceaac8fc9d85fb4a8e2ed37f60f43387e26af5f6",
+        "implementation_tree": "a5cf5a43cd6f7b5fa94562f505274f3811bafead",
+        "evidence": [
+          "docs/evidence/PR-011/README.md",
+          "docs/execution/PR-011-HANDOFF.md"
+        ],
+        "pr_url": "https://github.com/xsparc/omniweft/pull/17",
+        "runtime_checks": {
+          "candidate_sha": "ceaac8fc9d85fb4a8e2ed37f60f43387e26af5f6",
+          "hosted_checkout": "8578fdebf037df058247f15dcc010cd33a237046",
+          "tree": "a5cf5a43cd6f7b5fa94562f505274f3811bafead",
+          "passed": 6,
+          "failed": 0,
+          "runs": [
+            "https://github.com/xsparc/omniweft/actions/runs/35584484901",
+            "https://github.com/xsparc/omniweft/actions/runs/35584484865",
+            "https://github.com/xsparc/omniweft/actions/runs/35584484890"
+          ]
+        },
+        "latest_checks_url": "https://github.com/xsparc/omniweft/pull/17/checks"
       }
     },
     {
