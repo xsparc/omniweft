@@ -12,7 +12,9 @@ PR-008 adds the verified [offline room showcase](examples/showcase-ai_blocks.md)
 
 PR-009 is merged with verified Windows/Linux checks for [native hierarchy and reparenting](examples/objects-hierarchy.md); its [handoff](docs/execution/PR-009-HANDOFF.md) records matching merge-tree and post-merge verification. Remote SDK hierarchy remains unsupported.
 
-PR-010 adds bounded [native tag/AABB queries](examples/observe-semantic_query.md) under review. Its [handoff](docs/execution/PR-010-HANDOFF.md) records verification and delivery status; remote SDK query support remains deferred.
+PR-010 adds merged, verified [native tag/AABB queries](examples/observe-semantic_query.md). Its [handoff](docs/execution/PR-010-HANDOFF.md) records verification and delivery status; remote SDK query support remains deferred.
+
+PR-011 adds [concurrent proposals and retained retries](examples/agents-contention.md) under review through an explicit opt-in policy profile. See [its handoff](docs/execution/PR-011-HANDOFF.md).
 
 ## Start here
 

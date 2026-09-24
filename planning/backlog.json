@@ -470,7 +470,7 @@
     {
       "id": "PR-010",
       "title": "Bounded semantic and spatial queries",
-      "status": "in_review",
+      "status": "done",
       "milestone": "M2",
       "depends_on": [
         "PR-007",
@@ -494,21 +494,34 @@
         "claimed_at": "2026-09-20",
         "plan": "docs/execution/PR-010-PLAN.md",
         "handoff": "docs/execution/PR-010-HANDOFF.md",
-        "review": "Independent architecture/source/oracle/archive reviews passed; all findings resolved.",
-        "next_action": "Inspect latest-head hosted Windows/Linux checks, then await actual maintainer review/certification and merge.",
+        "review": "Independent source/oracle/archive reviews passed. Post-merge stale-handoff review finding reconciled with actual successful hosted runs and merge.",
+        "next_action": "Integrated; continue PR-011.",
         "pr_url": "https://github.com/xsparc/omniweft/pull/16",
         "implementation_sha": "3b32f812232608af0203d579a9cb89ce9f71173c",
         "implementation_tree": "9fe30bc84a4d24a4304f805f487edbde7aa6bbe3",
         "evidence": [
           "docs/evidence/PR-010/README.md",
           "docs/execution/PR-010-HANDOFF.md"
-        ]
+        ],
+        "merge_sha": "921c167980a0c2459c40e74d8d084e84437a0ce0",
+        "merged_tree": "6d102b616069c5d548553f434debd445a3c8e9e9",
+        "merged_at": "2026-09-20T14:34:42Z",
+        "delivery_sha": "f1be31766b0635999a9c3b7679d833be2fcb4bc4",
+        "post_merge_checks": {
+          "passed": 6,
+          "failed": 0,
+          "runs": [
+            "https://github.com/xsparc/omniweft/actions/runs/35516914006",
+            "https://github.com/xsparc/omniweft/actions/runs/35516914056",
+            "https://github.com/xsparc/omniweft/actions/runs/35516914084"
+          ]
+        }
       }
     },
     {
       "id": "PR-011",
       "title": "Concurrency and idempotent retries",
-      "status": "proposed",
+      "status": "in_review",
       "milestone": "M2",
       "depends_on": [
         "PR-007",
@@ -523,7 +536,38 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/pr-011-idempotent-retries",
+        "base_sha": "921c167980a0c2459c40e74d8d084e84437a0ce0",
+        "claimed_at": "2026-09-21",
+        "plan": "docs/execution/PR-011-PLAN.md",
+        "handoff": "docs/execution/PR-011-HANDOFF.md",
+        "review": "Independent architecture/source/oracle/schema/CI review closed; final archive audit passed 1582 static checks with all findings resolved.",
+        "next_action": "Implementation/evidence complete. Await maintainer review/certification and manual merge with all latest-head checks passing, then verify matching merge tree and required post-merge jobs before PR-012.",
+        "implementation_sha": "ceaac8fc9d85fb4a8e2ed37f60f43387e26af5f6",
+        "implementation_tree": "a5cf5a43cd6f7b5fa94562f505274f3811bafead",
+        "evidence": [
+          "docs/evidence/PR-011/README.md",
+          "docs/execution/PR-011-HANDOFF.md"
+        ],
+        "pr_url": "https://github.com/xsparc/omniweft/pull/17",
+        "runtime_checks": {
+          "candidate_sha": "ceaac8fc9d85fb4a8e2ed37f60f43387e26af5f6",
+          "hosted_checkout": "8578fdebf037df058247f15dcc010cd33a237046",
+          "tree": "a5cf5a43cd6f7b5fa94562f505274f3811bafead",
+          "passed": 6,
+          "failed": 0,
+          "runs": [
+            "https://github.com/xsparc/omniweft/actions/runs/35584484901",
+            "https://github.com/xsparc/omniweft/actions/runs/35584484865",
+            "https://github.com/xsparc/omniweft/actions/runs/35584484890"
+          ]
+        },
+        "latest_checks_url": "https://github.com/xsparc/omniweft/pull/17/checks"
+      }
     },
     {
       "id": "PR-012",

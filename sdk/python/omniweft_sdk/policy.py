@@ -101,6 +101,8 @@ class PolicyClient(Client):
 
 
 class PolicySession(NativeSession):
+    _profile = "policy.v1"
+
     def __init__(self, executable, *, session_ttl_ms=30000, max_runtime_ms=60000, max_requests=1024,
                  gpu=False, interactive=False, output=None):
         super().__init__(executable, session_ttl_ms=session_ttl_ms, max_slots=8,
@@ -131,7 +133,7 @@ class PolicySession(NativeSession):
                 raise ProtocolError()
             wrapper = fields(decode(data[:-1]), {"schema_version", "profile", "principals"})
             integer(wrapper["schema_version"], 2, 2)
-            if wrapper["profile"] != "policy.v1":
+            if wrapper["profile"] != self._profile:
                 raise ProtocolError()
             descriptors = fields(wrapper["principals"], {"west", "east"})
             parsed = {}

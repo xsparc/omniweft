@@ -1,0 +1,19 @@
+# PR-011: concurrent proposals and retained retries
+
+Adopted scope: [authorization](AUTHORIZATION.md), [agents.contention](../../examples/agents-contention.md), ADR-0002. Dependencies PR-007 and PR-010 are integrated. Branch `codex/pr-011-idempotent-retries` from verified merge `921c167980a0c2459c40e74d8d084e84437a0ce0`. Root owns all writes; independent read-only architecture/source/evidence review is required.
+
+## Reviewed bounded contract
+
+Add an explicit opt-in policy-backed retained-receipt profile. Preserve the legacy control, agents and policy.v1 profile and their resync_only behavior, grants, quotas, leases, deadlines and schemas. The new host shares the existing authenticated two-principal policy owner; one serialized boundary orders admitted proposals. Two principal proposals from one revision produce exactly one commit and one explicit conflict, with no silent last-writer-wins.
+
+Keep a fixed per-principal ring of four admitted canonical typed payloads and volatile receipts, with a 2,000 ms fixed absolute retention deadline. Host metadata content is capped at 16,384 canonical payload bytes and 8,192 receipt string-field bytes per entry; this is separate from unchanged policy world quotas and excludes allocator/container overhead. Canonical bounded payload preparation and cache reservation precede sequence consumption. Once consumed, a key cannot execute again: identical retained payload returns the original receipt; changed retained payload returns IDEMPOTENCY_MISMATCH; missing/expired/compacted admitted sequences require resync. Callback/serialization failure must not permit replay as new. Session rotation clears receipts but rejects the retired epoch; active epochs remain server-issued. Same-principal ingress limits remain in force; a concurrently overlapping retry may hit existing admission quota and then retry the same key after release.
+
+Expose exact limits through opt-in capabilities. New SDK support must negotiate this profile explicitly, preserve prepared request identity across explicit retries and never silently repeat an uncertain edit with a new key. Existing SDK clients must continue rejecting unsupported profiles. No persistence or crash-safe exactly-once claim; restart invalidates authority. No changes to policy grants, dependencies, save formats, GPU or physics.
+
+## Verification
+
+Provide the runnable agents.contention example, an independent literal oracle and adversarial native/real-transport tests. Cover concurrent same-revision proposals, byte-identical receipt reuse after later changes, payload mismatch, fixed expiry without renewal, receipt-window compaction, old-epoch rejection, valid fresh-sequence recovery and final world state/allocator/accounting. Prove a response failure can be reconciled with the same retained key. Include strict SDK/profile validation, legacy compatibility and bounded resource evidence. Real deadline tests use scheduling-tolerant intervals; no private fake-clock world mutation.
+
+Run Windows/Linux CPU checks and planning validation. Retain only independently audited fixture data, source/artifact hashes and generic tool versions. Public artifacts exclude credentials/epochs, personal details/paths, raw streams and executable bytes. Update handoff/backlog with actual run IDs before delivery and after integration; historical pending-check wording must not remain the authoritative next action. Publish a draft; maintainer review/certification and actual merge remain required. Keep PR-012 proposed until integration.
+
+Independent architecture/source review accepted this opt-in contract. Example review required live lease acquisition before native replay and explicit portable thread linkage; both are corrected. Real SDK replay of an older receipt after later admissions is included. Explicit prepare/submit handles are required for retry after convenience-call uncertainty.

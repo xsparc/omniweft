@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 #include "omniweft/control.hpp"
+#include "omniweft/retry.hpp"
 #include <nlohmann/json.hpp>
 #include <algorithm>
 #include <atomic>
@@ -751,14 +752,14 @@ class PolicyHost {
       for (std::size_t i=0;i<policy::principal_count;++i) {
         auto& session=sessions_[i];
         session.token=random_secret(); session.epoch=random_secret(); session.sequence=1;
-        session.exhausted=false; session.expires=Clock::now()+Milliseconds(config_.session_ttl_ms);
+        session.exhausted=false; session.retries.reset(); session.expires=Clock::now()+Milliseconds(config_.session_ttl_ms);
         descriptors[std::string(policy::grant(i).principal)]={{"schema_version",1},{"protocol_version","0.1"},
           {"host","127.0.0.1"},{"port",port_},{"token",session.token},{"epoch",session.epoch},
           {"session_ttl_ms",config_.session_ttl_ms}};
       }
     }
     if (Clock::now() >= deadline) return false;
-    pipes_.descriptor({{"schema_version",2},{"profile","policy.v1"},{"principals",std::move(descriptors)}},2048);
+    pipes_.descriptor({{"schema_version",2},{"profile",config_.retained_retries?"policy.retry.v1":"policy.v1"},{"principals",std::move(descriptors)}},2048);
     return true;
   }
   bool host_commands(Time deadline) {
@@ -831,7 +832,11 @@ class PolicyHost {
               {"max_response_bytes",max_response_bytes},{"max_operations",commands::max_operations},
               {"max_slots",config_.max_slots},{"request_timeout_ms",request_timeout.count()},
               {"session_ttl_ms",config_.session_ttl_ms}};
-            response["admission"]="synchronous";response["durability"]="volatile";response["retry_mode"]="resync_only";
+            response["admission"]="synchronous";response["durability"]="volatile";
+            response["retry_mode"]=config_.retained_retries?"retained_receipts_v1":"resync_only";
+            if(config_.retained_retries) response["retry_limits"]={{"receipts_per_principal",retry::window_size},
+              {"canonical_payload_bytes",retry::payload_limit},{"receipt_field_bytes",retry::receipt_field_limit},
+              {"receipt_ttl_ms",retry::receipt_lifetime.count()},{"principal_count",policy::principal_count}};
           } else {
             const auto& grant=policy::grant(principal);
             response["policy"]={{"schema_version",1},{"principal",grant.principal},{"read_scope","whole_world"},
@@ -899,13 +904,25 @@ class PolicyHost {
           auto& session=sessions_[principal];
           if(!same_secret(envelope.idempotency.epoch,session.epoch))
             reject(409,"REQUIRES_RESYNC","/idempotency/epoch");
-          if(session.exhausted || envelope.idempotency.sequence!=session.sequence)
-            reject(409,"REQUIRES_RESYNC","/idempotency/sequence");
-          if(session.sequence==std::numeric_limits<std::uint64_t>::max()) session.exhausted=true;
-          else ++session.sequence;
-          const auto receipt=callbacks_.apply(envelope,*lease);
-          response={{"protocol_version","0.1"},{"epoch",session.epoch},{"next_sequence",session.sequence},
-            {"receipt",receipt_json(receipt)}};
+          if(config_.retained_retries) {
+            const auto canonical=commands::serialize(envelope);
+            if(!canonical.json) reject(400,"INVALID_SCHEMA","/operations");
+            const auto result=session.retries.execute(envelope.idempotency.sequence,*canonical.json,
+              [&]{return callbacks_.apply(envelope,*lease);});
+            session.sequence=session.retries.next_sequence();
+            if(!result.receipt) reject(result.code==std::string_view("BUDGET_EXCEEDED")?413:409,
+                                      result.code,"/idempotency/sequence");
+            response={{"protocol_version","0.1"},{"epoch",session.epoch},{"next_sequence",session.sequence},
+              {"receipt",receipt_json(*result.receipt)}};
+          } else {
+            if(session.exhausted || envelope.idempotency.sequence!=session.sequence)
+              reject(409,"REQUIRES_RESYNC","/idempotency/sequence");
+            if(session.sequence==std::numeric_limits<std::uint64_t>::max()) session.exhausted=true;
+            else ++session.sequence;
+            const auto receipt=callbacks_.apply(envelope,*lease);
+            response={{"protocol_version","0.1"},{"epoch",session.epoch},{"next_sequence",session.sequence},
+              {"receipt",receipt_json(receipt)}};
+          }
         });
       }
       respond(socket,200,response,deadline);
@@ -915,7 +932,7 @@ class PolicyHost {
     }
   }
  private:
-  struct Session {std::string token,epoch;std::uint64_t sequence=1;bool exhausted=false;Time expires{};};
+  struct Session {std::string token,epoch;std::uint64_t sequence=1;bool exhausted=false;Time expires{};retry::Window retries;};
   Config config_;
   const PolicyCallbacks& callbacks_;
   PrivatePipes& pipes_;

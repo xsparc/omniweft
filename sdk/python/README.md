@@ -78,3 +78,26 @@ PR-007's opt-in PolicySession launches omniweft_policy with two independent priv
 PolicyClient.policy_status() returns an immutable version 1 profile with host-issued write bounds, an explicit whole-world read grant, limits and usage. These effective limits are separate from unchanged legacy global capabilities. PolicyClient.resync_policy() recovers revision/sequence after an uncertain outcome or oversized observation without retrying mutations. Renewal rotates both principals' credentials and retains world/quota sponsorship. Default NativeSession behavior remains unchanged.
 
 See [policy.denied_edits](../../examples/policy-denied_edits.md) for accounting, response-size limits, request recovery and commands.
+
+
+## Opt-in retained receipt retries
+
+PR-011 adds `RetryPolicySession` for `omniweft_contention` and `RetryPolicyClient`. These explicitly negotiate `policy.retry.v1`; existing clients retain `resync_only` behavior.
+
+```python
+from omniweft_sdk import RetryPolicySession, CreateCube, SetTransform, TemporaryTarget, Transform
+
+with RetryPolicySession("build/windows-headless/omniweft_contention.exe") as host:
+    client = host.client("east")
+    state = client.resync_policy()
+    request = client.prepare([
+        CreateCube("A"),
+        SetTransform(TemporaryTarget("A"), Transform(position_m=(3, 0, 0))),
+    ], state.world_revision)
+    receipt = client.submit(request)
+    same_receipt = client.submit(request)
+```
+
+Keep `request` to explicitly retry `submit(request)` after `OutcomeUnknown`; no automatic retry occurs. A different client or renewed session cannot use the handle. The four-entry, two-second window is bounded and volatile; `REQUIRES_RESYNC` means inspect state and deliberately call `resync()` or `resync_policy()` before deciding on a new proposal. Reads alone do not clear a pending request. A replayed receipt may describe an earlier world revision while the admission sequence has advanced. `transact()` is convenient for one attempt, but does not return its prepared handle on failure: explicitly resynchronize before another mutation.
+
+See [agents.contention](../../examples/agents-contention.md) for limits, concurrent proposals, loss recovery and independent evidence. No crash-safe exactly-once or persistence guarantee is provided.

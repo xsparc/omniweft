@@ -97,6 +97,8 @@ class _BoundedResponse(http.client.HTTPResponse):
 
 
 class Client:
+    _error_codes = ERROR_CODES
+
     def __init__(self, info: ConnectionInfo, *, timeout_ms: int = 3000) -> None:
         if not isinstance(info, ConnectionInfo):
             raise ProtocolError()
@@ -192,7 +194,7 @@ class Client:
                 error = fields(value, {"protocol_version", "status", "error"})
                 item = fields(error["error"], {"code", "path"})
                 if (error["protocol_version"] != "0.1" or error["status"] != "rejected"
-                        or item["code"] not in ERROR_CODES or not isinstance(item["path"], str)
+                        or item["code"] not in self._error_codes or not isinstance(item["path"], str)
                         or len(item["path"]) > 256 or not 400 <= response.status < 500):
                     raise ProtocolError()
                 if item["code"] == "REQUIRES_RESYNC":

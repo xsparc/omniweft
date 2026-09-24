@@ -75,7 +75,7 @@ One initial batch succeeds completely or does nothing. Large world-building jobs
 
 ## Ordering, retries and durability
 
-The retained duplicate-receipt and concurrent retry behavior in this section is the PR-011 target. PR-005 negotiates retry_mode=resync_only: repeats, gaps and retired epochs are rejected, no receipts are retained for replay, and an uncertain client must observe/resynchronize explicitly. Persistence and crash-safe receipt recovery remain later milestones.
+PR-011 implements bounded volatile receipt reuse in the opt-in `policy.retry.v1` profile; see [agents.contention](../examples/agents-contention.md) and [its wire extension](../schemas/retry-1.schema.json). Its actual four-entry/two-second retention limits supersede the larger proposed target below for this profile. PR-005 negotiates retry_mode=resync_only: repeats, gaps and retired epochs are rejected, no receipts are retained for replay, and an uncertain client must observe/resynchronize explicitly. Persistence and crash-safe receipt recovery remain later milestones.
 
 - The coordinator assigns an accepted sequence number and records the scheduled tick. Replay consumes this order, not nondeterministic client arrival timing.
 - The idempotency key is `(world, authenticated principal, server-issued epoch, client sequence)`. The UUID `transaction_id` is a correlation ID, not the deduplication mechanism. Sequence numbers are monotonically admitted per epoch; the SDK serializes admissions, retries uncertain admissions with the same sequence, and resyncs on a gap. Completion may remain asynchronous.

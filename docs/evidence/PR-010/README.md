@@ -1,6 +1,6 @@
 # PR-010 bounded native query evidence
 
-Runtime candidate: `3b32f812232608af0203d579a9cb89ce9f71173c`; tree `9fe30bc84a4d24a4304f805f487edbde7aa6bbe3`. Draft: [PR #16](https://github.com/xsparc/omniweft/pull/16). Contract and current delivery state: [handoff](../../execution/PR-010-HANDOFF.md).
+Runtime candidate: `3b32f812232608af0203d579a9cb89ce9f71173c`; tree `9fe30bc84a4d24a4304f805f487edbde7aa6bbe3`. Merged: [PR #16](https://github.com/xsparc/omniweft/pull/16). Contract and current delivery state: [handoff](../../execution/PR-010-HANDOFF.md).
 
 ## Windows CPU proof
 
@@ -21,4 +21,4 @@ Use the command in [observe.semantic_query](../../../examples/observe-semantic_q
 
 ## Limits
 
-All 26 Windows CTests were verified across the full run and affected-test rerun described in the handoff. Local Linux is not_run; hosted checks are separate and must pass on the latest PR head. This is CPU-only evidence, with no GPU, physics, save migration or remote query claim. Hosts bound session count; projected payload caps are not a global service/RSS bound. World must outlive its session. Actual maintainer review/certification and merge remain required for completion.
+All 26 Windows CTests were verified across the full run and affected-test rerun described in the handoff. Local Linux is not_run; all six delivery and all six post-merge hosted checks passed, linked in the handoff. This is CPU-only evidence, with no GPU, physics, save migration or remote query claim. Hosts bound session count; projected payload caps are not a global service/RSS bound. World must outlive its session. Actual merge and matching tree are verified in the handoff.
