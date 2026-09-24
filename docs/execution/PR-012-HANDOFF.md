@@ -1,6 +1,6 @@
 # PR-012 handoff
 
-State: runtime validation complete; clean-candidate archive and draft delivery pending on `codex/pr-012-authoring-undo`, from verified merge `457286e85818381f56aab4b021da0fb5439acdec`. [Plan](PR-012-PLAN.md), [authorization](AUTHORIZATION.md), [example](../../examples/world-undo_chain.md).
+State: draft PR #18 published; local runtime and archive validation complete; independently reviewed hosted compiler servicing repair awaiting full validation on `codex/pr-012-authoring-undo`, from verified merge `457286e85818381f56aab4b021da0fb5439acdec`. [Plan](PR-012-PLAN.md), [authorization](AUTHORIZATION.md), [example](../../examples/world-undo_chain.md).
 
 PR-011 is integrated with matching reviewed tree and all six required post-merge jobs passed, linked in its reconciled handoff. Existing worktrees are preserved. PR-012 implements bounded native supported-edit history through inverse Coordinator transactions: eight entries, four operations per entry, 16 KiB envelopes, generation-qualified tags and isolated-root transforms. Caller and private history-head revisions must match the live world. Rejections preserve history and world; explicit clear reconciles outside edits without restoring a snapshot. No remote history, new authority, persistence, GPU or physics capability is claimed.
 
@@ -8,4 +8,12 @@ All 33 Windows CTests passed. Independent review then identified that the direct
 
 The initial additional content-equivalence oracle paired the wrong two checkpoints and failed; correcting the test-only pair required no runtime change. The planning validator initially rejected a rewritten example missing literal adopted contract text; restoring that text resolved it without changing acceptance. These development failures are retained here rather than erased. OpenSteward's bundled static and dated strict checks reported a missing foreign-project registry, as explained in the plan; they are not claimed passed.
 
-Independent architecture, source/oracle and CI reviews closed with no remaining runtime blockers; the example verifier and staging-hook terminology findings are resolved. Next: retain a clean-candidate allowlisted archive, obtain independent archive review, publish the authorized draft and verify all required hosted checks on its actual head. No merge authority or certification is inferred. Keep PR-013 proposed until integration.
+Independent architecture, source/oracle and CI reviews closed with no remaining runtime blockers; the example verifier and staging-hook terminology findings are resolved. Next: finish the independently reviewed servicing-pin repair, publish the audited archive, and verify all required hosted checks on the actual delivery head. No merge authority or certification is inferred. Keep PR-013 proposed until integration.
+
+## Hosted servicing repair
+
+Draft [PR #18](https://github.com/xsparc/omniweft/pull/18) opened at runtime `a6b268a1b1f92ac4cd439203bd861c45729f4ad1`, tree `f668a21bae8ccf049050bdabc59e9ce74edb33b4`. The clean Windows oracle retained 1666 assertions and native 98. Independent archive audit passed 4580 static checks without rerunning native tests; the four JSON members preserve full fixture, canonical bytes, source/SDK bindings and actual build provenance.
+
+Initial hosted Windows [native run](https://github.com/xsparc/omniweft/actions/runs/36024036881) and [renderer run](https://github.com/xsparc/omniweft/actions/runs/36024036783) failed before compilation because the runner's compiler serviced to MSVC 19.44.35229, while recorded pins allowed .35227/.35228. The exact [runner image](https://github.com/actions/runner-images/blob/win22/20260920.314/images/windows/Windows2022-Readme.md) identifies Visual Studio 17.14.37710.0. The bounded repair records .35229 as primary and retains the two previously verified exact alternates; compiler equality enforcement and all functional gates stay intact. The new hosted compiler must pass the complete required checks before delivery is claimed. No host tooling was changed. Runtime source is unchanged; local archive stays bound to a6b268a.
+
+Independent exact servicing-pin review passed. The original runtime Linux native and renderer jobs and both planning jobs passed; Windows precompile failures remain recorded above. All six jobs must pass on the repaired delivery head.

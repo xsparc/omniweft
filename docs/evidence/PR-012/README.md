@@ -1,0 +1,11 @@
+# PR-012 authoring undo evidence
+
+Runtime candidate `a6b268a1b1f92ac4cd439203bd861c45729f4ad1`, tree `f668a21bae8ccf049050bdabc59e9ce74edb33b4`. Draft [PR #18](https://github.com/xsparc/omniweft/pull/18); [delivery handoff](../../execution/PR-012-HANDOFF.md).
+
+[windows-a6b268a.zip](windows-a6b268a.zip) contains exactly four JSON members, 16,329 bytes, SHA-256 `7a5d51f4795df17d1fed01a66079cb405496d8a28f5c55a757fd7b31bd70b1d1`. The clean-candidate oracle passed 1666 assertions and retained the separate 98-assertion native suite. Independent archive audit passed 4580 static checks without rerunning native tests.
+
+All 15 literal full receipts, snapshots, independently encoded OWOBJ003 bytes, cursors, exact authored round trips and monotonic revisions are checked. Negative physical-time and stale-history cases preserve complete state; explicit clear and a fresh edit/undo establish recovery. The native suite checks capacity, bounded inputs, branch success/failure, generation mismatch, unsupported hierarchy/lifecycle edits and synthetic staging-hook rejection. It does not establish a new policy lease integration path. Fourteen altered reports fail the corruption selftest.
+
+The manifest binds 52 source files and 13 SDK files, both actual executable hashes and configured tool/build provenance. Four checkout source files differ from Git blobs only by CRLF/LF conversion. Build: Windows Release, MSVC 19.44.35227, CMake 3.31.6, Ninja 1.13.2, Python 3.12.14, Vulkan disabled. Only reviewed JSON fixture data and generic versions/hashes are included; no private paths, accounts, hosts, credentials or epochs, raw process/HTTP streams, executable or PDB bytes.
+
+All 33 Windows CTests passed before the example verifier refinement; all three affected tests passed afterward. Local Linux is not_run. Hosted Windows/Linux validation remains pending after an exact compiler servicing-pin repair, detailed in the handoff. Runtime source is unchanged by that repair. CPU evidence establishes no GPU, physics, persistence or remote history capability. Reproduce with the commands in [world.undo_chain](../../../examples/world-undo_chain.md). Development oracle/specification failures are honestly recorded in the handoff.

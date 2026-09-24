@@ -609,9 +609,13 @@
         "claimed_at": "2026-09-25",
         "plan": "docs/execution/PR-012-PLAN.md",
         "handoff": "docs/execution/PR-012-HANDOFF.md",
-        "review": "Independent architecture, source/oracle and CI reviews closed; clean-candidate archive review pending.",
-        "next_action": "Complete independent source/archive review, retain clean-candidate evidence and publish the authorized draft.",
-        "validation": "All 33 Windows CTests passed; after native example verification refinement all three affected tests passed. Native 98 assertions, development oracle 1666, corruption selftest 14. Planning passed. Hosted Windows/Linux pending; local Linux not_run."
+        "review": "Independent architecture, source/oracle, CI, archive and exact compiler servicing-pin reviews passed. Archive audit 4580 static checks.",
+        "next_action": "Publish audited evidence and reviewed exact MSVC servicing pin; verify all required Windows/Linux delivery checks. Keep draft pending maintainer review/certification and merge.",
+        "validation": "All 33 Windows CTests passed; after native example verification refinement all three affected tests passed. Native 98 assertions, development oracle 1666, corruption selftest 14. Planning passed. Hosted Windows/Linux pending; local Linux not_run.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/18",
+        "runtime_sha": "a6b268a1b1f92ac4cd439203bd861c45729f4ad1",
+        "runtime_tree": "f668a21bae8ccf049050bdabc59e9ce74edb33b4",
+        "evidence": "docs/evidence/PR-012/README.md"
       }
     },
     {
