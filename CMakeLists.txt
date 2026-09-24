@@ -41,6 +41,11 @@ target_link_libraries(ow_transactions PUBLIC ow_world ow_commands)
 target_include_directories(ow_transactions PUBLIC include)
 ow_native_policy(ow_transactions)
 
+add_library(ow_history STATIC src/history.cpp)
+target_link_libraries(ow_history PUBLIC ow_transactions)
+target_include_directories(ow_history PUBLIC include)
+ow_native_policy(ow_history)
+
 add_library(ow_retry STATIC src/retry.cpp)
 target_link_libraries(ow_retry PUBLIC ow_transactions)
 target_include_directories(ow_retry PUBLIC include)
@@ -62,8 +67,8 @@ target_link_libraries(ow_presentation PUBLIC ow_world)
 target_include_directories(ow_presentation PUBLIC include)
 ow_native_policy(ow_presentation)
 
-add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp src/observe_example.cpp src/contention_example.cpp)
-target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation ow_observe ow_retry ow_policy)
+add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp src/observe_example.cpp src/contention_example.cpp src/undo_example.cpp)
+target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation ow_observe ow_retry ow_policy ow_history)
 target_include_directories(omniweft_examples SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_examples)
 
@@ -148,6 +153,15 @@ if(BUILD_TESTING)
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/protocol_oracle.py"
       --executable "$<TARGET_FILE:omniweft_examples>")
   set_tests_properties(protocol.native protocol.reject_invalid PROPERTIES TIMEOUT 60)
+
+  add_executable(history_native_test tests/history_native_test.cpp)
+  target_link_libraries(history_native_test PRIVATE ow_history)
+  ow_native_policy(history_native_test)
+  add_test(NAME world.history_native COMMAND history_native_test)
+  set_tests_properties(world.history_native PROPERTIES TIMEOUT 30)
+  add_test(NAME world.undo_chain COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/undo_oracle.py" --executable "$<TARGET_FILE:omniweft_examples>")
+  add_test(NAME world.undo_oracle_selftest COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/undo_oracle_test.py")
+  set_tests_properties(world.undo_chain world.undo_oracle_selftest PROPERTIES TIMEOUT 60)
 
   add_executable(retry_native_test tests/retry_native_test.cpp)
   target_link_libraries(retry_native_test PRIVATE ow_retry Threads::Threads)

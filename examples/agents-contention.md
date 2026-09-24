@@ -1,6 +1,6 @@
 # agents.contention
 
-Status: **implementation under review; not merged**. Work item: **PR-011 — Concurrency and idempotent retries**.
+Status: **merged; post-merge checks passed**. Work item: **PR-011 — Concurrency and idempotent retries**.
 
 Dependencies: PR-007, PR-010. Validation lanes: cpu.
 

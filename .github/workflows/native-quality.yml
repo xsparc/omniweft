@@ -113,6 +113,12 @@ jobs:
           build="build/${{ runner.os == 'Windows' && 'windows-headless' || 'linux-headless' }}"
           suffix="${{ runner.os == 'Windows' && '.exe' || '' }}"
           python tests/contention_oracle.py --executable "$build/omniweft_examples$suffix" --host "$build/omniweft_contention$suffix" --native-test "$build/retry_native_test$suffix" --evidence artifacts/contention
+      - name: Record bounded authoring undo evidence
+        shell: bash
+        run: |
+          build="build/${{ runner.os == 'Windows' && 'windows-headless' || 'linux-headless' }}"
+          suffix="${{ runner.os == 'Windows' && '.exe' || '' }}"
+          python tests/undo_oracle.py --executable "$build/omniweft_examples$suffix" --native-test "$build/history_native_test$suffix" --evidence artifacts/undo
       - name: Summarize retained evidence
         shell: bash
         run: |
@@ -127,7 +133,7 @@ jobs:
               summary["result"] = manifest["artifacts"]["result"]
               summary["executable"] = manifest["artifacts"]["executable"]
               print(json.dumps({"evidence": name, **summary}, sort_keys=True))
-          for name in ("sdk", "sdk-mutation", "agents", "agents-mutation", "agents-failure", "agents-owner", "policy", "policy-mutation", "hierarchy", "observe", "contention"):
+          for name in ("sdk", "sdk-mutation", "agents", "agents-mutation", "agents-failure", "agents-owner", "policy", "policy-mutation", "hierarchy", "observe", "contention", "undo"):
               manifest = json.loads((Path("artifacts") / name / "manifest.json").read_text(encoding="utf-8"))
               print(json.dumps({"evidence": name, "work_item": manifest["work_item"],
                                 "candidate_sha": manifest["candidate_sha"], "dirty": manifest["dirty"],
@@ -156,6 +162,7 @@ jobs:
             artifacts/hierarchy/
             artifacts/observe/
             artifacts/contention/
+            artifacts/undo/
             build/*/Testing/Temporary/LastTest.log
           if-no-files-found: error
           retention-days: 7
