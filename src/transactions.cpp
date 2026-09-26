@@ -204,7 +204,15 @@ void reparent(world::Snapshot& state, world::Slot& slot, world::Slot* parent,
 }
 }  // namespace
 
-Receipt Coordinator::apply_at_boundary(world::World& target_world, const commands::Envelope& envelope, StagingGuard* guard) {
+Receipt Coordinator::apply_at_boundary(world::World& world, const commands::Envelope& envelope, StagingGuard* guard, CommitObserver* observer) {
+  return apply(world,envelope,guard,observer,std::nullopt);
+}
+Receipt Coordinator::replay_at_boundary(world::World& world, const commands::Envelope& envelope,
+                                       std::span<const CreatedBinding> bindings) {
+  return apply(world,envelope,nullptr,nullptr,bindings);
+}
+Receipt Coordinator::apply(world::World& target_world, const commands::Envelope& envelope, StagingGuard* guard,
+                           CommitObserver* observer, std::optional<std::span<const CreatedBinding>> bindings) {
   Receipt receipt;
   // Preserve valid receipt correlation without copying unbounded typed input.
   if (!guard || envelope.transaction_id.size() <= 128) receipt.transaction_id = envelope.transaction_id;
@@ -258,6 +266,14 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
             slot = std::prev(staged.slots.end());
           }
           else if (guard) guard->create(static_cast<std::size_t>(slot - staged.slots.begin()), index);
+          if(bindings) {
+            if(created.size()>=bindings->size()) reject("INVALID_REPLAY","/created","Missing recorded creation mapping.",index);
+            const auto& binding=(*bindings)[created.size()];
+            if(binding.temporary_id!=operation.temporary_id || binding.world_id!=staged.world_id ||
+               binding.entity_uuid!=slot->entity_uuid || binding.generation!=slot->generation)
+              reject("INVALID_REPLAY","/created","Recorded creation mapping differs from allocator contract.",index);
+            slot->entity_uuid=binding.entity_uuid;slot->generation=binding.generation;
+          }
           slot->entity = world::Entity{operation.prefab, next_revision, {}, std::nullopt, {}, {}};
           names.emplace(operation.temporary_id, commands::EntityTarget{
             staged.world_id, slot->entity_uuid, slot->generation});
@@ -300,6 +316,7 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
       [](const auto& slot) { return slot.entity && slot.entity->parent; }) ? 2U : 1U;
     if (std::any_of(staged.slots.begin(), staged.slots.end(),
         [](const auto& slot) { return slot.entity && !slot.entity->tags.empty(); })) staged.format_version = 3;
+    if(bindings && created.size()!=bindings->size()) reject("INVALID_REPLAY","/created","Extra recorded creation mapping.");
     if (guard) guard->finish(staged);
   } catch (const Error& error) {
     // Rejection discards every staged write and provisional identity binding.
@@ -311,12 +328,18 @@ Receipt Coordinator::apply_at_boundary(world::World& target_world, const command
   receipt.status = "committed";
   receipt.world_revision = next_revision;
   receipt.created = std::move(created);
+  try { if(observer) observer->prepare(staged,receipt); }
+  catch(const Error& error) {
+    receipt.status="rejected";receipt.world_revision=target_world.state_.world_revision;receipt.created.clear();
+    receipt.errors.push_back(error);return receipt;
+  }
   // All receipt allocation precedes publication. Swap and return cannot allocate.
   static_assert(std::is_nothrow_swappable_v<world::Snapshot>);
   static_assert(std::is_nothrow_move_constructible_v<Receipt>);
   using std::swap;
   swap(target_world.state_, staged);
   if (guard) guard->commit();
+  if(observer) observer->publish();
   return receipt;
 }
 }  // namespace ow::transactions

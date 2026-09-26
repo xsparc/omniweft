@@ -48,7 +48,9 @@ World::World(std::string world_id, std::uint32_t seed, std::uint32_t max_slots) 
 }
 Snapshot World::snapshot() const { return state_; }
 
-std::vector<std::uint8_t> World::canonical_bytes() const {
+std::vector<std::uint8_t> World::canonical_bytes() const { return world::canonical_bytes(state_); }
+
+std::vector<std::uint8_t> canonical_bytes(const Snapshot& state_) {
   std::vector<std::uint8_t> bytes{'O', 'W', 'O', 'B', 'J', '0', '0', '1'};
   if (state_.format_version == 2) bytes.back() = '2';
   if (state_.format_version == 3) bytes.back() = '3';
