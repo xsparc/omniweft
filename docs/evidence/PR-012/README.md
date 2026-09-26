@@ -1,6 +1,6 @@
 # PR-012 authoring undo evidence
 
-Runtime candidate `a6b268a1b1f92ac4cd439203bd861c45729f4ad1`, tree `f668a21bae8ccf049050bdabc59e9ce74edb33b4`. Draft [PR #18](https://github.com/xsparc/omniweft/pull/18); [delivery handoff](../../execution/PR-012-HANDOFF.md).
+Runtime candidate `a6b268a1b1f92ac4cd439203bd861c45729f4ad1`, tree `f668a21bae8ccf049050bdabc59e9ce74edb33b4`. Merged [PR #18](https://github.com/xsparc/omniweft/pull/18); [delivery handoff](../../execution/PR-012-HANDOFF.md).
 
 [windows-a6b268a.zip](windows-a6b268a.zip) contains exactly four JSON members, 16,329 bytes, SHA-256 `7a5d51f4795df17d1fed01a66079cb405496d8a28f5c55a757fd7b31bd70b1d1`. The clean-candidate oracle passed 1666 assertions and retained the separate 98-assertion native suite. Independent archive audit passed 4580 static checks without rerunning native tests.
 
@@ -9,3 +9,5 @@ All 15 literal full receipts, snapshots, independently encoded OWOBJ003 bytes, c
 The manifest binds 52 source files and 13 SDK files, both actual executable hashes and configured tool/build provenance. Four checkout source files differ from Git blobs only by CRLF/LF conversion. Build: Windows Release, MSVC 19.44.35227, CMake 3.31.6, Ninja 1.13.2, Python 3.12.14, Vulkan disabled. Only reviewed JSON fixture data and generic versions/hashes are included; no private paths, accounts, hosts, credentials or epochs, raw process/HTTP streams, executable or PDB bytes.
 
 All 33 Windows CTests passed before the example verifier refinement; all three affected tests passed afterward. Local Linux is not_run. All six repaired-head hosted Windows/Linux checks passed, detailed in the handoff; each native manifest retained 1666 oracle and 98 native assertions with verified source/artifact bindings. The successful Windows runs used MSVC 19.44.35228; the independently reviewed .35229 pin has not yet completed functional validation at this checkpoint. Final-head checks and actual compiler observations remain linked through the PR. Runtime source is unchanged by that repair. CPU evidence establishes no GPU, physics, persistence or remote history capability. Reproduce with the commands in [world.undo_chain](../../../examples/world-undo_chain.md). Development oracle/specification failures are honestly recorded in the handoff.
+
+Post-merge native and renderer Windows runs exercised MSVC19.44.35229 successfully, resolving the historical compiler limitation above. All six required post-merge checks passed and both native manifests were verified; see the integrated handoff.

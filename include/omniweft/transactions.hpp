@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <span>
 #include <vector>
 
 namespace ow::transactions {
@@ -47,10 +48,24 @@ class StagingGuard {
   virtual void commit() noexcept = 0;
 };
 
+// Trusted owner hook. prepare may allocate/reject before publication; publish must not fail.
+class CommitObserver {
+ public:
+  virtual ~CommitObserver() = default;
+  virtual void prepare(const world::Snapshot&, const Receipt&) = 0;
+  virtual void publish() noexcept = 0;
+};
+
 // Trusted host boundary only: no authentication, scheduling or exactly-once admission.
 class Coordinator {
  public:
   static Receipt apply_at_boundary(world::World& target_world, const commands::Envelope& envelope,
-                                   StagingGuard* guard = nullptr);
+                                   StagingGuard* guard = nullptr, CommitObserver* observer = nullptr);
+  // Offline replay only: consume every recorded creation mapping without fallback.
+  static Receipt replay_at_boundary(world::World&, const commands::Envelope&,
+                                    std::span<const CreatedBinding>);
+ private:
+  static Receipt apply(world::World&, const commands::Envelope&, StagingGuard*, CommitObserver*,
+                       std::optional<std::span<const CreatedBinding>>);
 };
 }  // namespace ow::transactions

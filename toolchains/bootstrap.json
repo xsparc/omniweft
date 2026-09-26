@@ -16,7 +16,7 @@
       "version": "19.44.35229",
       "origin": "https://visualstudio.microsoft.com/downloads/",
       "license": "LicenseRef-Microsoft-Visual-Studio",
-      "verification": "Hosted Windows-2022 cl preflight observed 19.44.35229 in Actions run 36024036881 (2026-09-24 UTC), image win22/20260920.314 with Visual Studio 17.14.37710.0. Exact servicing pin independently reviewed. Successful repaired-head runs 36024756369 and 36024756368 used 19.44.35228; .35229 functional validation is not yet established at this checkpoint. Previously validated 19.44.35227 and 19.44.35228 remain explicit alternates; all exact compiler and functional gates stay required.",
+      "verification": "MSVC 19.44.35229 was independently reviewed after observed hosted servicing and passed all 33 CTests in both native run 36251207114 and renderer run 36251207118 on PR-012 merge d8f49dc97d97ef62600b58b299c24527b94bbb4c. The native source/artifact manifest was verified. Previously validated 19.44.35227 and 19.44.35228 remain exact alternates; compiler equality and functional gates remain required.",
       "local_alternates": [
         "19.44.35227",
         "19.44.35228"

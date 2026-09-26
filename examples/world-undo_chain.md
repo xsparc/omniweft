@@ -1,6 +1,6 @@
 # world.undo_chain
 
-Status: implemented in PR-012; integration pending. Dependencies: PR-009, PR-011. Validation lanes: cpu.
+Status: merged in PR-012; post-merge Windows/Linux checks passed. Dependencies: PR-009, PR-011. Validation lanes: cpu.
 
 ## Run and verify
 
