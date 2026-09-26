@@ -14,7 +14,7 @@ PR-009 is merged with verified Windows/Linux checks for [native hierarchy and re
 
 PR-010 adds merged, verified [native tag/AABB queries](examples/observe-semantic_query.md). Its [handoff](docs/execution/PR-010-HANDOFF.md) records verification and delivery status; remote SDK query support remains deferred.
 
-PR-011 adds [concurrent proposals and retained retries](examples/agents-contention.md) under review through an explicit opt-in policy profile. See [its handoff](docs/execution/PR-011-HANDOFF.md).
+PR-011 adds [concurrent proposals and retained retries](examples/agents-contention.md) merged with verified Windows/Linux checks through an explicit opt-in policy profile. See [its handoff](docs/execution/PR-011-HANDOFF.md).
 
 ## Start here
 
@@ -74,3 +74,5 @@ For the authenticated local SDK candidate, see [sdk.move_cube](examples/sdk-move
 Read [CONTRIBUTING.md](CONTRIBUTING.md), [AGENTS.md](AGENTS.md), and the [Code of Conduct](CODE_OF_CONDUCT.md). Start from an eligible item in the [roadmap](docs/ROADMAP.md). Each core feature ships with its corresponding runnable example, assertions, failure cases, and evidence in the same PR.
 
 The project uses the [Apache License 2.0](LICENSE). First-party examples and documentation use the same license unless explicitly marked otherwise. Models, datasets and third-party assets retain their own licenses. See [THIRD_PARTY.md](THIRD_PARTY.md).
+
+PR-012 implements bounded native [authoring undo and redo](examples/world-undo_chain.md); integration and delivery checks are tracked in [its handoff](docs/execution/PR-012-HANDOFF.md).

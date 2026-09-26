@@ -49,6 +49,8 @@ Authoring undo is an inverse transaction with preconditions. It restores support
 
 The first editor can preview a command diff without a fully simulated branch. Simulation branches and branch merging are later roadmap capabilities. Label these states separately in the UI.
 
+PR-012 implements the native supported-edit history described in [world.undo_chain](../examples/world-undo_chain.md): bounded tag and isolated-root transform batches, inverse transactions, monotonic revisions and explicit stale-history recovery. It exposes no editor UI or remote undo endpoint. Simulation rewind and speculative branches remain planned.
+
 ## Controls and accessibility
 
 Provide documented camera movement, select/focus, transform controls, pause/step, undo/redo and a command palette. Remapping, keyboard navigation, readable focus, scalable text, non-color status cues and adjustable motion are required for public tool usability. An immediate-mode UI library does not automatically provide full assistive-technology support; investigate its accessibility limitations before claiming compliance.

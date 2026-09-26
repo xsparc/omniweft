@@ -13,13 +13,15 @@
       "id": "MSVC",
       "executable": "cl",
       "toolset": "14.44.35207",
-      "version": "19.44.35228",
+      "version": "19.44.35229",
       "origin": "https://visualstudio.microsoft.com/downloads/",
       "license": "LicenseRef-Microsoft-Visual-Studio",
-      "verification": "Hosted Windows-2022 cl /Bv observed 19.44.35228 in Actions run 34708255226 (2026-09-12 UTC); local Windows 11 19.44.35227 passed native configure/build/CTest. Both exact serviced versions require functional validation.",
+      "verification": "Hosted Windows-2022 cl preflight observed 19.44.35229 in Actions run 36024036881 (2026-09-24 UTC), image win22/20260920.314 with Visual Studio 17.14.37710.0. Exact servicing pin independently reviewed. Successful repaired-head runs 36024756369 and 36024756368 used 19.44.35228; .35229 functional validation is not yet established at this checkpoint. Previously validated 19.44.35227 and 19.44.35228 remain explicit alternates; all exact compiler and functional gates stay required.",
       "local_alternates": [
-        "19.44.35227"
-      ]
+        "19.44.35227",
+        "19.44.35228"
+      ],
+      "runner_image": "https://github.com/actions/runner-images/blob/win22/20260920.314/images/windows/Windows2022-Readme.md"
     },
     "linux": {
       "id": "Clang",

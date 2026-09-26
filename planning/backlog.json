@@ -521,7 +521,7 @@
     {
       "id": "PR-011",
       "title": "Concurrency and idempotent retries",
-      "status": "in_review",
+      "status": "done",
       "milestone": "M2",
       "depends_on": [
         "PR-007",
@@ -546,7 +546,7 @@
         "plan": "docs/execution/PR-011-PLAN.md",
         "handoff": "docs/execution/PR-011-HANDOFF.md",
         "review": "Independent architecture/source/oracle/schema/CI review closed; final archive audit passed 1582 static checks with all findings resolved.",
-        "next_action": "Implementation/evidence complete. Await maintainer review/certification and manual merge with all latest-head checks passing, then verify matching merge tree and required post-merge jobs before PR-012.",
+        "next_action": "Integrated; continue PR-012.",
         "implementation_sha": "ceaac8fc9d85fb4a8e2ed37f60f43387e26af5f6",
         "implementation_tree": "a5cf5a43cd6f7b5fa94562f505274f3811bafead",
         "evidence": [
@@ -566,13 +566,26 @@
             "https://github.com/xsparc/omniweft/actions/runs/35584484890"
           ]
         },
-        "latest_checks_url": "https://github.com/xsparc/omniweft/pull/17/checks"
+        "latest_checks_url": "https://github.com/xsparc/omniweft/pull/17/checks",
+        "merge_sha": "457286e85818381f56aab4b021da0fb5439acdec",
+        "merged_tree": "41bc687f524ed1cfe85c0aef139c7acc7f36ff03",
+        "merged_at": "2026-09-24T15:31:27Z",
+        "delivery_sha": "207551d74c2b81799f68160441d754a516a8abe7",
+        "post_merge_checks": {
+          "passed": 6,
+          "failed": 0,
+          "runs": [
+            "https://github.com/xsparc/omniweft/actions/runs/36020826516",
+            "https://github.com/xsparc/omniweft/actions/runs/36020826587",
+            "https://github.com/xsparc/omniweft/actions/runs/36020826529"
+          ]
+        }
       }
     },
     {
       "id": "PR-012",
       "title": "Authoring undo and redo",
-      "status": "proposed",
+      "status": "in_progress",
       "milestone": "M2",
       "depends_on": [
         "PR-009",
@@ -587,7 +600,29 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/pr-012-authoring-undo",
+        "base_sha": "457286e85818381f56aab4b021da0fb5439acdec",
+        "claimed_at": "2026-09-25",
+        "plan": "docs/execution/PR-012-PLAN.md",
+        "handoff": "docs/execution/PR-012-HANDOFF.md",
+        "review": "Independent architecture, source/oracle, CI, archive and exact compiler servicing-pin reviews passed. Archive audit 4580 static checks.",
+        "next_action": "Verify final documentation-head checks and actual compiler observations; maintain explicit untested-servicing limitation if applicable. Await maintainer review/certification and manual merge; keep PR-013 proposed.",
+        "validation": "All 33 Windows CTests passed; three affected tests passed after verifier refinement. Clean local and both hosted oracles passed 1666 plus native 98; corruption selftest 14. All six repaired-head native/renderer/planning jobs passed. Local Linux not_run. Successful Windows jobs used 19.44.35228; reviewed 19.44.35229 functional validation not yet established.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/18",
+        "runtime_sha": "a6b268a1b1f92ac4cd439203bd861c45729f4ad1",
+        "runtime_tree": "f668a21bae8ccf049050bdabc59e9ce74edb33b4",
+        "evidence": "docs/evidence/PR-012/README.md",
+        "validated_delivery_sha": "f57b9185d678d926dc61603836c952308710ad6d",
+        "hosted_runs": {
+          "native": "https://github.com/xsparc/omniweft/actions/runs/36024756369",
+          "renderer": "https://github.com/xsparc/omniweft/actions/runs/36024756368",
+          "planning": "https://github.com/xsparc/omniweft/actions/runs/36024756383"
+        }
+      }
     },
     {
       "id": "PR-013",
