@@ -658,9 +658,11 @@
         "base_sha": "d8f49dc97d97ef62600b58b299c24527b94bbb4c",
         "plan": "docs/execution/PR-013-PLAN.md",
         "handoff": "docs/execution/PR-013-HANDOFF.md",
-        "next_action": "Retain audited clean-candidate evidence, publish authorized draft and verify all required hosted Windows/Linux checks.",
-        "review": "Independent architecture, source/oracle and CI reviews closed; archive audit pending.",
-        "validation": "Windows Release build and all 36 CTests passed; native replay 260 assertions, independent development oracle 1090, corruption selftest 18. Planning passed. Local Linux not_run; hosted pending."
+        "next_action": "Verify final delivery-head checks, then await maintainer review/certification and manual merge. After integration verify matching tree and post-merge checks before PR-014.",
+        "review": "Independent architecture/source/oracle/CI reviews closed; archive audit passed 11016 static checks.",
+        "validation": "Windows Release build and all 36 CTests passed; clean runtime oracle 1090 plus native 260, corruption selftest 18. All six runtime-head hosted Windows/Linux checks passed. Local Linux not_run; final delivery checks linked through PR.",
+        "pr": "https://github.com/xsparc/omniweft/pull/19",
+        "runtime_sha": "973d72ab168856273d563cda4051c7c641f59807"
       }
     },
     {
