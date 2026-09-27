@@ -69,3 +69,7 @@ Writes go to a temporary package, validate all referenced hashes, flush accordin
 Visible in-memory commits and durable acknowledgements are distinct. Referenced blobs become durable before their journal commit record is flushed; only then may the engine report `durable_revision`. Recovery replays the complete durable journal prefix beyond the last checkpoint, including resolved IDs, retry epoch and receipts. A receipt marked merely committed can be lost on a crash before flush. See the [protocol durability contract](AI_CONTROL_PROTOCOL.md) for client behavior and interruption tests.
 
 Checkpointing includes entity/body lifecycle and supported properties in addition to solver state. Jolt `SaveState` alone is insufficient to recover arbitrary creation/deletion or property changes; see [Jolt documentation](https://jrouwe.github.io/JoltPhysics/). Migrations run on a copy, preserve the source, and emit a version/provenance report. Cross-version replay requires an explicit compatibility adapter; it is not automatically promised.
+
+## Native replay implementation boundary
+
+PR-013's [world.replay](../examples/world-replay.md) adds opt-in bounded typed in-memory recording and reconstruction of a fresh private authoring World. It consumes recorded creation mappings and checks exact diagnostic checkpoints. Required schema and builtin asset content identities are validated before publication. This does not implement the durable journal or world-package contracts above; live policy/session state, physics and file persistence remain outside the slice.

@@ -2,6 +2,7 @@
 #include "observe_example.hpp"
 #include "contention_example.hpp"
 #include "undo_example.hpp"
+#include "replay_example.hpp"
 #if !defined(_M_X64) && !defined(__x86_64__)
 #error "Omniweft bootstrap requires an x86_64 compiler target; select x64 build tools."
 #endif
@@ -160,6 +161,8 @@ int main(int argc, char* argv[]) {
     if (std::string_view(argv[index]) == "--example" &&
         std::string_view(argv[index + 1]) == "world.undo_chain")
       return run_undo_example(argc, argv);
+    if (std::string_view(argv[index]) == "--example" && index + 1 < argc && std::string_view(argv[index + 1]) == "world.replay")
+      return run_replay_example(argc, argv);
     if (std::string_view(argv[index]) == "--example" &&
         std::string_view(argv[index + 1]) == "agents.contention")
       return run_contention_example(argc, argv);

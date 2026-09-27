@@ -75,4 +75,6 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), [AGENTS.md](AGENTS.md), and the [Code o
 
 The project uses the [Apache License 2.0](LICENSE). First-party examples and documentation use the same license unless explicitly marked otherwise. Models, datasets and third-party assets retain their own licenses. See [THIRD_PARTY.md](THIRD_PARTY.md).
 
-PR-012 implements bounded native [authoring undo and redo](examples/world-undo_chain.md); integration and delivery checks are tracked in [its handoff](docs/execution/PR-012-HANDOFF.md).
+PR-012 merged with verified Windows/Linux post-merge checks for bounded native [authoring undo and redo](examples/world-undo_chain.md); integration and delivery checks are tracked in [its handoff](docs/execution/PR-012-HANDOFF.md).
+
+PR-013 adds opt-in native [recorded command replay](examples/world-replay.md), currently under review. See [its handoff](docs/execution/PR-013-HANDOFF.md) for measured validation and scope.

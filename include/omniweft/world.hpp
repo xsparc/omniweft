@@ -46,6 +46,9 @@ struct Snapshot {
   bool operator==(const Snapshot&) const = default;
 };
 
+// Diagnostic encoding of a trusted detached snapshot; not validation or restoration.
+std::vector<std::uint8_t> canonical_bytes(const Snapshot&);
+
 // Single-owner-thread authoring storage. Snapshots are detached deep value copies.
 class World {
  public:
