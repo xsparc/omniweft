@@ -634,7 +634,7 @@
     {
       "id": "PR-013",
       "title": "Recorded command replay",
-      "status": "in_progress",
+      "status": "done",
       "milestone": "M2",
       "depends_on": [
         "PR-006",
@@ -658,17 +658,21 @@
         "base_sha": "d8f49dc97d97ef62600b58b299c24527b94bbb4c",
         "plan": "docs/execution/PR-013-PLAN.md",
         "handoff": "docs/execution/PR-013-HANDOFF.md",
-        "next_action": "Verify final delivery-head checks, then await maintainer review/certification and manual merge. After integration verify matching tree and post-merge checks before PR-014.",
+        "next_action": "Integrated; continue PR-014. Required post-merge native, renderer and planning workflows passed with matching reviewed tree.",
         "review": "Independent architecture/source/oracle/CI reviews closed; archive audit passed 11016 static checks.",
         "validation": "Windows Release build and all 36 CTests passed; clean runtime oracle 1090 plus native 260, corruption selftest 18. All six runtime-head hosted Windows/Linux checks passed. Local Linux not_run; final delivery checks linked through PR.",
         "pr": "https://github.com/xsparc/omniweft/pull/19",
-        "runtime_sha": "973d72ab168856273d563cda4051c7c641f59807"
+        "runtime_sha": "973d72ab168856273d563cda4051c7c641f59807",
+        "merge_sha": "a3223cdacfe58a4a04c66c9ee21fb9626ce09de1",
+        "merge_tree": "72bb046a1c57a10aa77c61893e9e00eb3cf5b4bf",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/19",
+        "evidence": "docs/evidence/PR-013/README.md"
       }
     },
     {
       "id": "PR-014",
       "title": "Crash-safe persistence and recovery",
-      "status": "proposed",
+      "status": "in_progress",
       "milestone": "M2",
       "depends_on": [
         "PR-013"
@@ -682,7 +686,21 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/pr-014-crash-recovery",
+        "base_sha": "a3223cdacfe58a4a04c66c9ee21fb9626ce09de1",
+        "plan": "docs/execution/PR-014-PLAN.md",
+        "handoff": "docs/execution/PR-014-HANDOFF.md",
+        "next_action": "Verify final delivery-head checks, then await maintainer review/certification and manual merge. After integration verify matching tree and post-merge jobs before advancing.",
+        "validation": "Windows Release build/all 39 CTests passed; clean repaired runtime 5575 oracle plus 272 native; oracle selftest 33. All six runtime-head hosted checks passed. Local Linux not_run; final delivery checks linked through PR.",
+        "review": "Independent architecture/source/I-O/native-test/oracle/CI review closed; archive audit passed 53227 static checks.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/20",
+        "runtime_sha": "727877c8804e42565ef9b9f3efeb16296c4dc939",
+        "evidence": "docs/evidence/PR-014/README.md"
+      }
     },
     {
       "id": "PR-015",

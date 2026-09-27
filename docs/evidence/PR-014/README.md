@@ -1,0 +1,15 @@
+# PR-014 crash-safe persistence evidence
+
+Runtime candidate `727877c8804e42565ef9b9f3efeb16296c4dc939`, tree `dd158295b35c1b85ed627b8a6915a8065dbaab15`. Draft [PR #20](https://github.com/xsparc/omniweft/pull/20); [delivery handoff](../../execution/PR-014-HANDOFF.md).
+
+[windows-727877c.zip](windows-727877c.zip) contains exactly six JSON members, 27,911 bytes, SHA-256 `107e565cbe6b8386175eba387a648be9cfc08a91f83fb1f1f163e2053b393fad`. Clean-candidate validation passed 5575 independent oracle assertions plus 272 native assertions. Independent archive audit passed 53,227 static checks without rerunning runtime tests.
+
+The audit independently reconstructs full literal snapshots, canonical bytes, durable receipts, exact reused generations, high/low watermarks, all 11 abrupt-process cases and eight corrupt/truncated-input outcomes. It verifies an actual delivered acknowledgement only at the after-ack boundary, private epoch-preserved booleans, interrupted compaction after high 5/low 2 receipt eviction, retry of the original interrupted sequence and append after tail repair. Command outcomes intentionally include 103 successful exits, 11 abrupt-exit codes 86 and seven corrupt-store rejection codes 2; those expected failures are part of passing evidence. The corruption selftest rejects 33 altered reports.
+
+All public members are byte-identical to retained private candidate reports. The manifest binds 63 source files and 13 SDK files, actual example/native executable hashes and configured tool/build provenance. Six source bindings differ from Git blobs only by CRLF/LF conversion. Local build: Windows Release, MSVC19.44.35227, CMake3.31.6, Ninja1.13.2, Python3.12.14, Vulkan disabled. All 39 Windows CTests passed on the final runtime/test source.
+
+Only reviewed fixture data and generic versions/hashes are included. The archive contains no private epochs or epoch-derived hashes, store/package bytes, account/host/path details, raw process/HTTP streams, executable or PDB bytes. The private epoch witness never enters public reports or artifact hashing.
+
+Local Linux is not_run; all six hosted runtime-head Windows/Linux checks passed, linked in the handoff. Final delivery-head status is tracked separately through current PR checks. This establishes bounded native process-crash recovery under the documented flush/local-filesystem model, not arbitrary power/device failure, hostile concurrent storage modification, remote durability, physics or GPU support. Configured quota tests do not fill the host filesystem. See [world.crash_recovery](../../../examples/world-crash_recovery.md) for reproduction and [the plan](../../execution/PR-014-PLAN.md) for the first-version format and exact limits. Development review findings and sandbox limitations are preserved in the handoff.
+
+Both hosted native manifests use checkout `1f6f742f1e0c3c847447c7b08b093dcf2aadba85` with the identical runtime tree. Each passed 5575 oracle plus 272 native assertions, and all 63 source, 13 SDK and retained artifact bindings were verified. Windows used MSVC19.44.35229.0; Linux used Clang18.1.3.

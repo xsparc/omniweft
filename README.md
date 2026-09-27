@@ -77,4 +77,6 @@ The project uses the [Apache License 2.0](LICENSE). First-party examples and doc
 
 PR-012 merged with verified Windows/Linux post-merge checks for bounded native [authoring undo and redo](examples/world-undo_chain.md); integration and delivery checks are tracked in [its handoff](docs/execution/PR-012-HANDOFF.md).
 
-PR-013 adds opt-in native [recorded command replay](examples/world-replay.md), currently under review. See [its handoff](docs/execution/PR-013-HANDOFF.md) for measured validation and scope.
+PR-013 adds opt-in native [recorded command replay](examples/world-replay.md), merged with verified Windows/Linux post-merge checks. See [its handoff](docs/execution/PR-013-HANDOFF.md) for measured validation and scope.
+
+PR-014 adds bounded native [crash-safe persistence and recovery](examples/world-crash_recovery.md), currently under review. See [its handoff](docs/execution/PR-014-HANDOFF.md) for measured validation and limits.
