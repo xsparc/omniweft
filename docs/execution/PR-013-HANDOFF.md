@@ -1,10 +1,10 @@
 # PR-013 handoff
 
-State: audited runtime delivered as draft [PR #19](https://github.com/xsparc/omniweft/pull/19); final evidence/documentation delivery checks tracked through the PR on `codex/pr-013-command-replay`, base `d8f49dc97d97ef62600b58b299c24527b94bbb4c`. [Plan](PR-013-PLAN.md), [authorization](AUTHORIZATION.md), [example](../../examples/world-replay.md).
+State: integrated through squash-merged [PR #19](https://github.com/xsparc/omniweft/pull/19); reviewed delivery and post-merge checks verified on `codex/pr-013-command-replay`, base `d8f49dc97d97ef62600b58b299c24527b94bbb4c`. [Plan](PR-013-PLAN.md), [authorization](AUTHORIZATION.md), [example](../../examples/world-replay.md).
 
 PR-012 merged with matching reviewed tree and all six post-merge checks passed. MSVC19.44.35229 was actually exercised by successful native and renderer jobs, resolving the prior limitation. Existing worktrees are preserved. Independent preliminary architecture review accepted an opt-in bounded recorder, trusted prepublication observer and private replay with explicit identity mappings. Independent source/oracle/CI reviews closed after the refinements recorded below.
 
-Next: verify final delivery-head checks, then await maintainer review/certification and manual merge. After actual merge, verify matching reviewed tree and all required post-merge jobs before advancing. No automatic ready transition, merge or certification. Keep PR-014 proposed until integration.
+Next: continue PR-014 from the verified merge. This record reflects the maintainer’s actual squash merge; no automatic merge or certification was performed.
 
 Initial targeted validation passed 86 native assertions. Asset identity review then required a bounded exact content descriptor/digest; compiled CPU mesh binding and wrong-content tests brought the suite to 249 assertions. Further review added transient same-batch create/delete/recreate identities, combined observer/guard rejection, hierarchy replay and literal direct-example verification. The independent full-report oracle passed 1090 assertions and rejects 18 altered reports. Final local and hosted runtime validation are recorded below.
 
@@ -20,6 +20,14 @@ Runtime `973d72ab168856273d563cda4051c7c641f59807`, tree `f08bbb5ce2d3784a2a2d44
 
 [Retained evidence](../evidence/PR-013/README.md) contains the audited four-member JSON archive: 15,422 bytes, SHA-256 `acd279f6c5d680747bdf7e0ed3e197638e7c17953ea73e52448add9f9f0018c3`. Independent audit passed 11,016 static checks, including full literal states, accepted operations, identities, canonical bytes, exact asset content, rejection/recovery, 56 source and 13 SDK bindings, actual binary/build provenance and privacy. No runtime rerun was used for the audit.
 
-Final evidence/documentation commits do not change runtime or tests. Inspect [fresh PR checks](https://github.com/xsparc/omniweft/pull/19/checks) for their exact delivery-head status; successful runtime-head checks above do not substitute for final-head checks. PR-013 remains in progress until actual maintainer integration; PR-014 remains proposed.
+Final evidence/documentation commits do not change runtime or tests. Inspect [fresh PR checks](https://github.com/xsparc/omniweft/pull/19/checks) for their exact delivery-head status; successful runtime-head checks above do not substitute for final-head checks. PR-013 integration is recorded below; PR-014 now proceeds from that merge.
 
 Both hosted native manifests use checkout `97b14a42fa5000b85db314a3da50951ed94a1125` with the identical runtime tree. Each passed 1090 oracle and 260 native assertions; all 56 source, 13 SDK and retained artifact bindings were verified. Windows used MSVC19.44.35229.0; Linux used Clang18.1.3. Independent final delivery-document review closed without blockers.
+
+## Integration
+
+The maintainer squash-merged PR #19 as `a3223cdacfe58a4a04c66c9ee21fb9626ce09de1`, tree `72bb046a1c57a10aa77c61893e9e00eb3cf5b4bf`, exactly matching reviewed delivery `135ffdf8c1f679498cc2f7a1a3825167473e9d8f`. Final delivery checks all passed: [native](https://github.com/xsparc/omniweft/actions/runs/36253350300), [renderer](https://github.com/xsparc/omniweft/actions/runs/36253350298), [planning](https://github.com/xsparc/omniweft/actions/runs/36253350299). Both final native manifests used checkout `1a160cc8ab4bec103a2fa90048964d38c30aec2f` with the identical delivery tree and verified 1090 oracle/260 native assertions plus source/SDK/artifact bindings.
+
+Required post-merge workflows passed: [native](https://github.com/xsparc/omniweft/actions/runs/36317332039), [renderer](https://github.com/xsparc/omniweft/actions/runs/36317332074), [planning](https://github.com/xsparc/omniweft/actions/runs/36317332032). No prior feature repair was reopened.
+
+Both post-merge native manifests identify the actual merge and matching tree; each passed 1090 oracle plus 260 native assertions with all source/SDK/artifact bindings verified. Windows used MSVC19.44.35229.0; Linux used Clang18.1.3.

@@ -1,6 +1,6 @@
 # PR-013 recorded command replay evidence
 
-Runtime candidate `973d72ab168856273d563cda4051c7c641f59807`, tree `f08bbb5ce2d3784a2a2d449adafdc155962a8d0d`. Draft [PR #19](https://github.com/xsparc/omniweft/pull/19); [delivery handoff](../../execution/PR-013-HANDOFF.md).
+Runtime candidate `973d72ab168856273d563cda4051c7c641f59807`, tree `f08bbb5ce2d3784a2a2d449adafdc155962a8d0d`. Merged [PR #19](https://github.com/xsparc/omniweft/pull/19); [delivery handoff](../../execution/PR-013-HANDOFF.md).
 
 [windows-973d72a.zip](windows-973d72a.zip) contains exactly four JSON members, 15,422 bytes, SHA-256 `acd279f6c5d680747bdf7e0ed3e197638e7c17953ea73e52448add9f9f0018c3`. The clean-candidate oracle passed 1090 assertions and retained the separate 260-assertion native suite. Independent archive audit passed 11,016 static checks without rerunning native tests.
 

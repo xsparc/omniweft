@@ -1,6 +1,6 @@
 # world.replay
 
-Status: **implementation under review; not merged**. Work item: **PR-013 — Recorded command replay**.
+Status: **implemented and merged with verified Windows/Linux checks**. Work item: **PR-013 — Recorded command replay**.
 
 Dependencies: PR-006, PR-011, PR-012. Validation lanes: cpu.
 

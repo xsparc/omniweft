@@ -73,3 +73,7 @@ Checkpointing includes entity/body lifecycle and supported properties in additio
 ## Native replay implementation boundary
 
 PR-013's [world.replay](../examples/world-replay.md) adds opt-in bounded typed in-memory recording and reconstruction of a fresh private authoring World. It consumes recorded creation mappings and checks exact diagnostic checkpoints. Required schema and builtin asset content identities are validated before publication. This does not implement the durable journal or world-package contracts above; live policy/session state, physics and file persistence remain outside the slice.
+
+## Bounded native persistence candidate
+
+PR-014's [world.crash_recovery](../examples/world-crash_recovery.md) introduces a first-version bounded native Store, currently under review. Its process-crash durability contract uses flushed full-prefix journal frames and checkpoint-before-reclaim compaction. It restores private epoch and receipt watermarks before native admission, with explicit unknown-outcome sealing. This does not implement the general world-package, external asset import, physics checkpoint or migration contracts above. See the example for exact caps and failure limits.
