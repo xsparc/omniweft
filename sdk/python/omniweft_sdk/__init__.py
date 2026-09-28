@@ -19,3 +19,6 @@ __all__ += ["PolicyClient", "PolicyLimits", "PolicySession", "PolicyStatus", "Po
 
 from .retry import PreparedTransaction, RetryCapabilities, RetryLimits, RetryPolicyClient, RetryPolicySession
 __all__ += ["PreparedTransaction", "RetryCapabilities", "RetryLimits", "RetryPolicyClient", "RetryPolicySession"]
+
+from .lifecycle import CubeGoal, WorkerStatus, WorkerSupervisor
+__all__ += ["CubeGoal", "WorkerStatus", "WorkerSupervisor"]

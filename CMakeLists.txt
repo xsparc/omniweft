@@ -195,6 +195,15 @@ if(BUILD_TESTING)
   add_test(NAME world.undo_oracle_selftest COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/undo_oracle_test.py")
   set_tests_properties(world.undo_chain world.undo_oracle_selftest PROPERTIES TIMEOUT 60)
 
+  add_test(NAME agents.worker_failure
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/lifecycle_oracle.py"
+      --executable "$<TARGET_FILE:omniweft_contention>")
+  add_test(NAME agents.lifecycle_oracle_selftest
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/lifecycle_oracle_test.py")
+  add_test(NAME agents.lifecycle_sdk
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/lifecycle_sdk_test.py")
+  set_tests_properties(agents.worker_failure agents.lifecycle_oracle_selftest agents.lifecycle_sdk PROPERTIES TIMEOUT 120)
+
   add_executable(retry_native_test tests/retry_native_test.cpp)
   target_link_libraries(retry_native_test PRIVATE ow_retry Threads::Threads)
   ow_native_policy(retry_native_test)

@@ -79,4 +79,6 @@ PR-012 merged with verified Windows/Linux post-merge checks for bounded native [
 
 PR-013 adds opt-in native [recorded command replay](examples/world-replay.md), merged with verified Windows/Linux post-merge checks. See [its handoff](docs/execution/PR-013-HANDOFF.md) for measured validation and scope.
 
-PR-014 adds bounded native [crash-safe persistence and recovery](examples/world-crash_recovery.md), currently under review. See [its handoff](docs/execution/PR-014-HANDOFF.md) for measured validation and limits.
+PR-014 adds bounded native [crash-safe persistence and recovery](examples/world-crash_recovery.md), merged with verified Windows/Linux post-merge checks. See [its handoff](docs/execution/PR-014-HANDOFF.md) for measured validation and limits.
+
+PR-015 is developing bounded [provider lifecycle and cancellation](examples/agents-worker_failure.md) through an opt-in SDK supervisor. See [its handoff](docs/execution/PR-015-HANDOFF.md) for current validation; it is not yet integrated.
