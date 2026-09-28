@@ -730,9 +730,12 @@
         "base_sha": "a18b9e2736c211c4397d8eb94c48c5c27acb5a83",
         "plan": "docs/execution/PR-015-PLAN.md",
         "handoff": "docs/execution/PR-015-HANDOFF.md",
-        "next_action": "Runtime commit, clean-candidate evidence/archive audit, draft publication and hosted Windows/Linux checks.",
-        "validation": "Windows Release build and all 42 CTests passed; development oracle1171/SDK127; corruption selftest38. Local Linux not_run; clean candidate and hosted checks pending.",
-        "review": "Independent architecture/source/cleanup/SDK-test/CI findings resolved; exact reviewed SDK assertion requirement applied."
+        "next_action": "Complete hosted manifest verification and final delivery checks, then await maintainer review/certification and manual merge.",
+        "validation": "All 42 Windows CTests passed; clean runtime 1171 oracle / 127 SDK assertions; corruption selftest 38. All six runtime-head hosted checks passed. Hosted manifest download/verification and final delivery checks pending; local Linux not_run.",
+        "review": "Independent architecture/source/oracle/cleanup/SDK-test/CI findings resolved; independent archive audit passed 20284 static checks.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/21",
+        "runtime_sha": "cf03b8c6cc48551bc9d2bd7f44ccc327f31e654a",
+        "evidence": "docs/evidence/PR-015/README.md"
       }
     },
     {
