@@ -1,6 +1,6 @@
 # world.crash_recovery
 
-Status: **implementation under review; not merged**. Work item: **PR-014 — Crash-safe persistence and recovery**.
+Status: **merged implementation; post-merge checks verified**. Work item: **PR-014 — Crash-safe persistence and recovery**.
 
 Dependencies: PR-013. Validation lanes: cpu.
 
