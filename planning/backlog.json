@@ -706,7 +706,7 @@
     {
       "id": "PR-015",
       "title": "Agent lifecycle and cancellation",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M2",
       "depends_on": [
         "PR-007",
@@ -730,16 +730,21 @@
         "base_sha": "a18b9e2736c211c4397d8eb94c48c5c27acb5a83",
         "plan": "docs/execution/PR-015-PLAN.md",
         "handoff": "docs/execution/PR-015-HANDOFF.md",
-        "next_action": "Complete bounded restart-expiry correction, evidence review and draft delivery before PR-016.",
-        "validation": "Original PR21 merged with matching tree, all six delivery and post-merge checks passed; both final and merge hosted manifests verified 1171 oracle / 127 SDK assertions and all bindings. Correction SDK suite passed 164; all three affected Windows CTests passed (19.28 seconds); clean correction evidence and new hosted checks pending.",
-        "review": "Original independent implementation/archive reviews closed. Concrete restart-expiry review finding reproduced on merged code; minimal correction and strengthened test review closed.",
+        "next_action": "Verify correction hosted evidence and final delivery, then await maintainer review/certification and manual merge.",
+        "validation": "Original PR21 merge and all manifests verified; all six post-merge checks passed. Correction: three affected Windows CTests passed19.28s, clean1171oracle/164SDK, selftest38. All six runtime-head correction checks passed; both native manifests and all63source/16SDK/artifact bindings verified. Local Linux not_run; final delivery checks tracked on PR22.",
+        "review": "Independent correction implementation/test/final-document reviews closed; independent archive audit passed20284staticchecks. Regression fails unchanged original runtime.",
         "pr_url": "https://github.com/xsparc/omniweft/pull/21",
         "runtime_sha": "cf03b8c6cc48551bc9d2bd7f44ccc327f31e654a",
         "evidence": "docs/evidence/PR-015/README.md",
         "merge_sha": "3df0d28e805328a4831291fb9f3e380279357be9",
         "merged_tree": "52782eaa15fef96358c6dfd434914a8f211b5ff8",
         "followup_plan": "docs/execution/PR-015-RESTART-PLAN.md",
-        "followup_handoff": "docs/execution/PR-015-RESTART-HANDOFF.md"
+        "followup_handoff": "docs/execution/PR-015-RESTART-HANDOFF.md",
+        "followup_base_sha": "3df0d28e805328a4831291fb9f3e380279357be9",
+        "followup_pr_url": "https://github.com/xsparc/omniweft/pull/22",
+        "followup_runtime_sha": "2cf1456f698760012883337ed498d6d862b544e8",
+        "followup_runtime_tree": "80b177755de865faec48a8a2eda86cd92c02cf74",
+        "followup_evidence": "docs/evidence/PR-015-RESTART/README.md"
       }
     },
     {
