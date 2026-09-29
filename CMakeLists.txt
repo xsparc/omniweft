@@ -54,6 +54,11 @@ if(WIN32)
 endif()
 ow_native_policy(ow_persistence)
 
+add_library(ow_assets STATIC src/assets.cpp)
+target_link_libraries(ow_assets PRIVATE ow_persistence)
+target_include_directories(ow_assets PUBLIC include)
+ow_native_policy(ow_assets)
+
 add_library(ow_history STATIC src/history.cpp)
 target_link_libraries(ow_history PUBLIC ow_transactions)
 target_include_directories(ow_history PUBLIC include)
@@ -80,8 +85,8 @@ target_link_libraries(ow_presentation PUBLIC ow_world)
 target_include_directories(ow_presentation PUBLIC include)
 ow_native_policy(ow_presentation)
 
-add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp src/observe_example.cpp src/contention_example.cpp src/undo_example.cpp src/replay_example.cpp src/persistence_example.cpp)
-target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation ow_observe ow_retry ow_policy ow_history ow_replay ow_persistence)
+add_executable(omniweft_examples src/bootstrap_main.cpp src/protocol_example.cpp src/objects_example.cpp src/render_example.cpp src/observe_example.cpp src/contention_example.cpp src/undo_example.cpp src/replay_example.cpp src/persistence_example.cpp src/assets_example.cpp)
+target_link_libraries(omniweft_examples PRIVATE ow_transactions ow_presentation ow_observe ow_retry ow_policy ow_history ow_replay ow_persistence ow_assets)
 target_include_directories(omniweft_examples SYSTEM PRIVATE third_party)
 ow_native_policy(omniweft_examples)
 
@@ -166,6 +171,14 @@ if(BUILD_TESTING)
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/protocol_oracle.py"
       --executable "$<TARGET_FILE:omniweft_examples>")
   set_tests_properties(protocol.native protocol.reject_invalid PROPERTIES TIMEOUT 60)
+
+  add_executable(assets_native_test tests/assets_native_test.cpp)
+  target_link_libraries(assets_native_test PRIVATE ow_assets)
+  ow_native_policy(assets_native_test)
+  add_test(NAME assets.native COMMAND assets_native_test)
+  add_test(NAME assets.roundtrip COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/assets_oracle.py" --executable "$<TARGET_FILE:omniweft_examples>")
+  add_test(NAME assets.oracle_selftest COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/assets_oracle_test.py")
+  set_tests_properties(assets.native assets.roundtrip assets.oracle_selftest PROPERTIES TIMEOUT 60)
 
   add_executable(persistence_native_test tests/persistence_native_test.cpp)
   target_link_libraries(persistence_native_test PRIVATE ow_persistence)

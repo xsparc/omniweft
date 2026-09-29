@@ -1,6 +1,6 @@
 # agents.worker_failure
 
-Status: **merged; bounded restart-status correction in progress**. Work item: **PR-015 — Agent lifecycle and cancellation**. Dependencies: PR-007, PR-011, PR-014. Validation lanes: cpu.
+Status: **merged; restart-status correction integrated and verified**. Work item: **PR-015 — Agent lifecycle and cancellation**. Dependencies: PR-007, PR-011, PR-014. Validation lanes: cpu.
 
 ## Behavior
 
