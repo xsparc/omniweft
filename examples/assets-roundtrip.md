@@ -15,7 +15,7 @@ Missing/extra blobs, traversal identifiers, content/manifest hash mismatch, unsu
 
 History roots are owner-supplied retention sets, not automatic World undo or save-file integration. Imported provenance is retained attribution data, not authenticated license authority. No existing save-format migration, glTF loader, filesystem extraction, remote asset endpoint, durable asset store, GPU or physics support is claimed. Reverting the additive module must preserve original bundle files.
 
-Local Windows build and all three asset CTests passed, including 853 native assertions and 56 corruption selftests. The full run passed 44/45; the existing persistence test passed after a process-local temporary-directory correction. Clean evidence and hosted Windows/Linux verification remain pending; no merge is claimed.
+Local Windows build and all three asset CTests passed, including 853 native assertions and 56 corruption selftests. The full run passed 44/45; the existing persistence test passed after a process-local temporary-directory correction. Clean evidence passed 1944 oracle/853 native assertions; its [independently audited archive](../docs/evidence/PR-016/README.md) is retained. All six runtime-head hosted checks and both Windows/Linux native manifests passed with 1944 oracle/853 native assertions and verified source/SDK/artifact bindings. Final delivery status is tracked through the handoff and current PR checks; no merge is claimed.
 
 ## Adopted acceptance contract
 

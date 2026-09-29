@@ -752,7 +752,7 @@
     {
       "id": "PR-016",
       "title": "Content-addressed assets and provenance",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M3",
       "depends_on": [
         "PR-003",
@@ -775,9 +775,13 @@
         "base_sha": "3b0204da63555deea238af34e3bf3e8a3ad39f4c",
         "plan": "docs/execution/PR-016-PLAN.md",
         "handoff": "docs/execution/PR-016-HANDOFF.md",
-        "next_action": "Retain clean runtime evidence and audit archive; publish draft and verify actual Windows/Linux hosted checks and both manifests.",
-        "validation": "Windows Release build passed; full45CTest44passed, existing persistence test passed on scoped-temp retry; assets native853 and selftest56 passed. Clean evidence and hosted checks pending.",
-        "review": "Independent architecture/source/API/native-test/example/oracle/CI reviews closed; archive review pending."
+        "next_action": "Inspect latest delivery-head checks and both native manifest bindings, then await actual maintainer review/certification and manual merge. PR017 remains proposed until integration.",
+        "validation": "Windows development full45CTest44passed plus sole persistence scoped-temp retry passed. Clean runtime1944oracle/853native; selftest56. All six runtime-head hosted Windows/Linux checks passed; both manifests and all69source/16SDK/artifact bindings verified. Local Linux not_run. Final delivery status linked on PR23.",
+        "review": "Independent architecture/source/API/native-test/example/oracle/CI/archive reviews closed; archive50693independent static checks plus1876read-only reviewed-oracle checks.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/23",
+        "runtime_sha": "7370603f26c7d4dfee69474f2363c512e54649ee",
+        "runtime_tree": "b61c03811804ed3c3f1129db3229e8c06a4981f5",
+        "evidence": "docs/evidence/PR-016/README.md"
       }
     },
     {
