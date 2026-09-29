@@ -1,6 +1,6 @@
 # agents.worker_failure
 
-Status: **implemented candidate; not yet merged**. Work item: **PR-015 — Agent lifecycle and cancellation**. Dependencies: PR-007, PR-011, PR-014. Validation lanes: cpu.
+Status: **merged; bounded restart-status correction in progress**. Work item: **PR-015 — Agent lifecycle and cancellation**. Dependencies: PR-007, PR-011, PR-014. Validation lanes: cpu.
 
 ## Behavior
 
@@ -27,7 +27,7 @@ The fixture times out a delayed worker, cancels and drains a second worker, obse
 
 ## Evidence and limits
 
-Current execution state and measured validation belong in [the handoff](../docs/execution/PR-015-HANDOFF.md). A passing state-machine unit test alone does not establish real process or native transport behavior. Physical GPU, physics, model inference, host/supervisor restart durability and performance targets are outside this slice. Existing legacy SDK profiles, policy grants/leases, native request deadlines and persistence formats remain unchanged. Revert through a normal PR; no save migration is required.
+Original integration is recorded in [the handoff](../docs/execution/PR-015-HANDOFF.md); the [restart-expiry correction](../docs/execution/PR-015-RESTART-HANDOFF.md) carries current follow-up validation. A passing state-machine unit test alone does not establish real process or native transport behavior. Physical GPU, physics, model inference, host/supervisor restart durability and performance targets are outside this slice. Existing legacy SDK profiles, policy grants/leases, native request deadlines and persistence formats remain unchanged. Revert through a normal PR; no save migration is required.
 
 ## Adopted acceptance and recovery contract
 

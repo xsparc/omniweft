@@ -726,16 +726,20 @@
       "execution": {
         "authorization": "docs/execution/AUTHORIZATION.md",
         "owner": "Codex coordinator",
-        "branch": "codex/pr-015-worker-lifecycle",
+        "branch": "codex/pr-015-restart-expiry",
         "base_sha": "a18b9e2736c211c4397d8eb94c48c5c27acb5a83",
         "plan": "docs/execution/PR-015-PLAN.md",
         "handoff": "docs/execution/PR-015-HANDOFF.md",
-        "next_action": "Complete hosted manifest verification and final delivery checks, then await maintainer review/certification and manual merge.",
-        "validation": "All 42 Windows CTests passed; clean runtime 1171 oracle / 127 SDK assertions; corruption selftest 38. All six runtime-head hosted checks passed. Hosted manifest download/verification and final delivery checks pending; local Linux not_run.",
-        "review": "Independent architecture/source/oracle/cleanup/SDK-test/CI findings resolved; independent archive audit passed 20284 static checks.",
+        "next_action": "Complete bounded restart-expiry correction, evidence review and draft delivery before PR-016.",
+        "validation": "Original PR21 merged with matching tree, all six delivery and post-merge checks passed; both final and merge hosted manifests verified 1171 oracle / 127 SDK assertions and all bindings. Correction SDK suite passed 164; all three affected Windows CTests passed (19.28 seconds); clean correction evidence and new hosted checks pending.",
+        "review": "Original independent implementation/archive reviews closed. Concrete restart-expiry review finding reproduced on merged code; minimal correction and strengthened test review closed.",
         "pr_url": "https://github.com/xsparc/omniweft/pull/21",
         "runtime_sha": "cf03b8c6cc48551bc9d2bd7f44ccc327f31e654a",
-        "evidence": "docs/evidence/PR-015/README.md"
+        "evidence": "docs/evidence/PR-015/README.md",
+        "merge_sha": "3df0d28e805328a4831291fb9f3e380279357be9",
+        "merged_tree": "52782eaa15fef96358c6dfd434914a8f211b5ff8",
+        "followup_plan": "docs/execution/PR-015-RESTART-PLAN.md",
+        "followup_handoff": "docs/execution/PR-015-RESTART-HANDOFF.md"
       }
     },
     {

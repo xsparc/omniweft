@@ -286,7 +286,7 @@ def main():
         require(run.returncode==0,'SDK lifecycle edge suite succeeds')
         summary=strict_json(run.stdout.encode('utf-8'))
         require(type(summary) is dict and set(summary)=={'status','assertions'} and summary['status']=='passed'
-                and type(summary['assertions']) is int and summary['assertions']==127,'SDK suite bounded result')
+                and type(summary['assertions']) is int and summary['assertions']==164,'SDK suite bounded result')
         evidence.retain_json('sdk/assertions.json',summary)
         evidence.finish('passed');print('worker lifecycle oracle passed: '+str(len(CHECKS))+' assertions');return 0
     except Exception:
