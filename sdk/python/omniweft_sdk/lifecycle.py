@@ -252,6 +252,7 @@ class WorkerSupervisor:
             self._generation += 1
             if self._active is not None:
                 record = self._records[self._active]
+                self._expire(record)
                 if record.state in _PRE_SUBMIT:
                     self._terminal(record, "superseded", "WORKER_RESTARTED")
             # Prepared authority survives provider generation changes.

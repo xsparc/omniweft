@@ -81,4 +81,4 @@ PR-013 adds opt-in native [recorded command replay](examples/world-replay.md), m
 
 PR-014 adds bounded native [crash-safe persistence and recovery](examples/world-crash_recovery.md), merged with verified Windows/Linux post-merge checks. See [its handoff](docs/execution/PR-014-HANDOFF.md) for measured validation and limits.
 
-PR-015 delivers draft bounded [provider lifecycle and cancellation](examples/agents-worker_failure.md) through an opt-in SDK supervisor. See [its handoff](docs/execution/PR-015-HANDOFF.md) for current validation; it is not yet integrated.
+PR-015 merged bounded [provider lifecycle and cancellation](examples/agents-worker_failure.md) through an opt-in SDK supervisor, with verified Windows/Linux post-merge evidence. A [bounded follow-up](docs/execution/PR-015-RESTART-HANDOFF.md) corrects the outcome reported when restart first observes an expired ready proposal.

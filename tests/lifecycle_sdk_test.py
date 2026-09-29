@@ -201,6 +201,38 @@ def correlation_and_deadline():
             check(supervisor.submit(status.request_id).state == "timed_out", "ready absolute deadline enforced")
 
 
+
+def restart_deadline_boundary():
+    for offset, state, code in ((0, "timed_out", "DEADLINE_EXPIRED"),
+                                 (1, "timed_out", "DEADLINE_EXPIRED"),
+                                 (-.001, "superseded", "WORKER_RESTARTED")):
+        client = Client()
+        with WorkerSupervisor(client) as supervisor:
+            status = ready(supervisor)
+            deadline = supervisor._records[status.request_id].deadline
+            # No status query at/after expiry before restart; the real child is cleaned.
+            with patch.object(lifecycle.time, "monotonic", return_value=deadline + offset):
+                check(supervisor.restart() == 2, "restart advances generation at deadline")
+                expected = {"request_id": 1, "generation": 1, "state": state,
+                    "expected_revision": 0, "late_results": 0, "receipt": None,
+                    "error_code": code, "worker_cleaned": True}
+                check(supervisor.status(1).to_dict() == expected, "restart preserves deadline outcome")
+                if state == "timed_out":
+                    check(supervisor.submit(1).to_dict() == expected, "restart terminal cannot submit")
+                else:
+                    rejected(lambda: supervisor.submit(1))
+                check(supervisor.cancel(1) == "terminal", "restart terminal cannot cancel")
+                check(supervisor.restart() == 3 and supervisor.status(1).to_dict() == expected,
+                      "repeated restart preserves terminal identity")
+                check(not client.prepared and not client.sent, "expired or superseded proposal has no authority")
+            fresh = ready(supervisor)
+            check((fresh.request_id, fresh.generation) == (2, 3), "fresh proposal after restart")
+            supervisor.submit(fresh.request_id)
+            result = wait(supervisor, fresh.request_id, {"committed"})
+            check(result.receipt.world_revision == 1 and len(client.sent) == 1,
+                  "restart recovery commits exactly once")
+
+
 def submit_races_and_recovery():
     client = Client(); client.submit_release.clear(); client.submit_error = OSError("private transport")
     with WorkerSupervisor(client) as supervisor:
@@ -212,10 +244,20 @@ def submit_races_and_recovery():
         check(time.monotonic() - start < .25, "status cancellation responsiveness")
         rejected(lambda: supervisor.start(CubeGoal.create("B", 2), 0), OutcomeUnknown)
         rejected(lambda: supervisor.supersede(CubeGoal.create("B", 2), 0), OutcomeUnknown)
+        original = client.sent[0]
+        with patch.object(lifecycle.time, "monotonic", return_value=supervisor._records[1].deadline + 1):
+            check(supervisor.restart() == 2, "submitting restart advances generation")
+            check(supervisor.status(1).state == "submitting" and supervisor._records[1].prepared is original,
+                  "expired proposal deadline cannot erase submitting authority")
+            rejected(lambda: supervisor.start(CubeGoal.create("B", 2), 0), OutcomeUnknown)
         client.submit_release.set()
         check(wait(supervisor, 1, {"outcome_unknown"}).error_code == "OUTCOME_UNKNOWN", "unknown response fixed code")
         original = client.sent[0]
-        check(supervisor.restart() == 2 and supervisor.status(1).generation == 1, "restart preserves request generation")
+        with patch.object(lifecycle.time, "monotonic", return_value=supervisor._records[1].deadline + 1):
+            check(supervisor.restart() == 3 and supervisor.status(1).generation == 1, "restart preserves request generation")
+            check(supervisor.status(1).state == "outcome_unknown" and supervisor._records[1].prepared is original,
+                  "expired proposal deadline cannot erase uncertain authority")
+            rejected(lambda: supervisor.start(CubeGoal.create("B", 2), 0), OutcomeUnknown)
         client.submit_error = None
         supervisor.retry(1)
         check(wait(supervisor, 1, {"committed"}).error_code is None, "exact retry recovery")
@@ -251,6 +293,10 @@ def prepare_deadline_and_close():
         time.sleep(1.05); client.prepare_release.set()
         result = wait(supervisor, 1, {"outcome_unknown"})
         check(result.error_code == "DEADLINE_EXPIRED" and not client.sent, "reserved unsent deadline fence")
+        check(supervisor.restart() == 2, "unsent reservation restart generation")
+        result = supervisor.status(1)
+        check(result.state == "outcome_unknown" and result.error_code == "DEADLINE_EXPIRED"
+              and supervisor._records[1].prepared is client._pending, "restart retains reconciliation-only reservation")
         rejected(lambda: supervisor.retry(1))
         rejected(lambda: supervisor.start(CubeGoal.create("B", 2), 0), OutcomeUnknown)
         supervisor.reconcile(1)
@@ -302,6 +348,7 @@ def main():
     inputs_and_success()
     children_and_late_output()
     correlation_and_deadline()
+    restart_deadline_boundary()
     submit_races_and_recovery()
     prepare_deadline_and_close()
     capacity_and_cleanup()
