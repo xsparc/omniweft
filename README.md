@@ -27,6 +27,7 @@ PR-011 adds [concurrent proposals and retained retries](examples/agents-contenti
 | [Simulation and rendering](docs/SIMULATION_AND_RENDERING.md) | Physics, graphics, collision synchronization and frame budgets |
 | [Editor and workflows](docs/EDITOR_AND_WORKFLOWS.md) | Human/AI interaction and an integrated demonstration |
 | [Roadmap](docs/ROADMAP.md) | Dependency-ordered implementation PRs and release gates |
+| [Ten feature proposals](docs/FEATURE_PROPOSALS.md) | Unadopted ideas with bounded first slices and verification criteria |
 | [Examples](examples/README.md) | Feature-by-feature verification contracts |
 | [Validation](docs/VALIDATION.md) | Windows/Linux CI, GPU evidence, replay and performance methodology |
 | [Autonomous development](docs/AUTONOMOUS_DEVELOPMENT.md) | One-slice PR workflow, review and durable handoff |
@@ -85,4 +86,4 @@ PR-015 merged bounded [provider lifecycle and cancellation](examples/agents-work
 
 PR-016 merged in [PR #23](https://github.com/xsparc/omniweft/pull/23) with verified Windows/Linux post-merge evidence for a bounded native [asset Catalog and bundle round-trip](examples/assets-roundtrip.md). See [its handoff](docs/execution/PR-016-HANDOFF.md) for actual validation status; external World asset attachment remains deferred.
 
-PR-017 delivers draft [PR #24](https://github.com/xsparc/omniweft/pull/24) for bounded native [GLB mesh import](examples/meshes-import_gltf.md). Its [handoff](docs/execution/PR-017-HANDOFF.md) records actual implementation and validation status.
+PR-017 merged in [PR #24](https://github.com/xsparc/omniweft/pull/24) with verified Windows/Linux post-merge evidence for bounded native [GLB mesh import](examples/meshes-import_gltf.md). Its [handoff](docs/execution/PR-017-HANDOFF.md) records actual implementation and validation status.
