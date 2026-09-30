@@ -790,7 +790,7 @@
     {
       "id": "PR-017",
       "title": "Bounded glTF mesh import",
-      "status": "in_progress",
+      "status": "in_review",
       "milestone": "M3",
       "depends_on": [
         "PR-016"
@@ -812,9 +812,13 @@
         "base_sha": "2e8f05b5d55f02052c17b4a505f54abff9784af1",
         "plan": "docs/execution/PR-017-PLAN.md",
         "handoff": "docs/execution/PR-017-HANDOFF.md",
-        "next_action": "Commit reviewed runtime and retain clean source-bound evidence; independently audit archive, publish draft and verify actual hosted Windows/Linux checks/manifests.",
-        "validation": "All48 localWindows CTests passed123.78s using process-localworkspaceTEMP/TMP. Native4090 assertions; corruptionselftest130. Clean candidate/hosted checks pending; localLinux not_run.",
-        "review": "Independent architecture/source/API/native-test/example/oracle/CMake/CI reviews closed; archivepending."
+        "next_action": "Inspect latest delivery-head checks and both native manifest bindings, then await actual maintainer review/certification and manual merge. PR018 remains proposed until integration.",
+        "validation": "All48 localWindows CTests passed123.78s. Clean runtime2340oracle/4090native; selftest130. All six hostedruntime checks passed; both manifests and all74source/16SDK/artifact bindings verified. LocalLinux not_run; hostedLinux passed. Final delivery tracked on PR24.",
+        "review": "Independent architecture/source/API/native-test/example/oracle/CMake/CI/archive reviews closed; archive20216 independent static assertions plus2271 reviewed-oracle checks.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/24",
+        "runtime_sha": "6566b4f56043c97aa9cedfe8f039751c624576b7",
+        "runtime_tree": "f96bde639ccd5339100801687d5aa22bf4b2a8ac",
+        "evidence": "docs/evidence/PR-017/README.md"
       }
     },
     {

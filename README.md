@@ -85,4 +85,4 @@ PR-015 merged bounded [provider lifecycle and cancellation](examples/agents-work
 
 PR-016 merged in [PR #23](https://github.com/xsparc/omniweft/pull/23) with verified Windows/Linux post-merge evidence for a bounded native [asset Catalog and bundle round-trip](examples/assets-roundtrip.md). See [its handoff](docs/execution/PR-016-HANDOFF.md) for actual validation status; external World asset attachment remains deferred.
 
-PR-017 is developing bounded native [GLB mesh import](examples/meshes-import_gltf.md). Its [handoff](docs/execution/PR-017-HANDOFF.md) records actual implementation and validation status.
+PR-017 delivers draft [PR #24](https://github.com/xsparc/omniweft/pull/24) for bounded native [GLB mesh import](examples/meshes-import_gltf.md). Its [handoff](docs/execution/PR-017-HANDOFF.md) records actual implementation and validation status.

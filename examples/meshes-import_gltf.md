@@ -1,6 +1,6 @@
 # meshes.import_gltf
 
-Status: **implemented candidate; clean evidence and delivery pending**. Work item: **PR-017 — Bounded glTF mesh import**. Dependency PR-016 is integrated. CPU lane only. See [contract](../docs/GLTF_IMPORT.md), [plan](../docs/execution/PR-017-PLAN.md) and [handoff](../docs/execution/PR-017-HANDOFF.md).
+Status: **implemented and verified runtime in draft PR #24; final delivery tracked in the handoff**. Work item: **PR-017 — Bounded glTF mesh import**. Dependency PR-016 is integrated. CPU lane only. See [contract](../docs/GLTF_IMPORT.md), [plan](../docs/execution/PR-017-PLAN.md) and [handoff](../docs/execution/PR-017-HANDOFF.md).
 
 Dependencies: PR-016. Validation lanes: cpu.
 
@@ -32,7 +32,7 @@ The example also covers stale Catalog revision, material-reference errors, exter
 
 ## Evidence and limitations
 
-Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md. Retained evidence and actual passed/failed/not-run lanes belong in the [handoff](../docs/execution/PR-017-HANDOFF.md). All 48 local Windows CTests passed; clean retained evidence and hosted Windows/Linux checks remain pending.
+Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md. Retained evidence and actual passed/failed/not-run lanes belong in the [handoff](../docs/execution/PR-017-HANDOFF.md). All 48 local Windows CTests passed. [Audited clean evidence](../docs/evidence/PR-017/README.md) retains 2340 oracle and 4090 native assertions; all six hosted Windows/Linux runtime checks and both native manifest bindings passed.
 
 This is the bounded POSITION-only GLB/TRS profile in the contract. No full glTF support, renderer, textures, World attachment, remote endpoint, cooked format, persistence migration, GPU or physics evidence. Source/license fields preserve attribution data without authenticating it. Existing Catalog and World formats remain unchanged.
 
