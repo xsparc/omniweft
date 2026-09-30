@@ -706,7 +706,7 @@
     {
       "id": "PR-015",
       "title": "Agent lifecycle and cancellation",
-      "status": "in_review",
+      "status": "done",
       "milestone": "M2",
       "depends_on": [
         "PR-007",
@@ -730,8 +730,8 @@
         "base_sha": "a18b9e2736c211c4397d8eb94c48c5c27acb5a83",
         "plan": "docs/execution/PR-015-PLAN.md",
         "handoff": "docs/execution/PR-015-HANDOFF.md",
-        "next_action": "Verify correction hosted evidence and final delivery, then await maintainer review/certification and manual merge.",
-        "validation": "Original PR21 merge and all manifests verified; all six post-merge checks passed. Correction: three affected Windows CTests passed19.28s, clean1171oracle/164SDK, selftest38. All six runtime-head correction checks passed; both native manifests and all63source/16SDK/artifact bindings verified. Local Linux not_run; final delivery checks tracked on PR22.",
+        "next_action": "Integrated; continue dependency-ready PR-016.",
+        "validation": "Original and correction integration verified. All six correction final-head and all six actual-merge checks passed; both actual-merge native manifests verified1171oracle/164SDK and all63source/16SDK/artifact bindings. Local affected Windows3CTests passed19.28s; local Linux not_run; hosted Windows/Linux passed.",
         "review": "Independent correction implementation/test/final-document reviews closed; independent archive audit passed20284staticchecks. Regression fails unchanged original runtime.",
         "pr_url": "https://github.com/xsparc/omniweft/pull/21",
         "runtime_sha": "cf03b8c6cc48551bc9d2bd7f44ccc327f31e654a",
@@ -744,13 +744,15 @@
         "followup_pr_url": "https://github.com/xsparc/omniweft/pull/22",
         "followup_runtime_sha": "2cf1456f698760012883337ed498d6d862b544e8",
         "followup_runtime_tree": "80b177755de865faec48a8a2eda86cd92c02cf74",
-        "followup_evidence": "docs/evidence/PR-015-RESTART/README.md"
+        "followup_evidence": "docs/evidence/PR-015-RESTART/README.md",
+        "followup_merge_sha": "3b0204da63555deea238af34e3bf3e8a3ad39f4c",
+        "followup_merged_tree": "b42aa8a48dbc4f15852fcc3b19391c3c3c1cf373"
       }
     },
     {
       "id": "PR-016",
       "title": "Content-addressed assets and provenance",
-      "status": "proposed",
+      "status": "in_review",
       "milestone": "M3",
       "depends_on": [
         "PR-003",
@@ -765,7 +767,22 @@
       ],
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
-      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+      "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/pr-016-content-assets",
+        "base_sha": "3b0204da63555deea238af34e3bf3e8a3ad39f4c",
+        "plan": "docs/execution/PR-016-PLAN.md",
+        "handoff": "docs/execution/PR-016-HANDOFF.md",
+        "next_action": "Inspect latest delivery-head checks and both native manifest bindings, then await actual maintainer review/certification and manual merge. PR017 remains proposed until integration.",
+        "validation": "Windows development full45CTest44passed plus sole persistence scoped-temp retry passed. Clean runtime1944oracle/853native; selftest56. All six runtime-head hosted Windows/Linux checks passed; both manifests and all69source/16SDK/artifact bindings verified. Local Linux not_run. Final delivery status linked on PR23.",
+        "review": "Independent architecture/source/API/native-test/example/oracle/CI/archive reviews closed; archive50693independent static checks plus1876read-only reviewed-oracle checks.",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/23",
+        "runtime_sha": "7370603f26c7d4dfee69474f2363c512e54649ee",
+        "runtime_tree": "b61c03811804ed3c3f1129db3229e8c06a4981f5",
+        "evidence": "docs/evidence/PR-016/README.md"
+      }
     },
     {
       "id": "PR-017",

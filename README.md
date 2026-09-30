@@ -81,4 +81,6 @@ PR-013 adds opt-in native [recorded command replay](examples/world-replay.md), m
 
 PR-014 adds bounded native [crash-safe persistence and recovery](examples/world-crash_recovery.md), merged with verified Windows/Linux post-merge checks. See [its handoff](docs/execution/PR-014-HANDOFF.md) for measured validation and limits.
 
-PR-015 merged bounded [provider lifecycle and cancellation](examples/agents-worker_failure.md) through an opt-in SDK supervisor, with verified Windows/Linux post-merge evidence. A [bounded follow-up](docs/execution/PR-015-RESTART-HANDOFF.md) corrects the outcome reported when restart first observes an expired ready proposal.
+PR-015 merged bounded [provider lifecycle and cancellation](examples/agents-worker_failure.md) through an opt-in SDK supervisor, with verified Windows/Linux post-merge evidence. Its merged, verified [bounded follow-up](docs/execution/PR-015-RESTART-HANDOFF.md) corrects the outcome reported when restart first observes an expired ready proposal.
+
+PR-016 delivers draft [PR #23](https://github.com/xsparc/omniweft/pull/23) for a bounded native [asset Catalog and bundle round-trip](examples/assets-roundtrip.md). See [its handoff](docs/execution/PR-016-HANDOFF.md) for actual validation status; external World asset attachment remains deferred.

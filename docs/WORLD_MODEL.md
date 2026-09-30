@@ -77,3 +77,7 @@ PR-013's [world.replay](../examples/world-replay.md) adds opt-in bounded typed i
 ## Bounded native persistence candidate
 
 PR-014's [world.crash_recovery](../examples/world-crash_recovery.md) introduces a first-version bounded native Store, currently under review. Its process-crash durability contract uses flushed full-prefix journal frames and checkpoint-before-reclaim compaction. It restores private epoch and receipt watermarks before native admission, with explicit unknown-outcome sealing. This does not implement the general world-package, external asset import, physics checkpoint or migration contracts above. See the example for exact caps and failure limits.
+
+## PR-016 asset catalog scope
+
+The additive [bounded native asset contract](ASSETS.md) retains opaque content-addressed blobs and immutable provenance manifests. Explicit owner current/history retention sets protect asset identities and their shared blobs. This does not automatically attach external assets to World, undo, replay or OWPKG001 persistence. See [the execution handoff](execution/PR-016-HANDOFF.md) for actual validation and integration state.
