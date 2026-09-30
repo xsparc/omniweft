@@ -1,0 +1,15 @@
+# PR-017 handoff
+
+State: in progress on `codex/pr-017-gltf-import`, based on actual PR #23 merge `2e8f05b5d55f02052c17b4a505f54abff9784af1`. See [plan](PR-017-PLAN.md) and [authorization](AUTHORIZATION.md). Preserve every worktree.
+
+Independent architecture review selected bounded atomic GLB source import into the existing Catalog plus a detached scene. Coordinator owns the example/oracle/CMake/CI/docs and shared ledger; isolated helper owns only the new native importer header/module/tests. Native implementation is complete and independently reviewed. The independent example/oracle/CI review passed 114 static reconstruction checks plus 2271 static oracle checks, covering the exact 1184-byte fixture, full states and rejection/recovery. Its SHA-256 is `cd1db03badf75d0a51dd0b39ab8a44aaf9231b384b64ee1206c64fbb80497183`. The corruption selftest rejects 130 reports. The oracle now requires exactly 4090 native assertions. Actual pinned Windows build and all three targeted mesh CTests passed; all 48 Windows CTests passed in 123.78 seconds; clean runtime/archive review remains pending. Static review counts are separate from runtime evidence.
+
+PR-016 integration is verified: matching reviewed delivery tree, all six post-merge checks, and both native manifests with 1944 oracle/853 native assertions and all 69 source/16 SDK/artifact bindings. See [its handoff](PR-016-HANDOFF.md).
+
+Next: implement the approved bounded profile and runnable example with independent oracle, resolve independent review, run Windows and hosted Linux checks, retain clean evidence and obtain independent archive audit, then publish a draft and verify current-head checks and manifests. Keep PR-018 proposed until actual integration. No automatic ready transition or merge.
+
+Planning validation passed after restoring the example's required scope/dependency/lane declarations. OpenSteward static and strict checks dated 2026-09-30 report `registry.unreadable` for the absent foreign registry; neither is claimed passed. Existing Omniweft governance remains authoritative.
+
+Independent source/API/native-test review closed after enforcing provenance length/ASCII limits before copying and rejecting stride on unused index-target views. A valid scene with no reachable mesh rejects as UNSUPPORTED_PROFILE. Tests cover checked float32 extrema, including JSON 0.1/0.3, and an unsigned-byte restart sentinel that otherwise lies inside the vertex range. Coordinator bytes match the reviewed helper checkpoint after LF normalization. Initial local link failed because default temporary storage was inaccessible; the same source linked successfully with process-local workspace TEMP/TMP. No host/global setting changed.
+
+Independent example/oracle/CMake/CI review is closed, including exact integer native count 4090. Full Windows validation used process-local workspace temporary storage. Runtime/test sources were normalized to LF before this build and full suite. No Linux runtime is yet claimed locally or hosted. Next: commit the reviewed runtime, retain clean evidence, independently audit the archive and publish a draft for actual hosted checks.

@@ -1,6 +1,6 @@
 # PR-016 content-addressed asset evidence
 
-Runtime candidate `7370603f26c7d4dfee69474f2363c512e54649ee`, tree `b61c03811804ed3c3f1129db3229e8c06a4981f5`. Draft [PR #23](https://github.com/xsparc/omniweft/pull/23); [delivery handoff](../../execution/PR-016-HANDOFF.md).
+Runtime candidate `7370603f26c7d4dfee69474f2363c512e54649ee`, tree `b61c03811804ed3c3f1129db3229e8c06a4981f5`. Merged [PR #23](https://github.com/xsparc/omniweft/pull/23); [verified delivery and integration handoff](../../execution/PR-016-HANDOFF.md).
 
 [windows-7370603.zip](windows-7370603.zip) contains exactly four JSON members, 18,754 bytes, SHA-256 `aebb33b5a1d6ea023776c15352d045b7d7cdac13437d41f8224640f4f970c223`. Clean-candidate validation passed 1,944 independent oracle assertions plus 853 native assertions. The corruption selftest rejects 56 altered reports. Independent archive audit passed 50,693 independent static checks plus 1,876 read-only checks through the reviewed oracle; it did not rerun runtime tests.
 

@@ -41,6 +41,8 @@ AI reasoning runs outside the simulation thread. The editor and gateway submit c
 | Model runtime | Optional ONNX Runtime CPU adapter later | Isolated dependency; accelerator/provider compatibility requires separate testing |
 | Tests | CTest + a standard-library Python subprocess oracle for PR-001 | Headless examples and regression artifacts; select a pinned C++ test library when a later slice needs it |
 
+PR-017 introduces an additive native `ow_gltf` module linked to the existing Catalog and pinned JSON dependency. Its [bounded profile](GLTF_IMPORT.md) stages validation, detached scene data and the original source bundle before Catalog publication. It performs no file/network resolution or World/GPU publication. See [the handoff](execution/PR-017-HANDOFF.md) for implementation and measured validation status.
+
 Dependency versions are not selected by floating branch at configure time. PR-001 records the actual headless toolchain and dependency inventory. Each integration slice records exact source revisions, licenses, checksums, build options and supported compilers for libraries it introduces. The design chooses libraries, not an untested lockfile.
 
 ## Dependency boundaries

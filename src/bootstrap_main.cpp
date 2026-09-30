@@ -5,6 +5,7 @@
 #include "replay_example.hpp"
 #include "persistence_example.hpp"
 #include "assets_example.hpp"
+#include "gltf_example.hpp"
 #if !defined(_M_X64) && !defined(__x86_64__)
 #error "Omniweft bootstrap requires an x86_64 compiler target; select x64 build tools."
 #endif
@@ -162,6 +163,8 @@ int main(int argc, char* argv[]) {
   for (int index = 1; index + 1 < argc; ++index) {
     if (std::string_view(argv[index]) == "--example" && std::string_view(argv[index + 1]) == "assets.roundtrip")
       return run_assets_example(argc, argv);
+    if (std::string_view(argv[index]) == "--example" && std::string_view(argv[index + 1]) == "meshes.import_gltf")
+      return run_gltf_example(argc, argv);
     if (std::string_view(argv[index]) == "--example" && index + 1 < argc && std::string_view(argv[index + 1]) == "world.crash_recovery")
       return run_persistence_example(argc, argv);
     if (std::string_view(argv[index]) == "--example" &&
