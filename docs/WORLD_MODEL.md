@@ -81,3 +81,5 @@ PR-014's [world.crash_recovery](../examples/world-crash_recovery.md) introduces 
 ## PR-016 asset catalog scope
 
 The additive [bounded native asset contract](ASSETS.md) retains opaque content-addressed blobs and immutable provenance manifests. Explicit owner current/history retention sets protect asset identities and their shared blobs. This does not automatically attach external assets to World, undo, replay or OWPKG001 persistence. See [the execution handoff](execution/PR-016-HANDOFF.md) for actual validation and integration state.
+
+PR-017's [bounded GLB importer](GLTF_IMPORT.md) adds a detached source-ordered scene and an immutable original-source Catalog asset. It does not attach meshes to World or serialize cooked geometry. Selected-scene and node bounds describe the imported fixture, independently of World collision or presentation. [Its handoff](execution/PR-017-HANDOFF.md) records actual validation status.
