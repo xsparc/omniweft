@@ -1,6 +1,6 @@
 # meshes.import_gltf
 
-Status: **implemented and verified runtime in draft PR #24; final delivery tracked in the handoff**. Work item: **PR-017 — Bounded glTF mesh import**. Dependency PR-016 is integrated. CPU lane only. See [contract](../docs/GLTF_IMPORT.md), [plan](../docs/execution/PR-017-PLAN.md) and [handoff](../docs/execution/PR-017-HANDOFF.md).
+Status: **merged in PR #24 with verified Windows/Linux post-merge checks and native evidence**. Work item: **PR-017 — Bounded glTF mesh import**. Dependency PR-016 is integrated. CPU lane only. See [contract](../docs/GLTF_IMPORT.md), [plan](../docs/execution/PR-017-PLAN.md) and [handoff](../docs/execution/PR-017-HANDOFF.md).
 
 Dependencies: PR-016. Validation lanes: cpu.
 

@@ -2,6 +2,8 @@
 
 Implementation of these 38 items is now [adopted](execution/AUTHORIZATION.md). The backlog records current states; only dependency-ready work may be claimed. PR IDs are stable work-item IDs; they are not GitHub pull-request numbers. The dependency graph permits parallel independent work; number order is a reading aid. The initial documentation bootstrap precedes PR-001.
 
+[Ten additional feature proposals](FEATURE_PROPOSALS.md) are recorded separately for maintainer consideration. Their FP identifiers are unadopted, do not change this roadmap or its release gates, and are not eligible for autonomous implementation without explicit adoption.
+
 ## M1: Offline AI-addressable scene
 
 **Exit gate:** PR-001 through PR-008 and their CPU/GPU examples pass on both supported platforms.
