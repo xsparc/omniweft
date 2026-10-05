@@ -4,6 +4,8 @@ Implementation of these 38 items is now [adopted](execution/AUTHORIZATION.md). T
 
 [Ten additional feature proposals](FEATURE_PROPOSALS.md) are recorded separately for maintainer consideration. Their FP identifiers are unadopted, do not change this roadmap or its release gates, and are not eligible for autonomous implementation without explicit adoption.
 
+A [second batch, FP-011–020](FEATURE_PROPOSALS_2.md), adds ten more proposals under the same boundary. Both batches remain separate from the adopted PR-001–038 work items.
+
 ## M1: Offline AI-addressable scene
 
 **Exit gate:** PR-001 through PR-008 and their CPU/GPU examples pass on both supported platforms.
