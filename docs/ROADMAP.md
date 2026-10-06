@@ -2,6 +2,10 @@
 
 Implementation of these 38 items is now [adopted](execution/AUTHORIZATION.md). The backlog records current states; only dependency-ready work may be claimed. PR IDs are stable work-item IDs; they are not GitHub pull-request numbers. The dependency graph permits parallel independent work; number order is a reading aid. The initial documentation bootstrap precedes PR-001.
 
+[Ten additional feature proposals](FEATURE_PROPOSALS.md) are recorded separately for maintainer consideration. Their FP identifiers are unadopted, do not change this roadmap or its release gates, and are not eligible for autonomous implementation without explicit adoption.
+
+A [second batch, FP-011–020](FEATURE_PROPOSALS_2.md), adds ten more proposals under the same boundary. Both batches remain separate from the adopted PR-001–038 work items.
+
 ## M1: Offline AI-addressable scene
 
 **Exit gate:** PR-001 through PR-008 and their CPU/GPU examples pass on both supported platforms.
@@ -102,3 +106,5 @@ Re-estimate after M1 and the first voxel/collider prototype. Track actual PR lea
 - Required checks and adopted merge policy pass; the merged commit and handoff are recorded.
 
 See [future tracks](FUTURE_TRACKS.md) for general game-engine breadth and research features beyond this foundation.
+
+The [third proposal catalog](FEATURE_PROPOSALS_3.md) adds FP-021–030 as unimplemented, unadopted ideas. It does not expand this roadmap or its release gates.

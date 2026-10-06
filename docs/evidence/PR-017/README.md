@@ -1,6 +1,6 @@
 # PR-017 bounded GLB import evidence
 
-Runtime candidate `6566b4f56043c97aa9cedfe8f039751c624576b7`, tree `f96bde639ccd5339100801687d5aa22bf4b2a8ac`. Draft [PR #24](https://github.com/xsparc/omniweft/pull/24); [delivery handoff](../../execution/PR-017-HANDOFF.md).
+Runtime candidate `6566b4f56043c97aa9cedfe8f039751c624576b7`, tree `f96bde639ccd5339100801687d5aa22bf4b2a8ac`. Merged [PR #24](https://github.com/xsparc/omniweft/pull/24); [integration handoff](../../execution/PR-017-HANDOFF.md).
 
 Clean local Windows validation passed 2340 independent oracle assertions plus 4090 native assertions. The corruption selftest rejects 130 altered reports. The independently reconstructed GLB contains 1184 bytes with SHA-256 `cd1db03badf75d0a51dd0b39ab8a44aaf9231b384b64ee1206c64fbb80497183`. It exercises strided POSITION data, two source-ordered triangles, explicit/default material references, hierarchical and mirrored transforms, deduplication, distinct provenance and post-rejection recovery. Twelve rejected requests preserve full Catalog states and original input bytes.
 
@@ -11,3 +11,7 @@ The complete local Windows suite passed all 48 CTests in 123.78 seconds. Runtime
 Only reviewed generated fixture data and necessary generic versions/hashes may be retained publicly. No personal/account/host/path identifiers, credentials, epoch values or hashes, raw HTTP/process streams, executable or PDB bytes are published. The proof establishes a bounded POSITION-only GLB/TRS importer into the volatile Catalog and a detached scene. No full glTF support, World attachment, renderer/texture implementation, cooked format, remote endpoint, save migration, GPU or physics support is claimed. See [the contract](../../GLTF_IMPORT.md) and [example](../../../examples/meshes-import_gltf.md).
 
 All six runtime-head hosted checks passed: [native Windows/Linux](https://github.com/xsparc/omniweft/actions/runs/36716541059), [renderer Windows/Linux](https://github.com/xsparc/omniweft/actions/runs/36716541014) and [planning Windows/Linux](https://github.com/xsparc/omniweft/actions/runs/36716541045). Both native manifests use checkout `85bc51ff0aa21afca209eaf19e992bc3dc730587` with the identical runtime tree, independently confirmed through the GitHub commit API. Each passed 2340 oracle/4090 native assertions; all 74 source, 16 SDK and artifact bindings were verified. Hosted builds use Debug, Windows MSVC19.44.35229.0 and Linux Clang18.1.3.
+
+## Integration verification
+
+Maintainer squash merge `c9a50e6e6826d6448e09d1e7f6c1bebdf3af9fcc` matches reviewed delivery `9217b317f98c81095328cbf9b35320f796a76a85` at tree `69a71127bcff8d17d3a9fdc986e5272e0a3b0d8a`. All six post-merge checks and both actual-merge native manifests passed and were independently verified; each native report retains 2340 oracle/4090 native assertions and all 74 source/16 SDK/artifact bindings. See the [integration handoff](../../execution/PR-017-HANDOFF.md) for exact runs and compiler versions. The archive above remains bound to the original runtime, not relabeled as a merge run.
