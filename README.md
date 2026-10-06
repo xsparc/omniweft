@@ -29,6 +29,7 @@ PR-011 adds [concurrent proposals and retained retries](examples/agents-contenti
 | [Roadmap](docs/ROADMAP.md) | Dependency-ordered implementation PRs and release gates |
 | [Ten feature proposals](docs/FEATURE_PROPOSALS.md) | Unadopted ideas with bounded first slices and verification criteria |
 | [Ten more feature proposals](docs/FEATURE_PROPOSALS_2.md) | Additional scene tools, interactive behavior and geometry ideas |
+| [Ten further feature proposals](docs/FEATURE_PROPOSALS_3.md) | Additional geometry, animation and scene text ideas |
 | [Examples](examples/README.md) | Feature-by-feature verification contracts |
 | [Validation](docs/VALIDATION.md) | Windows/Linux CI, GPU evidence, replay and performance methodology |
 | [Autonomous development](docs/AUTONOMOUS_DEVELOPMENT.md) | One-slice PR workflow, review and durable handoff |

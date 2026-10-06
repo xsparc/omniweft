@@ -106,3 +106,5 @@ Re-estimate after M1 and the first voxel/collider prototype. Track actual PR lea
 - Required checks and adopted merge policy pass; the merged commit and handoff are recorded.
 
 See [future tracks](FUTURE_TRACKS.md) for general game-engine breadth and research features beyond this foundation.
+
+The [third proposal catalog](FEATURE_PROPOSALS_3.md) adds FP-021–030 as unimplemented, unadopted ideas. It does not expand this roadmap or its release gates.
