@@ -1320,7 +1320,7 @@
           "docs/evidence/FP-008/README.md",
           "https://github.com/xsparc/omniweft/pull/30/checks"
         ],
-        "review": "Independent architecture/source/native/example/oracle/governance/CI/repair/archive reviews closed. Initial Windows51CTests passed; corrected four affected checks passed, Debug and Release973native; clean3895oracle/973native and14000archive checks. See handoff and current PR for hosted delivery verification."
+        "review": "Independent architecture/source/native/example/oracle/governance/CI/repair/archive reviews closed. Initial Windows51CTests passed; corrected four affected checks passed, Debug and Release973native; clean3895oracle/973native and14000archive checks. See handoff and current PR for hosted delivery verification. Corrected runtime six hosted checks passed and both manifests verified: each3895oracle, Windows973native/Linux949native."
       }
     }
   ]
