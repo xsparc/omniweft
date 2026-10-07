@@ -1,0 +1,13 @@
+# Fourth feature-proposal slice plan
+
+Authority: on 2026-10-07 the maintainer reported a squash merge and requested ten more feature ideas in a draft PR. This authorizes proposal documentation and draft publication, not implementation of FP items. Existing PR-001 through PR-038 adoption and manual integration rules remain unchanged.
+
+Deliver [FP-031–040](../FEATURE_PROPOSALS_4.md), exactly ten distinct candidates with bounded first slices, prerequisites, independent success/rejection/recovery criteria and explicit unsupported claims. Base main at `7d8f6711a7a9a86a2150d5e9fac627f47505a66d`; branch `codex/feature-proposals-40`. PR #27 merged into PR #25's branch, then PR #25 integrated all thirty previous proposals into main. Matching reviewed tree, six post-merge checks and both actual-merge native manifests are verified in the [handoff](FEATURE-PROPOSALS-4-HANDOFF.md).
+
+Expected public paths: the fourth catalog, this plan, its handoff, README and roadmap navigation. Coordinator owns all writes; independent review is read-only. Preserve every worktree and unrelated PR work. Leave all three previous catalogs and all 38 ledger entries unchanged. No runtime, SDK, CI, dependency, authority, protocol, persistent-format, license or release change.
+
+Acceptance and checks: inspect live GitHub state, browse focused primary sources, independently review overlap and bounded contracts, run the planning validator and existing planning/export tests with process-local ignored temporary storage, verify exact count/path scope/unchanged ledger and catalogs, whitespace and publication privacy. Run OpenSteward static and dated strict checks, reporting foreign-registry incompatibility honestly under existing Omniweft governance. Review exact public prose and approved commit attribution before push.
+
+Publish a draft against main. Verify actual current-head hosted checks and both native source/SDK/artifact manifests when available; existing regressions do not implement the proposals. No unchanged local engine/GPU test or Docker run is needed. No new feature executable or runtime archive is appropriate for this documentation-only slice.
+
+Risks: overlap disguised as novelty, mathematical ambiguity, unbounded generated output, implicit authority through text/items, and proposal merge being mistaken for adoption. Mitigate with explicit limits, source-bound results, typed owner paths and independent review. Rollback is a normal documentation PR; no migration is involved. Await manual review/certification and merge; verify actual merge tree/checks/manifests before next dependency-ready roadmap implementation.

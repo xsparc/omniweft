@@ -108,3 +108,5 @@ Re-estimate after M1 and the first voxel/collider prototype. Track actual PR lea
 See [future tracks](FUTURE_TRACKS.md) for general game-engine breadth and research features beyond this foundation.
 
 The [third proposal catalog](FEATURE_PROPOSALS_3.md) adds FP-021–030 as unimplemented, unadopted ideas. It does not expand this roadmap or its release gates.
+
+The [fourth proposal catalog](FEATURE_PROPOSALS_4.md) adds FP-031–040 as unimplemented, unadopted ideas. The adopted roadmap and release gates remain unchanged.
