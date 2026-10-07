@@ -13,7 +13,7 @@ Use `.exe` on Windows and new output/evidence directories. Build with the pinned
 
 ## Adopted acceptance contract
 
-All 51 local Windows CTests passed. Clean Windows evidence retained 3,895 oracle and 969 native assertions with an [independently audited archive](../docs/evidence/FP-008/README.md). The corruption selftest rejected 41 reports. Hosted Windows/Linux evidence is tracked through the draft's latest checks and handoff; no merge is claimed.
+The initial source passed all 51 local Windows CTests. After the documented test-only Debug injector repair, all four affected Release checks passed and the corrected native test passed in Debug and Release. Corrected clean Windows evidence retained 3,895 oracle and 973 native assertions with an [independently audited archive](../docs/evidence/FP-008/README.md). The corruption selftest rejected 41 reports. Hosted Windows/Linux evidence is tracked through the draft's latest checks and handoff; no merge is claimed.
 
 Dependencies: PR-016. Validation lanes: cpu.
 
