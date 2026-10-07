@@ -119,7 +119,7 @@ def validate(root: Path = ROOT) -> list[str]:
             errors.append("Backlog item must be an object")
             continue
         key = item.get("id", "")
-        if not isinstance(key, str) or not re.fullmatch(r"PR-\d{3}(?:-[a-z0-9]+)?", key):
+        if not isinstance(key, str) or not re.fullmatch(r"(?:PR|FP)-\d{3}(?:-[a-z0-9]+)?", key):
             errors.append(f"Invalid work-item ID: {key!r}")
             continue
         if key in by_id:
@@ -191,7 +191,7 @@ def validate(root: Path = ROOT) -> list[str]:
 
     expected_ids = set(by_id)
     for label, content in (("roadmap", roadmap), ("catalog", catalog)):
-        declared_ids = set(re.findall(r"^\| (PR-\d{3}(?:-[a-z0-9]+)?) \|", content, re.MULTILINE))
+        declared_ids = set(re.findall(r"^\| ((?:PR|FP)-\d{3}(?:-[a-z0-9]+)?) \|", content, re.MULTILINE))
         if declared_ids != expected_ids:
             errors.append(f"{label}: work-item rows differ from backlog IDs")
     registered_specs = {item.get("example_spec") for item in by_id.values()

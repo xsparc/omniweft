@@ -1,6 +1,8 @@
 # Ten further feature proposals: geometry, animation and scene text
 
-Status: **proposed, unimplemented, and not adopted for autonomous execution**. These ten ideas answer the maintainer's 2026-10-06 request for another draft. They extend [FP-001–010](FEATURE_PROPOSALS.md) and [FP-011–020](FEATURE_PROPOSALS_2.md); they do not expand the adopted [38-item roadmap](ROADMAP.md) or its release gate. Merging proposal documentation does not authorize implementation.
+Current adoption: **authorized for incremental implementation on 2026-10-07**. See the [adoption and integration record](execution/FEATURE-IMPLEMENTATION.md) and [execution ledger](../planning/backlog.json) for current state. The proposal-stage status and baselines below are historical; the new maintainer instruction supersedes their nonadoption statements. Authorization does not establish implementation or validation.
+
+Status when proposed: **unimplemented and not yet adopted**. These ten ideas answer the maintainer's 2026-10-06 request for another draft. They extend [FP-001–010](FEATURE_PROPOSALS.md) and [FP-011–020](FEATURE_PROPOSALS_2.md); they do not expand the adopted [38-item roadmap](ROADMAP.md) or its release gate. Merging proposal documentation does not authorize implementation.
 
 Baseline: PR #26 was squash-merged as `b1bb3ea7c182c85c316126585335f647996da268` into the branch of still-open [PR #25](https://github.com/xsparc/omniweft/pull/25), not into main. Its tree matches reviewed PR #26 delivery `6b2fb5b25d19ebac1ecaeec872b53fdc32cea580`. This batch is a separate draft based on those combined contents. See [README](../README.md) for implemented capabilities and the [handoff](execution/FEATURE-PROPOSALS-3-HANDOFF.md) for actual delivery status.
 

@@ -271,6 +271,53 @@ Bytes canonical_manifest(const Manifest& value) {
 AssetId asset_id(const Manifest& value) { return content_hash(canonical_manifest(value)); }
 Snapshot Catalog::snapshot() const { return state_; }
 std::uint64_t Catalog::revision() const noexcept { return state_.revision; }
+RetentionResult Catalog::inspect_retention(std::uint64_t expected_revision) const {
+  RetentionResult result;
+  result.revision = state_.revision;
+  if (expected_revision != state_.revision) {
+    result.code = "REVISION_CONFLICT";
+    return result;
+  }
+  try {
+    RetentionReport report;
+    report.current_roots = state_.current_roots;
+    report.history_roots = state_.history_roots;
+    report.assets.reserve(state_.assets.size());
+    report.blobs.reserve(state_.blobs.size());
+    for (const auto& asset : state_.assets) {
+      AssetRetention row;
+      row.id = asset.id;
+      row.content_hash = asset.manifest.content_hash;
+      row.current_root = std::binary_search(
+          state_.current_roots.begin(), state_.current_roots.end(), asset.id);
+      for (const auto& roots : state_.history_roots) {
+        if (std::binary_search(roots.asset_ids.begin(), roots.asset_ids.end(), asset.id))
+          row.history_roots.push_back(roots.name);
+      }
+      if (!row.current_root && row.history_roots.empty())
+        report.removable_assets.push_back(asset.id);
+      report.assets.push_back(std::move(row));
+    }
+    for (const auto& blob : state_.blobs) {
+      BlobRetention row;
+      row.hash = blob.hash;
+      for (const auto& asset : report.assets) {
+        if (asset.content_hash == blob.hash) {
+          row.referencing_assets.push_back(asset.id);
+          if (asset.current_root || !asset.history_roots.empty())
+            row.retaining_assets.push_back(asset.id);
+        }
+      }
+      if (row.retaining_assets.empty()) report.removable_blobs.push_back(blob.hash);
+      report.blobs.push_back(std::move(row));
+    }
+    result.report.emplace(std::move(report));
+    result.status = "ok";
+  } catch (const std::bad_alloc&) {
+    result.code = "RESOURCE_EXHAUSTED";
+  }
+  return result;
+}
 Receipt Catalog::apply(const Command& command, std::uint64_t expected_revision) {
   Receipt receipt;
   receipt.revision = state_.revision;

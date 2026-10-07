@@ -149,6 +149,12 @@ jobs:
           build=build/linux-headless; suffix=""
           if [ "${{ runner.os }}" = "Windows" ]; then build=build/windows-headless; suffix=".exe"; fi
           python tests/gltf_oracle.py --executable "$build/omniweft_examples$suffix" --native-test "$build/gltf_native_test$suffix" --evidence artifacts/gltf
+      - name: Record asset retention inspection evidence
+        shell: bash
+        run: |
+          build=build/linux-headless; suffix=""
+          if [ "${{ runner.os }}" = "Windows" ]; then build=build/windows-headless; suffix=".exe"; fi
+          python tests/retention_oracle.py --executable "$build/omniweft_examples$suffix" --native-test "$build/retention_native_test$suffix" --evidence artifacts/retention
       - name: Summarize retained evidence
         shell: bash
         run: |
@@ -163,7 +169,7 @@ jobs:
               summary["result"] = manifest["artifacts"]["result"]
               summary["executable"] = manifest["artifacts"]["executable"]
               print(json.dumps({"evidence": name, **summary}, sort_keys=True))
-          for name in ("sdk", "sdk-mutation", "agents", "agents-mutation", "agents-failure", "agents-owner", "policy", "policy-mutation", "hierarchy", "observe", "contention", "undo", "replay", "persistence", "lifecycle", "assets", "gltf"):
+          for name in ("sdk", "sdk-mutation", "agents", "agents-mutation", "agents-failure", "agents-owner", "policy", "policy-mutation", "hierarchy", "observe", "contention", "undo", "replay", "persistence", "lifecycle", "assets", "gltf", "retention"):
               manifest = json.loads((Path("artifacts") / name / "manifest.json").read_text(encoding="utf-8"))
               print(json.dumps({"evidence": name, "work_item": manifest["work_item"],
                                 "candidate_sha": manifest["candidate_sha"], "dirty": manifest["dirty"],
@@ -198,6 +204,7 @@ jobs:
             artifacts/lifecycle/
             artifacts/assets/
             artifacts/gltf/
+            artifacts/retention/
             build/*/Testing/Temporary/LastTest.log
           if-no-files-found: error
           retention-days: 7

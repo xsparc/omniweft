@@ -55,3 +55,9 @@ PR-001 implements the runner shell; each later PR adds its named example. GUI-on
 Examples use fixed seeds, procedural or explicitly redistributable fixtures, no mandatory credentials, and independent expected values. Assertions must exercise public behavior, not merely repeat implementation formulas. All behavior examples include at least one negative test. Recovery assertions are required whenever the feature adds persistence, asynchronous work or external execution.
 
 Evidence format and lane definitions are in [validation](../docs/VALIDATION.md) and the [evidence template](../docs/templates/EVIDENCE.md). New core capabilities must add catalog entries in the same PR; a general demo is insufficient if it cannot isolate the behavior being added.
+
+## Adopted feature examples
+
+| Work item | Example | Lanes |
+| --- | --- | --- |
+| FP-008 | [assets.explain_retention](assets-explain_retention.md) | cpu |

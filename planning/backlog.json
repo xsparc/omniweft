@@ -1288,6 +1288,40 @@
       "scope": "Implement only the named behavior, its public contract, corresponding runnable example and directly required tests/docs. Split the item before execution if it cannot be reviewed as one behavior.",
       "evidence": "Record exact candidate SHA, commands, environment, seed, assertions, results, artifact hashes and limitations using docs/templates/EVIDENCE.md.",
       "rollback": "Revert the PR; preserve source fixtures and earlier save data. Any persistent schema change needs a versioned migration and recovery fixture before merge."
+    },
+    {
+      "id": "FP-008",
+      "title": "Asset retention and impact inspector",
+      "status": "in_review",
+      "milestone": "Adopted features",
+      "depends_on": [
+        "PR-016"
+      ],
+      "example": "assets.explain_retention",
+      "example_spec": "examples/assets-explain_retention.md",
+      "acceptance": "Return complete sorted root reasons, shared-blob retainers and exact collection candidates at the expected Catalog revision; verify prediction against ordinary collection in a fresh Catalog.",
+      "negative_case": "Reject stale expected revisions without a report or mutation; re-query after root changes and recover the exact new removal sets.",
+      "lanes": [
+        "cpu"
+      ],
+      "scope": "Add only native read-only retention inspection using existing Catalog limits and owner-held roots; preserve collection, commands, authority and bundle formats.",
+      "evidence": "Retain source-bound complete fixture states, literal independent oracle results, negative and recovery reports, native boundaries and Windows/Linux verification.",
+      "rollback": "Remove the additive inspector through a PR while preserving existing asset bundles and collection behavior.",
+      "execution": {
+        "authorization": "docs/execution/AUTHORIZATION.md",
+        "owner": "Codex coordinator",
+        "branch": "codex/fp-008-retention-inspector",
+        "claimed_at": "2026-10-07",
+        "plan": "docs/execution/FP-008-PLAN.md",
+        "handoff": "docs/execution/FP-008-HANDOFF.md",
+        "pr_url": "https://github.com/xsparc/omniweft/pull/30",
+        "runtime_sha": "845ce05412dd21d28573d1c928c56eadaaae18bb",
+        "evidence": [
+          "docs/evidence/FP-008/README.md",
+          "https://github.com/xsparc/omniweft/pull/30/checks"
+        ],
+        "review": "Independent architecture/source/native/example/oracle/governance/CI/repair/archive reviews closed. Initial Windows51CTests passed; corrected four affected checks passed, Debug and Release973native; clean3895oracle/973native and14000archive checks. See handoff and current PR for hosted delivery verification. Corrected runtime six hosted checks passed and both manifests verified: each3895oracle, Windows973native/Linux949native."
+      }
     }
   ]
 }
