@@ -131,7 +131,9 @@ class Catalog final {
   // No content bytes or provenance fields are copied into the report.
   // Success is status="ok", empty code, and a complete report. Rejection is
   // status="rejected" with no report: REVISION_CONFLICT (checked first) or
-  // RESOURCE_EXHAUSTED on allocation failure. Revision never advances.
+  // RESOURCE_EXHAUSTED on catchable report-payload std::bad_alloc.
+  // No recovery is promised for a library's noexcept allocation termination.
+  // Revision never advances.
   RetentionResult inspect_retention(std::uint64_t expected_revision) const;
   Receipt apply(const Command&, std::uint64_t expected_revision);
   // Bundle: "OWASB001", u32 version=1, u32 asset count, u32 blob count;

@@ -3,7 +3,9 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
+#include <exception>
 #include <iostream>
 #include <limits>
 #include <new>
@@ -14,12 +16,33 @@
 #include <vector>
 
 // Test-only allocation failure, armed exclusively around the const query.
-// No production fault hook or Catalog internals are needed.
+// No production fault hook or Catalog internals are needed. MSVC iterator-debug
+// bookkeeping allocates a proxy even in noexcept container constructors/moves.
+// Exclude exactly that allocation size in Debug: the bounded fixture's report
+// payload allocations are all larger, and failing the proxy would terminate
+// inside the STL rather than exercise catchable report-allocation failure.
 namespace allocation_probe {
 bool armed = false, triggered = false;
-std::size_t remaining = 0;
-void before_allocation() {
+std::size_t remaining = 0, bookkeeping_bypasses = 0;
+#if defined(_MSVC_STL_VERSION) && _ITERATOR_DEBUG_LEVEL != 0
+constexpr std::size_t bookkeeping_size = sizeof(std::_Container_proxy);
+static_assert(bookkeeping_size == 2 * sizeof(void*));
+static_assert(sizeof(ow::assets::AssetId) > bookkeeping_size);
+static_assert(sizeof(ow::assets::HistoryRoots) > bookkeeping_size);
+static_assert(sizeof(ow::assets::AssetRetention) > bookkeeping_size);
+static_assert(sizeof(ow::assets::BlobRetention) > bookkeeping_size);
+static_assert(64 + 1 > bookkeeping_size); // Every asset/blob digest string.
+#else
+constexpr std::size_t bookkeeping_size = 0;
+#endif
+void before_allocation(std::size_t size) {
   if (!armed) return;
+  if constexpr (bookkeeping_size != 0) {
+    if (size == bookkeeping_size) {
+      ++bookkeeping_bypasses;
+      return;
+    }
+  }
   if (remaining != 0) { --remaining; return; }
   armed = false;
   triggered = true;
@@ -28,6 +51,7 @@ void before_allocation() {
 struct Scope {
   explicit Scope(std::size_t after) {
     remaining = after;
+    bookkeeping_bypasses = 0;
     triggered = false;
     armed = true;
   }
@@ -36,7 +60,7 @@ struct Scope {
 };
 }
 void* operator new(std::size_t size) {
-  allocation_probe::before_allocation();
+  allocation_probe::before_allocation(size);
   if (void* memory = std::malloc(size == 0 ? 1 : size)) return memory;
   throw std::bad_alloc{};
 }
@@ -194,10 +218,16 @@ void prediction(const Catalog& original) {
 void allocation_failures(const Catalog& catalog, const RetentionReport& expected) {
   const auto before = catalog.snapshot();
   const auto bytes = catalog.export_bundle();
+  // Verified pinned MSVC small-string storage holds these fixture names;
+  // therefore they never add a proxy-sized character allocation to the sweep.
+  check(std::all_of(before.history_roots.begin(), before.history_roots.end(),
+          [](const auto& roots) { return roots.name.size() <= 7; }),
+        "allocation fixture history names fit small-string storage");
   std::size_t failures = 0;
   bool reached_success = false;
-  // Every allocation site along a successful report construction is failed in
-  // turn, covering failures after partial roots/asset/blob rows were staged.
+  // Every catchable report-payload allocation is failed in turn, excluding
+  // only the proven MSVC noexcept iterator-debug bookkeeping above. This
+  // covers failures after partial roots/asset/blob rows were staged.
   for (std::size_t index = 0; index < 1024; ++index) {
     allocation_probe::Scope failure(index);
     const auto result = catalog.inspect_retention(before.revision);
@@ -205,6 +235,10 @@ void allocation_failures(const Catalog& catalog, const RetentionReport& expected
     if (!allocation_probe::triggered) {
       check(result.status == "ok" && result.report && *result.report == expected,
             "allocation sweep reaches complete successful report");
+      check(allocation_probe::bookkeeping_size == 0
+                ? allocation_probe::bookkeeping_bypasses == 0
+                : allocation_probe::bookkeeping_bypasses > 0,
+            "allocation sweep observes only configured debug bookkeeping bypass");
       reached_success = true;
       break;
     }
@@ -435,6 +469,12 @@ void rejected_mutation_recovery() {
 }
 }
 int main() {
+  // A future noexcept failure must be a bounded test failure, never an abort
+  // dialog that makes a headless test wait until its external timeout.
+  std::set_terminate([] {
+    std::fputs("retention oracle failed: unexpected termination\n", stderr);
+    std::_Exit(1);
+  });
   try {
     empty_catalog(); shared_content(); full_capacity();
     eight_shared_variants(); rejected_mutation_recovery();

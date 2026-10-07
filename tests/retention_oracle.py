@@ -230,7 +230,7 @@ def main():
             require(result.returncode == 0, 'native retention boundary suite executes')
             summary = strict_json(result.stdout.encode('utf-8'))
             require(type(summary) is dict and summary.keys() == {'status', 'assertions'} and summary['status'] == 'passed'
-                    and type(summary['assertions']) is int and 549 <= summary['assertions'] <= 6585,
+                    and type(summary['assertions']) is int and 553 <= summary['assertions'] <= 6589,
                     'native retention suite reports its actual bounded assertion count')
             evidence.retain_json('native/assertions.json', summary)
         evidence.finish('passed')
