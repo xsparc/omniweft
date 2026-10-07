@@ -4,7 +4,7 @@
 
 Development proceeds through small branches and PRs, with durable work-item state, runnable examples and independent review. A maintainer adopts an execution scope, such as a milestone or explicit PR-ID batch. Within that scope, an agent may select dependency-ready work, implement, run checks, fix failures, open draft PRs and prepare integration without repeatedly asking for routine implementation decisions.
 
-The 2026-09-13 continuation request adopts incremental implementation of the existing 38-item roadmap. The [authorization record](execution/AUTHORIZATION.md) captures its scope and recurring execution. The [backlog](../planning/backlog.json) tracks actual eligibility and progress; dependencies and integration gates remain binding.
+The 2026-09-13 continuation request adopts incremental implementation of the existing 38-item roadmap. The [authorization record](execution/AUTHORIZATION.md) captures its scope and recurring execution. The [backlog](../planning/backlog.json) tracks actual eligibility and progress; dependencies and integration gates remain binding. The maintainer additionally adopted FP-001 through FP-040 on 2026-10-07; the [feature implementation record](execution/FEATURE-IMPLEMENTATION.md) lists that scope. Refined FP slices enter the same ledger with the same gates, without changing the original roadmap release boundary.
 
 ## State and ownership
 

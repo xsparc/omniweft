@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- FP-008: additive native revision-checked asset retention inspection with exact root reasons, shared-content retainers and collection candidates. Existing collection and bundle formats remain unchanged; [handoff](docs/execution/FP-008-HANDOFF.md) records validation and integration state.
+
 - PR-007 (local candidate): authenticated scoped cube writes, deterministic retained/working resource budgets, observation/request limits, independent literal-state and compiled scope-bypass proofs. Windows local checks pass; hosted validation and maintainer merge remain pending.
 
 - PR-006 (merged): fixed-step world owner, bounded scripted SDK provider, immutable runtime observations and live Vulkan presentation; independent canonical, cancellation/admission, failure and GPU proofs, maintainer merge and six post-merge checks passed.

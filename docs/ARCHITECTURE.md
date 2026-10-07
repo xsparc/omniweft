@@ -47,6 +47,8 @@ Dependency versions are not selected by floating branch at configure time. PR-00
 
 ## Dependency boundaries
 
+FP-008 adds a read-only retention query within `ow_assets`, using the existing single-owner Catalog revision and bounded current/history roots. It returns detached metadata and exact collection candidates without copying blob bytes, inferring World relationships or adding mutation authority. The existing collector remains independent of this diagnostic. See [the asset contract](ASSETS.md#read-only-retention-inspection) and [verification handoff](execution/FP-008-HANDOFF.md).
+
 | Module | Owns | May depend on |
 | --- | --- | --- |
 | `ow_foundation` | IDs, math conventions, errors, clocks, jobs, bounded allocators | C++ standard library and audited tiny utilities |

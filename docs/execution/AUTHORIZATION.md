@@ -37,3 +37,7 @@ On 2026-09-13, the maintainer explicitly replied:
 This answers the preceding request to use public GitHub identity `xsparc <10508303+xsparc@users.noreply.github.com>` for agent-generated Omniweft commits, including future increments. Use that exact name and noreply address for author and committer through per-command Git configuration/environment. Verify both fields before pushing. Do not use a connector that silently substitutes a personal email, or change global Git configuration.
 
 The earlier automatic approval-review attribution blocker is resolved by this explicit authorization. This is commit-attribution permission, not a DCO sign-off, human code-review approval, new merge authority or permission to rewrite shared history. Existing privacy, contribution, merge and release policies remain binding.
+
+## Feature proposal adoption on 2026-10-07
+
+The maintainer explicitly requested: “Please continue and implement the proposals.” This adopts the bounded first slices of FP-001 through FP-040 in all four merged catalogs, alongside the original PR-001–038 roadmap. The [feature implementation record](FEATURE-IMPLEMENTATION.md) defines the inventory and selection rule. Claim one dependency-ready behavior at a time in the existing backlog; prerequisites, examples, independent review and manual integration gates remain binding. Prior unadopted-proposal statements are historical. Draft publication and approved commit attribution continue under the existing authorization; no new merge, release, purchase, trust, migration or gate-bypass authority is granted.

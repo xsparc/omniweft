@@ -2,9 +2,11 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <span>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <variant>
 #include <vector>
 
@@ -55,6 +57,36 @@ struct Snapshot {
   bool operator==(const Snapshot&) const = default;
 };
 
+struct AssetRetention {
+  AssetId id;
+  BlobId content_hash;
+  bool current_root = false;
+  std::vector<std::string> history_roots;
+  bool operator==(const AssetRetention&) const = default;
+};
+struct BlobRetention {
+  BlobId hash;
+  std::vector<AssetId> referencing_assets, retaining_assets;
+  bool operator==(const BlobRetention&) const = default;
+};
+struct RetentionReport {
+  std::uint32_t format_version = 1;
+  std::vector<AssetId> current_roots;
+  std::vector<HistoryRoots> history_roots;
+  std::vector<AssetRetention> assets;
+  std::vector<BlobRetention> blobs;
+  std::vector<AssetId> removable_assets;
+  std::vector<BlobId> removable_blobs;
+  bool operator==(const RetentionReport&) const = default;
+};
+struct RetentionResult {
+  // Only static literals: reporting allocation failure must not allocate.
+  std::string_view status = "rejected", code;
+  std::uint64_t revision = 0;
+  std::optional<RetentionReport> report;
+  bool operator==(const RetentionResult&) const = default;
+};
+
 struct Import { Bytes bundle; };
 // Each root set contains at most 8 distinct known AssetIds. Names are 1..32
 // ASCII characters matching [A-Za-z][A-Za-z0-9_.-]*; at most 4 named sets exist.
@@ -94,6 +126,13 @@ class Catalog final {
   Catalog& operator=(Catalog&&) = delete;
   Snapshot snapshot() const;
   std::uint64_t revision() const noexcept;
+  // Read-only, revision-bound explanation of the existing Collect policy.
+  // All IDs/names/rows are detached and sorted, including empty named sets.
+  // No content bytes or provenance fields are copied into the report.
+  // Success is status="ok", empty code, and a complete report. Rejection is
+  // status="rejected" with no report: REVISION_CONFLICT (checked first) or
+  // RESOURCE_EXHAUSTED on allocation failure. Revision never advances.
+  RetentionResult inspect_retention(std::uint64_t expected_revision) const;
   Receipt apply(const Command&, std::uint64_t expected_revision);
   // Bundle: "OWASB001", u32 version=1, u32 asset count, u32 blob count;
   // each asset: 32 ID bytes, u32 manifest byte length, canonical manifest;

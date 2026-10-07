@@ -1,0 +1,11 @@
+# FP-008 handoff
+
+State: in progress. Native read-only asset retention inspection is the first slice of the [adopted forty proposals](FEATURE-IMPLEMENTATION.md). See [plan](FP-008-PLAN.md). Coordinator branch `codex/fp-008-retention-inspector`, based on verified main merge `2afd15d1cc827389e084bc9c8223f49a7148aded`. Preserve every worktree and unrelated PR.
+
+Independent architecture, production source, native tests, example/oracle, governance and CI reviews are closed. Existing Collect/root/import behavior stays unchanged. Review added eight shared provenance variants and failed-mutation recovery coverage, and strengthened the direct example's `--verify` mode to compare complete literal query results, stale rejection, command receipts and reconstructed collection states. The coordinator owns the shared ledger and integrated helper changes.
+
+Pinned Windows Release compilation and all 51 CTests passed in 128.50 seconds, including the strengthened direct example and all existing regressions. The native retention suite passed 969 assertions; its count varies by STL allocation sites exercised in the failure sweep. The independent corruption selftest rejected 41 reports. Planning validation passed; planning/export tests passed 36 with one unavailable-symlink skip out of 37 in 8.484 seconds. An earlier restricted-context attempt failed with access-denied errors in generated temporary fixtures; the unchanged suite passed using process-local ignored workspace TEMP/TMP outside that restriction. No global setting or gate changed. Clean retained evidence remains pending at this checkpoint.
+
+OpenSteward static and dated strict checks on 2026-10-07 both returned `registry.unreadable` for the absent foreign registry. Neither is claimed passed; existing Omniweft governance remains authoritative. Local Linux is not_run and hosted FP-008 validation is pending. This slice makes no GPU or physics claim.
+
+Next: retain clean evidence, close the independent archive audit, publish a draft and verify required current-head Windows/Linux checks and both native manifests. No automatic ready transition, merge, human certification, history rewrite or release is authorized. Keep continuation active and resume the remaining adopted proposals and original roadmap after each verified manual integration.

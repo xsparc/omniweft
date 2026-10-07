@@ -1,6 +1,8 @@
 # Ten feature proposals for Omniweft
 
-Status: **proposed, unimplemented, and not adopted for autonomous execution**. These ten candidates answer the maintainer's 2026-09-30 request for new feature ideas in a draft PR. They supplement the [adopted PR-001–038 roadmap](ROADMAP.md); they do not renumber it, change its dependencies or enlarge the v0.1 release gate. Merging this proposal document records ideas, not approval to implement them.
+Current adoption: **authorized for incremental implementation on 2026-10-07**. See the [adoption and integration record](execution/FEATURE-IMPLEMENTATION.md) and [execution ledger](../planning/backlog.json) for current state. The proposal-stage status and baselines below are historical; the new maintainer instruction supersedes their nonadoption statements. Authorization does not establish implementation or validation.
+
+Status when proposed: **unimplemented and not yet adopted**. These ten candidates answer the maintainer's 2026-09-30 request for new feature ideas in a draft PR. They supplement the [adopted PR-001–038 roadmap](ROADMAP.md); they do not renumber it, change its dependencies or enlarge the v0.1 release gate. Merging this proposal document records ideas, not approval to implement them.
 
 Baseline: PR-017 squash merge `c9a50e6e6826d6448e09d1e7f6c1bebdf3af9fcc`. The current GLB importer produces detached scenes and Catalog assets. World attachment, remote hierarchy/query support, physics and much of the renderer remain separate work. See [README](../README.md), [architecture](ARCHITECTURE.md) and the [integration handoff](execution/PR-017-HANDOFF.md) for actual support.
 

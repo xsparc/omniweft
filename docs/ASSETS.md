@@ -10,6 +10,14 @@ Current roots and up to four named history root sets contain full asset identiti
 
 The limits are eight manifests, eight blobs, eight references per root set, 64 KiB per decoded blob, 256 KiB of unique decoded bytes and 512 KiB per encoded bundle. Empty content and empty catalogs are valid. Manifest fields are nonempty printable ASCII: media type at most 64 bytes, source at most 128, license at most 64. Root names contain 1–32 ASCII characters matching `[A-Za-z][A-Za-z0-9_.-]*`. Duplicate references are rejected. Replacing roots is atomic; removing an absent valid root name is a successful no-op.
 
+## Read-only retention inspection
+
+FP-008 adds `Catalog::inspect_retention(expected_revision)` and [assets.explain_retention](../examples/assets-explain_retention.md). The result contains the observed Catalog revision, `status`/`code` and an optional detached version-1 report. `ok` has an empty code and a complete report. A stale or future revision produces `rejected/REVISION_CONFLICT` with no report; allocation failure produces `rejected/RESOURCE_EXHAUSTED` without partial output. The query neither increments revision nor changes collection policy. Revision binding is to the queried live Catalog instance; equal revisions in different instances are not interchangeable identities. Caller synchronization remains required.
+
+The report preserves sorted current roots and every named history set, including empty sets. Each asset row contains its immutable identity, content hash, current-root membership and sorted history-root names. Each blob row separates all referencing manifest IDs from the rooted subset that retains it. `removable_assets` contains exactly the manifests with no root reason; `removable_blobs` contains exactly the blobs with no retaining manifest. A shared blob may survive removal of one provenance variant. Existing Catalog bounds limit the graph to eight manifests, eight blobs and forty root-reference edges. There are no blob bytes or provenance strings in the report, no World-reference inference and no collection authority in a diagnostic result.
+
+The report's format version describes a native detached value, not a new bundle, save or network format. Existing Import/Collect/root commands, HTTP/SDK profiles, grants and OWASB001 bytes remain unchanged. See [the FP-008 handoff](execution/FP-008-HANDOFF.md) for actual verification and integration state.
+
 ## Version 1 byte format
 
 All integers are unsigned little-endian. Digests occupy 32 raw bytes in manifest entries; displayed identities use 64 lowercase hexadecimal characters. Text lengths count bytes.

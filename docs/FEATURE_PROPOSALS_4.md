@@ -1,6 +1,8 @@
 # Ten additional feature proposals: procedural content and gameplay tools
 
-Status: **proposed, unimplemented, and not adopted for autonomous execution**. This fourth batch answers the maintainer's 2026-10-07 request for ten new ideas in a draft PR. It extends [FP-001–010](FEATURE_PROPOSALS.md), [FP-011–020](FEATURE_PROPOSALS_2.md) and [FP-021–030](FEATURE_PROPOSALS_3.md). It does not change the adopted [PR-001–038 roadmap](ROADMAP.md), its dependencies or release gates. Merging this document records proposals, not permission to implement them.
+Current adoption: **authorized for incremental implementation on 2026-10-07**. See the [adoption and integration record](execution/FEATURE-IMPLEMENTATION.md) and [execution ledger](../planning/backlog.json) for current state. The proposal-stage status and baselines below are historical; the new maintainer instruction supersedes their nonadoption statements. Authorization does not establish implementation or validation.
+
+Status when proposed: **unimplemented and not yet adopted**. This fourth batch answers the maintainer's 2026-10-07 request for ten new ideas in a draft PR. It extends [FP-001–010](FEATURE_PROPOSALS.md), [FP-011–020](FEATURE_PROPOSALS_2.md) and [FP-021–030](FEATURE_PROPOSALS_3.md). It does not change the adopted [PR-001–038 roadmap](ROADMAP.md), its dependencies or release gates. Merging this document records proposals, not permission to implement them.
 
 Baseline: main at `7d8f6711a7a9a86a2150d5e9fac627f47505a66d`. PR #27 was first squash-merged into PR #25's branch, then PR #25 integrated all thirty earlier proposals into main. The final tree matches reviewed delivery `d89763267b2f533aef7a860b5c05b24b710d4ba3`. See [README](../README.md) for actual engine support and the [fourth-batch handoff](execution/FEATURE-PROPOSALS-4-HANDOFF.md) for verified merge and delivery evidence. The earlier proposal handoffs are historical checkpoints.
 

@@ -28,6 +28,41 @@ class PlanningGateTests(unittest.TestCase):
     def test_valid_repository(self):
         self.assertEqual(validate(self.root), [])
 
+    def test_adopted_feature_keeps_original_dependency_gate(self):
+        data = json.loads((self.root / "planning/backlog.json").read_text(encoding="utf-8"))
+        feature = next(item for item in data["items"] if item["id"] == "FP-008")
+        self.assertEqual(feature["depends_on"], ["PR-016"])
+        self.assertEqual(validate(self.root), [])
+        self.alter_backlog(lambda value: next(item for item in value["items"]
+                           if item["id"] == "PR-016").update(status="in_review"))
+        self.assertTrue(any("FP-008: dependency PR-016 is not done" in e
+                            for e in validate(self.root)))
+
+    def test_duplicate_feature_id_is_rejected(self):
+        self.alter_backlog(lambda data: data["items"].append(dict(next(
+            item for item in data["items"] if item["id"] == "FP-008"))))
+        self.assertTrue(any("Duplicate work-item ID: FP-008" in e for e in validate(self.root)))
+
+    def test_feature_unknown_dependency_and_cycle_are_rejected(self):
+        self.alter_backlog(lambda data: next(item for item in data["items"]
+                           if item["id"] == "FP-008").update(depends_on=["FP-008", "FP-999"]))
+        errors = validate(self.root)
+        self.assertTrue(any("Dependency cycle involving FP-008" in e for e in errors))
+        self.assertTrue(any("FP-008: unknown dependency 'FP-999'" in e for e in errors))
+
+    def test_feature_review_needs_authorization(self):
+        self.alter_backlog(lambda data: next(item for item in data["items"]
+                           if item["id"] == "FP-008").update(status="in_review", execution={}))
+        self.assertTrue(any("FP-008: execution state needs adopted authorization" in e
+                            for e in validate(self.root)))
+
+    def test_feature_done_needs_merge_evidence(self):
+        self.alter_backlog(lambda data: next(item for item in data["items"]
+                           if item["id"] == "FP-008").update(status="done",
+                           execution={"authorization": "fixture approval"}))
+        self.assertTrue(any("FP-008: done needs PR URL, merge SHA and evidence" in e
+                            for e in validate(self.root)))
+
     def test_generated_dependency_markdown_is_ignored(self):
         cached = self.root / ".cache" / "render-deps" / "upstream.md"
         cached.parent.mkdir(parents=True)

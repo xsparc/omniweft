@@ -1,6 +1,8 @@
 # Ten more feature proposals: scene tools and interactive content
 
-Status: **proposed, unimplemented, and not adopted for autonomous execution**. The maintainer requested a second set of ten ideas on 2026-10-06 and clarified that the reported squash merge referred to PR #24. [PR #25](https://github.com/xsparc/omniweft/pull/25), containing [FP-001–010](FEATURE_PROPOSALS.md), remains the base draft for this stacked proposal PR. Its merge must not be presumed.
+Current adoption: **authorized for incremental implementation on 2026-10-07**. See the [adoption and integration record](execution/FEATURE-IMPLEMENTATION.md) and [execution ledger](../planning/backlog.json) for current state. The proposal-stage status and baselines below are historical; the new maintainer instruction supersedes their nonadoption statements. Authorization does not establish implementation or validation.
+
+Status when proposed: **unimplemented and not yet adopted**. The maintainer requested a second set of ten ideas on 2026-10-06 and clarified that the reported squash merge referred to PR #24. [PR #25](https://github.com/xsparc/omniweft/pull/25), containing [FP-001–010](FEATURE_PROPOSALS.md), remains the base draft for this stacked proposal PR. Its merge must not be presumed.
 
 Proposal baseline: `b344154d55264b4b11a466481d0c956b6b6a43c4`. Integrated engine baseline: PR #24 merge `c9a50e6e6826d6448e09d1e7f6c1bebdf3af9fcc`. These ten additional candidates have IDs FP-011–020. None changes the adopted [38-item roadmap](ROADMAP.md), grants implementation authority, or adds a release gate. Merging either proposal document records ideas only.
 
