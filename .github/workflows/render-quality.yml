@@ -70,7 +70,7 @@ jobs:
         run: python tests/render_oracle.py --executable build/windows-vulkan/omniweft_examples.exe --headless --evidence-dir artifacts/render-structural
       - name: Retain allowlisted structural evidence
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # shared repository pin
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # shared repository pin
         with:
           name: render-structural-${{ matrix.os }}-${{ github.sha }}
           path: artifacts/render-structural/
